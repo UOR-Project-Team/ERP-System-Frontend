@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
+import {validateusername,validatepassword} from  '../services/validation.login';
 import axios from 'axios'
+
 import { useNavigate } from "react-router-dom"
 
 function Login() {
@@ -7,9 +9,13 @@ function Login() {
     const [username, setUsername] = useState('admin')
     const [password, setPassword] = useState('admin')
 
+    const navigate = useNavigate()
+
+    const usernameError = validateusername(username);
+    const passwordError = validatepassword(password);
+
     const [ErrorMessage, setErrorMessage]= useState(false)
 
-    const navigate = useNavigate()
 
 
     const handleSubmit= async(event)=>{
@@ -36,10 +42,10 @@ function Login() {
               navigate('/home');
             } else {
               alert('Error logging in');
-              setErrorMessage(true)
             }
           } catch (error) {
             console.error('Error:', error);
+            setErrorMessage(true)
             // Handle error 
           }
 
@@ -53,6 +59,7 @@ function Login() {
             <h1 className="text-white mb-3 p-3 rounded w-100 ">ERP System of ABC </h1>
             <div className='bg-white p-3 rounded w-100'>
                 <h2>Sign-In</h2>
+                {ErrorMessage && <div className='text-danger'>Login Faild</div>}
                 <form action="" onSubmit={handleSubmit} >
                     <div className='mb-3 text-start'>
                         <label htmlFor="uname"><strong>User Name</strong></label>
@@ -66,9 +73,6 @@ function Login() {
                         onChange={(event) => setPassword(event.target.value)} value={password} className='form-control rounded-0'/>
                         {passwordError && <span className='text-danger'>{passwordError}</span>}
                     </div>
-
-                    {ErrorMessage && <div className="error">Login Faild</div>}
-
                     <button type='submit' className='btn btn-success w-100'>Log in</button>
                     
                 </form>
