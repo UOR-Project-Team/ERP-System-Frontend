@@ -35,10 +35,31 @@ const SidePanelCollapse = ({ onToggle }) => {
   const closeModal4 = () => {setIsModalOpen4(false);};
   const closeModal5 = () => {setIsModalOpen5(false);};
 
-  const navDash = () => {
+  const navigateModal1 = (path) => {
     setIsModalOpen1(false);
-    navigateTo('/home/customer-master');
+    navigateTo(`/home/${path}-master`);
   };
+
+  const navigateModal2 = (path) => {
+    setIsModalOpen2(false);
+    navigateTo(`/home/${path}`);
+  };
+
+  const navigateModal3 = (path) => {
+    setIsModalOpen3(false);
+    navigateTo(`/home/invoice-${path}`);
+  };
+
+  const navigateModal4 = (path) => {
+    setIsModalOpen4(false);
+    navigateTo(`/home/${path}-reports`);
+  };
+
+  const navigateModal5 = (path) => {
+    setIsModalOpen5(false);
+    navigateTo(`/home/${path}-list`);
+  };
+  
 
   return (
     <div>
@@ -62,12 +83,12 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal1}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Master Files</h2>
-        <button>Category Master</button>
-        <button>Unit Master</button>
-        <button>Item Master</button>
-        <button>Supplier Master</button>
-        <button>Employee Master</button>
-        <button onClick={navDash}>Customer Master</button>
+        <button onClick={() => navigateModal1('category')}>Category Master</button>
+        <button onClick={() => navigateModal1('unit')}>Unit Master</button>
+        <button onClick={() => navigateModal1('item')}>Item Master</button>
+        <button onClick={() => navigateModal1('supplier')}>Supplier Master</button>
+        <button onClick={() => navigateModal1('employee')}>Employee Master</button>
+        <button onClick={() => navigateModal1('customer')}>Customer Master</button>
       </Modal>
       <Modal
         isOpen={isModalOpen2}
@@ -78,8 +99,7 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal2}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Purchasing</h2>
-        <button>Good Recieved Note</button>
-        <button>Good Recieved Note Add</button>
+        <button onClick={() => navigateModal2('good-received-note')}>Good Recieved Note</button>
       </Modal>
       <Modal
         isOpen={isModalOpen3}
@@ -90,8 +110,8 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal3}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Sales</h2>
-        <button>Invoice Add</button>
-        <button>Invoice Display</button>
+        <button onClick={() => navigateModal3('add')}>Invoice Add</button>
+        <button onClick={() => navigateModal3('display')}>Invoice Display</button>
       </Modal>
       <Modal
         isOpen={isModalOpen4}
@@ -102,9 +122,9 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal4}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Reports</h2>
-        <button>Stock Movement Report</button>
-        <button>Profit & Loss Report</button>
-        <button>Other Reports</button>
+        <button onClick={() => navigateModal4('stock-movement')}>Stock Movement Report</button>
+        <button onClick={() => navigateModal4('profit-loss')}>Profit & Loss Report</button>
+        <button onClick={() => navigateModal4('other')}>Other Reports</button>
       </Modal>
       <Modal
         isOpen={isModalOpen5}
@@ -115,12 +135,12 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal5}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Master Lists</h2>
-        <button>Category List</button>
-        <button>Item List</button>
-        <button>Supplier List</button>
-        <button>Employee List</button>
-        <button>Customer List</button>
-        <button>Invoice List</button>
+        <button onClick={() => navigateModal5('category')}>Category List</button>
+        <button onClick={() => navigateModal5('item')}>Item List</button>
+        <button onClick={() => navigateModal5('supplier')}>Supplier List</button>
+        <button onClick={() => navigateModal5('employee')}>Employee List</button>
+        <button onClick={() => navigateModal5('customer')}>Customer List</button>
+        <button onClick={() => navigateModal5('invoice')}>Invoice List</button>
       </Modal>
       </div>
   );
