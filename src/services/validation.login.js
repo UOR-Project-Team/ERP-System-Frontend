@@ -15,3 +15,11 @@
             return "";
         }
     }
+
+    export const ValidateInput =(input)=>{
+        if(!input){
+            return "Field is required";
+        }else{
+            return "";
+        }
+    }
