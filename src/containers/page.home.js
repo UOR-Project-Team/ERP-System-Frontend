@@ -47,7 +47,7 @@ function Home() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="category-master" element={<CategoryMaster />} />
-            <Route path="unit-master" element={<UnitMaster />} />
+            <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
             <Route path="employee-master" element={<EmployeeMaster />} />
