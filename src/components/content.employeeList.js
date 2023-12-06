@@ -1,0 +1,12 @@
+import React, { useState } from 'react';
+
+function EmployeeList() {
+
+  return (
+    <div>
+      Employee List
+    </div>
+  );
+}
+
+export default EmployeeList;
