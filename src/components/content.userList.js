@@ -6,21 +6,6 @@ function UserList() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch data from backend
-
-  //   const fetchdata = async()=>{
-  //     try{
-  //       const response = await fetch('http://localhost:8081/user/show');
-  //       const data = await response.json();
-  //       setUsers(data);
-  //     }catch(error){
-  //       console.error("error" , error)
-  //     }
-  //   };
-
-  //   fetchdata()
-  // },[])
-
 
     axios.get('http://localhost:8081/user/show')
       .then(response => {
