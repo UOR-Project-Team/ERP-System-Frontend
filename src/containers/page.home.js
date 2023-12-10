@@ -31,7 +31,7 @@ function Home() {
   };
 
   return (
-    <div className="container">
+    <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
           <SidePanelExpand onToggle={togglePanel} />
@@ -50,7 +50,7 @@ function Home() {
             <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
-            <Route path="user-master" element={<UserMaster />} />
+            <Route path="employee-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />

@@ -12,10 +12,11 @@ function CategoryMaster() {
   // }
   function handleSubmit(event) {
     event.preventDefault();
-    axios.post('http://localhost:8081/post', { category })
+    axios.post('http://localhost:8081/category/create', { category })
       .then(res =>{
           console.log(res);
           //navigate('/');
+          alert("Success Fully Added")
 
       }).catch (err => {
           console.log(err);
