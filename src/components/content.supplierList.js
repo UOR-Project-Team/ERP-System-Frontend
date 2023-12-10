@@ -3,13 +3,13 @@ import axios from 'axios';
 
 function SupplierList() {
 
-  const [users, setUsers] = useState([]);
+  const [Supplier, setSupplier] = useState([]);
 
   useEffect(() => {
 
     axios.get('http://localhost:8081/supplier/show')
       .then(response => {
-        setUsers(response.data.user);
+        setSupplier(response.data.Supplier);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -39,8 +39,8 @@ function SupplierList() {
         </thead>
         <tbody>
         
-        {Array.isArray(users) && users.length > 0 ? (
-          users.map(user => (
+        {Array.isArray(Supplier) && Supplier.length > 0 ? (
+          Supplier.map(user => (
             <tr key={user.id}>
               <td>{user.ID}</td>
               <td>{user.Fullname}</td>
