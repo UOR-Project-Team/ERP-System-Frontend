@@ -18,7 +18,7 @@ function SupplierList() {
 
   return (
     <div>
-      <h2>User Information</h2>
+      <h2>Supplier Information</h2>
       <table class="table table-striped table-bordered">
         <thead class="thead-dark">
           <tr>
