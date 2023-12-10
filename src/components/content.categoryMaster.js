@@ -5,14 +5,14 @@ import axios  from 'axios';
 
 function CategoryMaster() {
 
-  const [category, setcategory] = useState('');
+  const [Category, setcategory] = useState('');
   // function handleSubmit(event) {
   //   event.preventDefault();
     
   // }
   function handleSubmit(event) {
     event.preventDefault();
-    axios.post('http://localhost:8081/category/create', { category })
+    axios.post('http://localhost:8081/category/create', { Category })
       .then(res =>{
           console.log(res);
           //navigate('/');
@@ -35,7 +35,7 @@ function CategoryMaster() {
       <form onSubmit={handleSubmit}>
                 <div id="input">
                 <label>Category Name</label>
-                <input type="text" placeholder="Category Name" onChange = {e => setcategory(e.target.value)} ></input>
+                <input type="text" placeholder="Category Name" value={Category} onChange = {(e) => setcategory(e.target.value)} />
 
                
                 </div>

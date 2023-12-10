@@ -6,7 +6,7 @@ import './Style.css';
 function SupplierMaster() {
 
   const [formData, setFormData] = useState({
-    Fullname:'Atlas',
+    Fullname:'qwerqazx',
     RegistrationNo: '12345',
     Email: 'admintest@gmail.com',
     ContactNo: '1234564321',
@@ -76,18 +76,18 @@ function SupplierMaster() {
 
 
       <div className="mb-3">
-          <label htmlFor="fullname" className="form-label">
+          <label htmlFor="Fullname" className="form-label">
             Full Name
           </label>
           <input
             type="text"
             className="form-control"
-            id="fullname"
-            name="fullname"
+            id="Fullname"
+            name="Fullname"
             value={formData.Fullname}
             onChange={handleInputChange}
             style={{ width: '850px' }}
-            required
+            
           />
         </div>
 

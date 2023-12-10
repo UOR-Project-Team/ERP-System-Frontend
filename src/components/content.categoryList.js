@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 
 function CategoryList() {
 
-  const [category , setcategory] = useState([])
+  const [Category , setcategory] = useState([])
 
     useEffect(()=>{
-        axios.get('http://localhost:8081/')
-        .then(res => setcategory(res.data))
+        axios.get('http://localhost:8081/category/show')
+        .then(res => setcategory(res.data.Category))
         .catch(err => console.log(err));
 
     },[])
@@ -27,20 +27,28 @@ function CategoryList() {
                 </thead>
                 <tbody>
 
-                </tbody>
-               
-               {
-                category.map((data , i)=>(
+                {Array.isArray(Category) && Category.length > 0 ? (
+                Category.map((data , i)=>(
                     <tr key = {i}>
-                        <td>{data.id}</td>
-                        <td>{data.name}</td>
+                        <td>{data.ID}</td>
+                        <td>{data.Description}</td>
                         <td>
                             <button id = "update">Update</button>
                             <button id = "delete">Delete</button>
                         </td>
                     </tr>
                 ))
-               }
+                ):(
+                  <tr>
+            <td colSpan="11">No Supplier data available</td>
+          </tr>
+                )
+              }
+                </tbody>
+               
+               
+                
+               
             </table>
 
 
