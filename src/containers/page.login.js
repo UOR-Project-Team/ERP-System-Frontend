@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom"
 
 function Login() {
     
-    const [username, setUsername] = useState('admin')
-    const [password, setPassword] = useState('admin')
+    const [username, setUsername] = useState('admintest')
+    const [password, setPassword] = useState('a22')
 
     const navigate = useNavigate()
 
@@ -32,11 +32,11 @@ function Login() {
           const response =await axios.post('http://localhost:8081/login', {
             //paasing username & password
               username: username, 
-              password: password
+              password: password,
           });
           
           //checking the responese
-          if (response.data === 'Success') {
+          if (response.status === 200) {
               console.log('Successfully logged in');
               setErrorMessage(false)
               navigate('/home');
