@@ -11,8 +11,8 @@ body, html {
     margin: 0;
 }
 
-.container {
-    width: 100%;
+.master-container {
+    width: 99%;
     height: 100%;
     display: flex;
     flex-direction: row;
