@@ -285,14 +285,12 @@ body, html {
     width: 100%;
     height: calc(100vh - 60px);
     background-color: #FFFFFF;
-    padding: 20px 10px;
 }
 
 .body-container .master-content {
     width: 100%;
-    background-color:  #E8E8E8;
+    background-color:  #f3f3f3;
     padding: 10px;
-    margin-bottom: 10px;
 }
 
 .body-container .master-content .form-container {
