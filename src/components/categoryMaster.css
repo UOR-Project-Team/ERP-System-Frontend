@@ -1,9 +1,10 @@
 
 
-#buttons{
+#button-container{
     
   
-    margin-top: 40vh;
+    margin-top: 35vh;
+    
     
 }
 
@@ -14,7 +15,14 @@
    border: none;
    border-radius: 8px;
    font-size: medium;
+   cursor: pointer;
+   
 
+
+}
+
+#save:hover{
+    opacity: 80%;
 }
 #cancel{
     background-color: #DC143C;
@@ -24,9 +32,13 @@
     border: none;
     border-radius: 8px;
     margin-right: 10px;
+    cursor: pointer;
 
 
    
+}
+#cancel:hover{
+    opacity: 80%;
 }
 
  

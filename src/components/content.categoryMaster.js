@@ -67,7 +67,7 @@ function CategoryMaster() {
 
                
                 </div>
-                <div id="buttons" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <div id="button-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                      <button id="cancel" onClick={handleCancel}> Cancel</button>
                     <button id = "save" type="submit">Save</button>
                     
