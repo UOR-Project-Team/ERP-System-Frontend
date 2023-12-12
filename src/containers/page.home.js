@@ -31,7 +31,7 @@ function Home() {
   };
 
   return (
-    <div className="container">
+    <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
           <SidePanelExpand onToggle={togglePanel} />
