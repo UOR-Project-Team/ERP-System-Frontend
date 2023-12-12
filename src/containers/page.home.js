@@ -25,33 +25,59 @@ import InvoiceList from '../components/content.invoiceList';
 
 function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [headerText, setHeaderText] = useState("Control Panel");
+
+  const [customerFormValues, setCustomerFormValues] = useState({
+    firstName: '',
+    lastName: '',
+    nationalId: '',
+    vatNumber: '',
+    email: '',
+    mobile: '',
+    street1: '',
+    street2: '',
+    city: '',
+    country: null,
+  });
+
+  const updateCustomerFormValues = (newValues) => {
+    setCustomerFormValues((prevValues) => ({ ...prevValues, ...newValues }));
+  };
+
+  const updateCountry = (newCountry) => {
+    setCustomerFormValues((prevValues) => ({ ...prevValues, country: newCountry }));
+  };
 
   const togglePanel = () => {
     setIsExpanded((prev) => !prev);
   };
 
+  const updateHeaderText = (text) => {
+    setHeaderText(text);
+  };
+
   return (
-    <div className="container">
+    <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
-          <SidePanelExpand onToggle={togglePanel} />
+          <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} />
+          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} updateCountry={updateCountry} />
         )}
       </div>
       <div className="main-container">
         <div className="header-container">
-          <Header text={"Dashboard"} />
+          <Header text={headerText} />
         </div>
         <div className="body-container">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="category-master" element={<CategoryMaster />} />
-            <Route path="unit-master" element={<UnitMaster />} />
+            <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
             <Route path="employee-master" element={<EmployeeMaster />} />
-            <Route path="customer-master" element={<CustomerMaster />} />
+            <Route path="customer-master" element={<CustomerMaster formValues={customerFormValues} updateFormValues={updateCustomerFormValues}/>} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
             <Route path="invoice-display" element={<InvoiceDisplay />} />
