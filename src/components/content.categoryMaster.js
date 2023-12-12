@@ -7,7 +7,6 @@ function CategoryMaster() {
 
   const [Description, setDescription] = useState('');
   // function handleSubmit(event) {
-   
     
   // }
   function handleSubmit(event) {
@@ -35,8 +34,6 @@ function CategoryMaster() {
                 <div id="input">
                 <label>Category Name</label>
                 <input type="text" placeholder="Category Name" onChange = {e => setDescription(e.target.value)} ></input>
-
-               
                 </div>
                 <div id="buttons" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                      <button id="cancel"> Cancel</button>

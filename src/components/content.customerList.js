@@ -323,7 +323,6 @@ function CustomerList() {
           </Button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 }
