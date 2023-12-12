@@ -10,7 +10,7 @@ import MasterListLogo from './../assets/icons/list.png';
 import SingleRightLogo from './../assets/icons/singleright.png';
 import DoubleRightLogo from './../assets/icons/doubleright.png';
 
-const SidePanelCollapse = ({ onToggle }) => {
+const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
   const [activeSubcategories, setActiveSubcategories] = useState([]);
   const [rotatedButton, setRotatedButton] = useState([]);
 
@@ -40,7 +40,7 @@ const SidePanelCollapse = ({ onToggle }) => {
         <button><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo"/></button>
       </div>
       <div className='body'>
-        <button>
+        <button onClick={() => updateHeaderText('Dashboard')}>
           <img src={DashboardLogo} alt="Dashboard Logo"/>
           <span>Dashboard</span>
           <img style={{width: '14px', height: '14px', visibility: 'hidden'}} src={SingleRightLogo} alt="SingleRight Logo"/>
@@ -51,27 +51,27 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('masterFiles') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo"/>
         </button>
           <div className={`subCategory ${activeSubcategories.includes('masterFiles') ? 'visible' : ''}`}>
-            <button onClick={() => navigateTo('/home/category-master')}>
+            <button onClick={() => {navigateTo('/home/category-master'); updateHeaderText('Category Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Category Master</span>
             </button>
-            <button onClick={() => navigateTo('/home/unit-master')}>
+            <button onClick={() => {navigateTo('/home/unit-master'); updateHeaderText('Unit Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Unit Master</span>
             </button>
-            <button onClick={() => navigateTo('/home/item-master')}>
+            <button onClick={() => {navigateTo('/home/item-master'); updateHeaderText('Item Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Item Master</span>
             </button>
-            <button onClick={() => navigateTo('/home/supplier-master')}>
+            <button onClick={() => {navigateTo('/home/supplier-master'); updateHeaderText('Supplier Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Supplier Master</span>
             </button>
-            <button onClick={() => navigateTo('/home/employee-master')}>
+            <button onClick={() => {navigateTo('/home/employee-master'); ; updateHeaderText('Employee Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Employee Master</span>
             </button>
-            <button onClick={() => navigateTo('/home/customer-master')}>
+            <button onClick={() => {navigateTo('/home/customer-master'); ; updateHeaderText('Customer Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Customer Master</span>
             </button>
@@ -82,7 +82,7 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('purchasing') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo"/>
         </button>
         <div className={`subCategory ${activeSubcategories.includes('purchasing') ? 'visible' : ''}`}>
-            <button onClick={() => navigateTo('/home/good-received-note')}>
+            <button onClick={() => {navigateTo('/home/good-received-note'); updateHeaderText('Good Recieved Note');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Good Recieved Note</span>
             </button>
@@ -93,11 +93,11 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('sales') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
         <div className={`subCategory ${activeSubcategories.includes('sales') ? 'visible' : ''}`}>
-            <button onClick={() => navigateTo('/home/invoice-add')}>
+            <button onClick={() => {navigateTo('/home/invoice-add'); updateHeaderText('Invoice Add');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice Add</span>
             </button>
-            <button onClick={() => navigateTo('/home/invoice-display')}>
+            <button onClick={() => {navigateTo('/home/invoice-display'); updateHeaderText('Invoice Display');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice Display</span>
             </button>
@@ -108,15 +108,15 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('reports') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
           <div className={`subCategory ${activeSubcategories.includes('reports') ? 'visible' : ''}`}>
-            <button onClick={() => navigateTo('/home/stock-movement-reports')}>
+            <button onClick={() => {navigateTo('/home/stock-movement-reports'); updateHeaderText('Stock Movement Reports');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Stock Movement Report</span>
             </button>
-            <button onClick={() => navigateTo('/home/profit-loss-reports')}>
+            <button onClick={() => {navigateTo('/home/profit-loss-reports'); updateHeaderText('Profit & Loss Reports');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Profit & Loss Report</span>
             </button>
-            <button onClick={() => navigateTo('/home/other-reports')}>
+            <button onClick={() => {navigateTo('/home/other-reports'); updateHeaderText('Other Reports');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Other Reports</span>
             </button>
@@ -127,27 +127,27 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('masterlists') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
           <div className={`subCategory ${activeSubcategories.includes('masterlists') ? 'visible' : ''}`}>
-            <button onClick={() => navigateTo('/home/category-list')}>
+            <button onClick={() => {navigateTo('/home/category-list'); updateHeaderText('Category List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Category List</span>
             </button>
-            <button onClick={() => navigateTo('/home/item-list')}>
+            <button onClick={() => {navigateTo('/home/item-list'); updateHeaderText('Item List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Item List</span>
             </button>
-            <button onClick={() => navigateTo('/home/supplier-list')}>
+            <button onClick={() => {navigateTo('/home/supplier-list'); updateHeaderText('Supplier List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Supplier List</span>
             </button>
-            <button onClick={() => navigateTo('/home/employee-list')}>
+            <button onClick={() => {navigateTo('/home/employee-list'); updateHeaderText('Employee List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Employee List</span>
             </button>
-            <button onClick={() => navigateTo('/home/customer-list')}>
+            <button onClick={() => {navigateTo('/home/customer-list'); updateHeaderText('Customer List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Customer List</span>
             </button>
-            <button onClick={() => navigateTo('/home/invoice-list')}>
+            <button onClick={() => {navigateTo('/home/invoice-list'); updateHeaderText('Invoice List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice List</span>
             </button>
