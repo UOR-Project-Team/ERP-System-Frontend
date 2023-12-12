@@ -9,7 +9,7 @@ import CategoryMaster from '../components/content.categoryMaster';
 import UnitMaster from '../components/content.unitMaster';
 import ItemMaster from '../components/content.itemMaster';
 import SupplierMaster from '../components/content.supplierMaster';
-import EmployeeMaster from '../components/content.employeeMaster';
+import UserMaster from '../components/content.userMaster';
 import GRN from '../components/content.GRN';
 import InvoiceAdd from '../components/content.invoiceAdd';
 import InvoiceDisplay from '../components/content.invoiceDisplay';
@@ -19,7 +19,7 @@ import StockMovementReports from '../components/content.stockMovementReports';
 import CategoryList from '../components/content.categoryList';
 import ItemList from '../components/content.itemList';
 import SupplierList from '../components/content.supplierList';
-import EmployeeList from '../components/content.employeeList';
+import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
 
@@ -77,6 +77,7 @@ function Home() {
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
             <Route path="employee-master" element={<EmployeeMaster />} />
+            <Route path="user-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster formValues={customerFormValues} updateFormValues={updateCustomerFormValues}/>} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
@@ -87,7 +88,7 @@ function Home() {
             <Route path="category-list" element={<CategoryList />} />
             <Route path="item-list" element={<ItemList />} />
             <Route path="supplier-list" element={<SupplierList />} />
-            <Route path="employee-list" element={<EmployeeList />} />
+            <Route path="employee-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
             <Route path="*" element={<Navigate to="/" />} />
