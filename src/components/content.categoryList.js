@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import './categoryList.css'
 import axios from 'axios';
 import { Link } from "react-router-dom";
@@ -14,10 +14,10 @@ function CategoryList() {
 
     },[])
 
-
   return (
     <div>
-      <table>
+        <table>
+
                 <thead>
                 <tr>
                     <th>No</th>
