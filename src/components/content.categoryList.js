@@ -17,6 +17,9 @@ function CategoryList() {
 
   return (
     <div>
+      <div className='master-content'>
+        <h2>Category List</h2>
+       </div>
       <div id="table-container">
            <table >
                 <thead>

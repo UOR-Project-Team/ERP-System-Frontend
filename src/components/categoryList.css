@@ -17,8 +17,12 @@ label{
     color: white;
     border: none;
     margin: 50px;
+    cursor: pointer;
    
 
+}
+#add:hover{
+  opacity: 80%;
 }
 
 #update{
@@ -80,6 +84,6 @@ table {
 #button-container{
   display: flex;
   justify-content: right;
-  margin-top: 55vh;
+  margin-top: 50vh;
 }
   
