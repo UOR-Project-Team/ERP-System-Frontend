@@ -1,0 +1,54 @@
+
+
+#buttons{
+    
+  
+    margin-top: 40vh;
+    
+}
+
+#save{
+   background-color: #4AEF3C;
+   width: 150px;
+   color: white;
+   border: none;
+   border-radius: 8px;
+   font-size: medium;
+
+}
+#cancel{
+    background-color: #DC143C;
+    color: white;
+    width:150px;
+    font-size: medium;
+    border: none;
+    border-radius: 8px;
+    margin-right: 10px;
+
+
+   
+}
+
+#formcontainer{
+    
+  
+    
+}
+
+#input{
+    margin-top: 30vh;
+    display: flex;
+    justify-content: center;
+   
+    align-items: center;
+}
+
+label{
+    margin-right: 30px;
+    font-size: large;
+}
+
+input{
+    width: 300px;
+    
+}

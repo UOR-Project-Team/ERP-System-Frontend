@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RightArrowLogo from './../assets/icons/left.png';
 import DashboardLogo from './../assets/icons/dashboard.png';
 import MasterFileLogo from './../assets/icons/customer.png';
@@ -12,6 +13,8 @@ import DoubleRightLogo from './../assets/icons/doubleright.png';
 const SidePanelCollapse = ({ onToggle }) => {
   const [activeSubcategories, setActiveSubcategories] = useState([]);
   const [rotatedButton, setRotatedButton] = useState([]);
+
+  const navigateTo = useNavigate();
 
   const handleSubcategoryClick = (subcategory) => {
     setActiveSubcategories((prevSubcategories) => {
@@ -48,27 +51,27 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('masterFiles') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo"/>
         </button>
           <div className={`subCategory ${activeSubcategories.includes('masterFiles') ? 'visible' : ''}`}>
-            <button>
+            <button onClick={() => navigateTo('/home/category-master')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Category Master</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/unit-master')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Unit Master</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/item-master')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Item Master</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/supplier-master')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Supplier Master</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/employee-master')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Employee Master</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/customer-master')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Customer Master</span>
             </button>
@@ -79,13 +82,9 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('purchasing') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo"/>
         </button>
         <div className={`subCategory ${activeSubcategories.includes('purchasing') ? 'visible' : ''}`}>
-            <button>
+            <button onClick={() => navigateTo('/home/good-received-note')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Good Recieved Note</span>
-            </button>
-            <button>
-              <img src={DoubleRightLogo} alt="Double RightLogo"/>
-              <span>Good Recieved Note Add</span>
             </button>
           </div>
         <button onClick={() => handleSubcategoryClick('sales')}>
@@ -94,11 +93,11 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('sales') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
         <div className={`subCategory ${activeSubcategories.includes('sales') ? 'visible' : ''}`}>
-            <button>
+            <button onClick={() => navigateTo('/home/invoice-add')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice Add</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/invoice-display')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice Display</span>
             </button>
@@ -109,15 +108,15 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('reports') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
           <div className={`subCategory ${activeSubcategories.includes('reports') ? 'visible' : ''}`}>
-            <button>
+            <button onClick={() => navigateTo('/home/stock-movement-reports')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Stock Movement Report</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/profit-loss-reports')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Profit & Loss Report</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/other-reports')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Other Reports</span>
             </button>
@@ -128,27 +127,27 @@ const SidePanelCollapse = ({ onToggle }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('masterlists') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
           <div className={`subCategory ${activeSubcategories.includes('masterlists') ? 'visible' : ''}`}>
-            <button>
+            <button onClick={() => navigateTo('/home/category-list')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Category List</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/item-list')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Item List</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/supplier-list')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Supplier List</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/employee-list')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Employee List</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/customer-list')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Customer List</span>
             </button>
-            <button>
+            <button onClick={() => navigateTo('/home/invoice-list')}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice List</span>
             </button>
