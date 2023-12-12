@@ -17,6 +17,7 @@ function CategoryList() {
   return (
     <div>
         <table>
+
                 <thead>
                 <tr>
                     <th>No</th>
