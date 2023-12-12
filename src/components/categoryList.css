@@ -18,6 +18,7 @@ label{
     border: none;
     margin: 50px;
    
+
 }
 
 #update{
@@ -53,13 +54,32 @@ table {
   
   td, th {
     border: 1px solid black;
-    text-align: left;
+    width: 10px;
+    
     padding: 8px;
   }
   th{
     background-color: whitesmoke;
+    text-align: center;
+  }
+  td{
+    text-align: left;
   }
   
   tr:nth-child(even) {
     background-color: #dddddd;
   }
+ 
+  #table-container{
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  } 
+#button-container{
+  display: flex;
+  justify-content: right;
+  margin-top: 55vh;
+}
+  

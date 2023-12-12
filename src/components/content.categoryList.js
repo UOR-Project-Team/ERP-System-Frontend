@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 
 function CategoryList() {
 
-  const [category , setcategory] = useState([])
+  const [categories , setCategories] = useState([])
 
     useEffect(()=>{
-        axios.get('http://localhost:8081/')
-        .then(res => setcategory(res.data))
+        axios.get('http://localhost:8081/category/show')
+        .then(res => setCategories(res.data.categories))
         .catch(err => console.log(err));
 
     },[])
@@ -17,10 +17,11 @@ function CategoryList() {
 
   return (
     <div>
-      <table>
+      <div id="table-container">
+           <table >
                 <thead>
                 <tr>
-                    <th>No</th>
+                    <th >No</th>
                     <th>Category Name</th>
                     <th>Action</th>
                 </tr>
@@ -30,10 +31,10 @@ function CategoryList() {
                 </tbody>
                
                {
-                category.map((data , i)=>(
+                categories && categories.map((category , i)=>(
                     <tr key = {i}>
-                        <td>{data.id}</td>
-                        <td>{data.name}</td>
+                        <td>{category.ID}</td>
+                        <td>{category.Description}</td>
                         <td>
                             <button id = "update">Update</button>
                             <button id = "delete">Delete</button>
@@ -41,14 +42,18 @@ function CategoryList() {
                     </tr>
                 ))
                }
-            </table>
-
-
-           <Link to = "/Create">
-            <button id="add" >Add Category</button>
+           </table>
+      </div>
+      <div id="button-container">
+            <Link to = "/home/category-master">
+                <button id="add" >Add Category</button>
 
             </Link>
-    </div>
+      </div>
+      
+
+         
+   </div>
   );
 }
 
