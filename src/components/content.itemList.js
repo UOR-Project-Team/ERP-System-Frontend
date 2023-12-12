@@ -4,7 +4,7 @@ import axios from 'axios';
 function ItemList() {
 
   const [Item, setItem] = useState([]);
-
+  
   useEffect(() => {
 
     axios.get('http://localhost:8081/item/show')
@@ -16,11 +16,12 @@ function ItemList() {
       });
   }, []); // Empty dependency array ensures useEffect runs once on mount
 
+
   return (
     <div>
       <h2>Item Information</h2>
-      <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+      <table className="table table-striped table-bordered">
+        <thead className="thead-dark">
           <tr>
             <th>ID</th>
             <th>Code</th>

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
+import toast, { Toaster } from 'react-hot-toast';
 
 function ItemMaster() {
 
@@ -13,17 +15,32 @@ function ItemMaster() {
 
   })
 
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleSubmit=(e)=>{
-    e.preventDefault();
-    axios.post('http://localhost:8081/item/create',values)
-    .then(res=>{
-        console.log(res);
-        //navigate('/')
-    })
-    .catch(err=>console.log(err))
-  }
 
+  // Fetch categories from the server
+  useEffect(() => {
+    
+    axios.get('http://localhost:8081/category/get') // Adjust the API endpoint based on your backend
+      .then(response => {
+        setCategories(response.data.categories);
+      })
+      .catch(error => {
+        console.error('Error fetching category data:', error);
+      });
+  }, []);
+
+  // Handle category change
+  const handleCategoryChange = selectedOption => {
+    setSelectedCategory(selectedOption);
+    setValues(prevValues => ({
+      ...prevValues,
+      categoryId: selectedOption.value
+    }));
+  };
+
+  //handle input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setValues((prevValues)=>({
@@ -32,12 +49,71 @@ function ItemMaster() {
     }));
   };
 
+  const [units, setUnit] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState(null);
+
+   // Fetch units from the server
+   useEffect(() => {
+    
+    axios.get('http://localhost:8081/unit/get') // Adjust the API endpoint based on your backend
+      .then(response => {
+        setUnit(response.data.units);
+      })
+      .catch(error => {
+        console.error('Error fetching units data:', error);
+      });
+  }, []);
+
+  
+  // Handle unit change
+  const handleUnitChange = selectedOption => {
+    setSelectedUnit(selectedOption);
+    setValues(prevValues => ({
+      ...prevValues,
+      unitId: selectedOption.value
+    }));
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios.post('http://localhost:8081/item/create', values)
+      .then((res) => {
+        // toast.success('Item successfully added!', {
+        //   duration: 1000,
+        // });
+
+        setSelectedCategory('');
+        setSelectedUnit('');
+
+        setValues({
+          code: '',
+          itemName: '',
+          
+        });
+      })
+      .catch((err) => console.error(err));
+  };
+
+  
+
+
+  const categoryOptions = categories.map(category => ({
+    value: category.ID,
+    label: category.Description,
+  }));
+
+  const unitOptions = units.map(unit => ({
+    value: unit.ID,
+    label: unit.Description,
+  }));
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
                 <h2>Add Item</h2>
 
-                <div className='mb-2'>
+                <div className='mb-2 col-md-3'>
                     <label htmlFor="ItemCode">Item Code</label>
                     {/* <input type="text" placeholder='Enter Item Code' className='form-control'
                     onChange={e=>setValues({...values, code:e.target.value})} value={values.code}/> */}
@@ -50,7 +126,7 @@ function ItemMaster() {
                       value={values.code}/>
                 </div>
 
-                <div className='mb-2'>
+                <div className='mb-2 col-md-3'>
                     <label htmlFor="ItemName">Item name</label>
                     <input 
                       type="text" 
@@ -61,26 +137,43 @@ function ItemMaster() {
                       value={values.itemName}/>
                 </div>
                 
-                <div className='mb-2'>
-                    <label htmlFor="CateogoryId">Category ID</label>
-                    <input 
+                <div className='mb-2 col-md-3'>
+                    <label htmlFor="Cateogory">Category</label>
+                    <Select
+                      options={categoryOptions}
+                      value={selectedCategory}
+                      onChange={handleCategoryChange}
+                      placeholder="Select a category"
+                      name= 'categoryId'
+                    />
+                    
+                    {/* <input 
                       type="text" 
                       name='categoryId' 
                       placeholder='Enter Category ID' 
                       className='form-control'
                       onChange={handleInputChange} 
-                      value={values.categoryId}/>
+                      value={values.categoryId}/> */}
                 </div>
 
-                <div className='mb-2'>
+                <div className='mb-2 col-md-3'>
                     <label htmlFor="UnitId">Unit ID</label>
-                    <input 
+                    <Select
+                      options={unitOptions}
+                      value={selectedUnit}
+                      onChange={handleUnitChange}
+                      placeholder="Select a Unit"
+                      name= 'unitId'
+                    />
+
+
+                    {/* <input 
                       type="text" 
                       name='unitId' 
                       placeholder='Enter Unit ID' 
                       className='form-control'
                       onChange={handleInputChange} 
-                      value={values.unitId}/>
+                      value={values.unitId}/> */}
                 </div>
 
 
