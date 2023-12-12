@@ -36,15 +36,36 @@ function Login() {
     };
   }, [image])
 
-  const handleSubmit= async(event)=>{
-    event.preventDefault();
-    
-    if (usernameError || passwordError) {
-        // Handle validation errors
-        console.error('Validation Error:', usernameError, passwordError)
-        return;
-    }
-
+    const handleSubmit= async(event)=>{
+        event.preventDefault();
+        
+        if (usernameError || passwordError) {
+            // Handle validation errors
+            console.error('Validation Error:', usernameError, passwordError);
+            return;
+          }
+  
+  
+          try{
+          const response =await axios.post('http://localhost:8081/login', {
+            //paasing username & password
+              username: username, 
+              password: password,
+          });
+          
+          //checking the responese
+          if (response.status === 200) {
+              console.log('Successfully logged in');
+              setErrorMessage(false)
+              navigate('/home');
+            } else {
+              alert('Error logging in');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            setErrorMessage(true)
+            // Handle error 
+          }
 
     try{
     const response =await axios.post('http://localhost:8081/login', {

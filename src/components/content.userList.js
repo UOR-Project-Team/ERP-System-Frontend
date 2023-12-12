@@ -18,7 +18,7 @@ function UserList() {
 
   return (
     <div>
-      <h2>User Information</h2>
+      <h2>User Information </h2>
       <table class="table table-striped table-bordered">
         <thead class="thead-dark">
           <tr>
@@ -27,7 +27,7 @@ function UserList() {
             <th>Email</th>
             <th>Username</th>
             <th>NIC</th>
-            <th>JobRole</th>
+            <th>Job Role</th>
             <th>Mobile No</th>
             <th>Mobile No2</th>
             <th>Address</th>
