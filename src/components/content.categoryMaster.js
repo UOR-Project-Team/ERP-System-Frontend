@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function CategoryMaster() {
 
   const [Description, setDescription] = useState('');
+
   //const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   
@@ -65,7 +66,6 @@ function CategoryMaster() {
                 <label>Category Name</label>
                 <input type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
 
-               
                 </div>
                 <div id="button-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                      <button id="cancel" onClick={handleCancel}> Cancel</button>
