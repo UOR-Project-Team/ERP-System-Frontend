@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './categoryMaster.css'
 import axios  from 'axios';
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function CategoryMaster() {
 
@@ -21,11 +22,25 @@ function CategoryMaster() {
     axios.post('http://localhost:8081/category/create', { Description })
       .then(res =>{
           console.log(res);
-          navigate('/home/category-list');
+
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Category has been saved",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+
+          //navigate('/home/category-list');
 
       }).catch (err => {
           console.log(err);
       })
+      .finally(() => {
+        // Navigate to 'category-list' after the alert is closed
+        navigate('/home/category-list');
+      });
+  
   }
 
   function handleCancel() {

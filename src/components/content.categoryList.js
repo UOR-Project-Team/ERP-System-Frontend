@@ -109,6 +109,6 @@ function CategoryList() {
          
    </div>
   );
-}
+              }
 
 export default CategoryList;
