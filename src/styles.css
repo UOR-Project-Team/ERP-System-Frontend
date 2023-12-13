@@ -62,18 +62,22 @@ body, html {
     text-align: center;
     margin-bottom: 30px;
     cursor: default;
+    font-size: 30px;
 }
 
-.login-container .form-container form label {
-    font-size: 18px;
+.login-container .form-container form .input-label {
+    font-size: 16px;
+    padding-bottom: 10px;
+    display: block;
 }
 
 .login-container .form-container form input {
     width: 100%;
     height: 40px;
     display: block;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    padding: 0px 10px;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 .login-container .form-container form button {
@@ -85,6 +89,7 @@ body, html {
     color: #FFFFFF;
     margin-top: 40px;
     transition: 0.5s ease;
+    cursor: pointer;
 }
 
 .login-container .form-container form button:hover {
@@ -211,6 +216,32 @@ body, html {
     font-family: 'Ubuntu', sans-serif;
     text-align: left;
 }
+
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 999;
+  }
+  
+.modal-content {
+    width: 60%;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    cursor: auto;
+    z-index: 1000;
+}
   
 .main-container {
     flex: 80%;
@@ -245,10 +276,7 @@ body, html {
 .header-container .header .left {
     display: flex;
     align-items: center;
-}
-
-.header-container .header .left img {
-    margin-right: 10px;
+    font-family: 'Merriweather', serif;
 }
   
 .header-container .header .middle {
@@ -261,6 +289,46 @@ body, html {
   
 .header-container .header .right {
     justify-content: flex-end;
+    display: flex;
+    align-items: center;
+}
+
+.header-container .header .right button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding-right: 15px;
+    border-right: 2px solid grey;
+    display: flex;
+    align-items: center;
+}
+
+.header-container .header .right button img {
+    width: 10px;
+    height: 8px;
+}
+
+.header-container .header .right button img:hover {
+    transform: scale(1);
+}
+
+.header-container .header .right span {
+    display: inline-block;
+}
+
+.header-container .header .right .text-container {
+    padding-left: 10px;
+    font-family: 'ubuntu', serif;
+    text-align: left;
+}
+
+.header-container .header .right .text-container .uname-text {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.header-container .header .right .text-container .type-text {
+    font-size: 12px;
 }
   
 .header-container .header .right img {
@@ -271,6 +339,8 @@ body, html {
     transform: scale(1.2);
     transition: 0.3s ease;
 }
+
+
 
 .settings-menu button {
     padding: 0;
@@ -508,7 +578,7 @@ body, html {
 }
 
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1200px), (max-height: 460px) {
     
     .login-container .form-container form {
         width: 360px;
@@ -534,7 +604,11 @@ body, html {
         margin-top: 32px;
         font-size: 15px;
     }
-    
+      
+    .modal-content {
+        width: 70%;
+        padding: 10px;
+    }
     
     .sidepanel-container img {
         width: 20px;
@@ -589,6 +663,24 @@ body, html {
 
     .header-container .header .right img {
         margin-left: 5px;
+    }
+   
+    .header-container .header .right button {
+        border: 0;
+        background-color: transparent;
+        cursor: pointer;
+        padding-right: 15px;
+        border-right: 2px solid grey;
+        display: flex;
+        align-items: center;
+    }
+
+    .header-container .header .right .text-container .uname-text {
+        font-size: 12px;
+    }
+
+    .header-container .header .right .text-container .type-text {
+        display: none;
     }
 
 }

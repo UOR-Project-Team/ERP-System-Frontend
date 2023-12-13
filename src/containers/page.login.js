@@ -15,8 +15,8 @@ const images = [
 function Login() {
     
   const navigate = useNavigate()
-  const [username, setUsername] = useState('admintest')
-  const [password, setPassword] = useState('a22')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const usernameError = validateusername(username)
   const passwordError = validatepassword(password)
   const [ErrorMessage, setErrorMessage]= useState(false)
@@ -98,11 +98,10 @@ function Login() {
         <div className='form-container'>
           <form onSubmit={handleSubmit}>
             <h3>Login</h3>
-            <label>Username:</label>
-              <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} />
-            <label>Password:</label>
-              <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
-            
+            <div className='input-label'>Username:</div>
+            <input type='text' value={username} placeholder='Enter your Username Here' onChange={(e) => setUsername(e.target.value)} />
+            <div className='input-label'>Password:</div>
+            <input type='password' value={password} placeholder='Enter your Password Here'  onChange={(e) => setPassword(e.target.value)} />
             <button type='submit'>Login</button>
           </form>
         </div>
