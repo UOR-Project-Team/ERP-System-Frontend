@@ -2,20 +2,72 @@ import React, { useEffect, useState } from 'react';
 import './categoryList.css'
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function CategoryList() {
 
-  const [category , setcategory] = useState([])
+  const [categories , setCategories] = useState([])
+  const [isBlur , setIsBlur] = useState(false);
+
 
     useEffect(()=>{
-        axios.get('http://localhost:8081/')
-        .then(res => setcategory(res.data))
+        axios.get('http://localhost:8081/category/show')
+        .then(res => setCategories(res.data.categories))
         .catch(err => console.log(err));
 
-    },[])
+    },[]);
+
+    const toggleBlur = (shouldBlur) => {
+      setIsBlur(shouldBlur);
+    }
+
+    const Alert = () => {
+      return new Promise((resolve) => {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#4AEF3C",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+          resolve(result); // Resolve the result from Swal
+        });
+      });
+    };
+
+    const handleDelete = (categoryId) => {
+      toggleBlur(true);
+      Alert().then((result) => {
+        toggleBlur(false);
+        if (result.isConfirmed) {
+
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Category Succesfully Deleted",
+            showConfirmButton: false,
+            timer: 1500
+          });
+
+          axios
+            .delete(`http://localhost:8081/category/delete/${categoryId}`)
+            .then((res) => {
+              console.log(res.data);
+              axios
+                .get("http://localhost:8081/category/show")
+                .then((res) => setCategories(res.data.categories))
+                .catch((err) => console.log(err));
+            })
+            .catch((err) => console.error("Error deleting category:", err));
+        }
+      });
+    };
+
 
   return (
-    <div>
+    <div className={isBlur ? 'blur-background' : ''}>
       <div className='master-content'>
         <h2>Category List</h2>
        </div>
@@ -23,7 +75,7 @@ function CategoryList() {
            <table >
                 <thead>
                 <tr>
-                    <th>No</th>
+                    <th >No</th>
                     <th>Category Name</th>
                     <th>Action</th>
                 </tr>
@@ -33,26 +85,29 @@ function CategoryList() {
                 </tbody>
                
                {
-                category.map((data , i)=>(
+                categories && categories.map((category , i)=>(
                     <tr key = {i}>
-                        <td>{data.id}</td>
-                        <td>{data.name}</td>
+                        <td>{category.ID}</td>
+                        <td>{category.Description}</td>
                         <td>
                             <button id = "update">Update</button>
-                            <button id = "delete">Delete</button>
+                            <button id = "delete" onClick={()=> handleDelete(category.ID)}>Delete</button>
                         </td>
                     </tr>
                 ))
                }
-            </table>
-
-
-           <Link to = "/Create">
-            <button id="add" >Add Category</button>
+           </table>
+      </div>
+      <div id="button-container">
+            <Link to = "/home/category-master">
+                <button id="add" >Add Category</button>
 
             </Link>
-    </div>
-    </div>
+      </div>
+      
+
+         
+   </div>
   );
               }
 
