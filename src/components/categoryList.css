@@ -86,4 +86,8 @@ table {
   justify-content: right;
   margin-top: 50vh;
 }
+
+.blur-background{
+  filter: blur(5px);
+}
   
