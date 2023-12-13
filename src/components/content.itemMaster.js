@@ -16,6 +16,7 @@ function ItemMaster() {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  
 
 
   // Fetch categories from the server
@@ -62,6 +63,7 @@ function ItemMaster() {
         console.error('Error fetching units data:', error);
       });
   }, []);
+
 
   
   // Handle unit change
