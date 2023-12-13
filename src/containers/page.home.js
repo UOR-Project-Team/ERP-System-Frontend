@@ -7,7 +7,7 @@ import Dashboard from '../components/content.dashboard';
 import CustomerMaster from '../components/content.customerMaster';
 import CategoryMaster from '../components/content.categoryMaster';
 import UnitMaster from '../components/content.unitMaster';
-import ItemMaster from '../components/content.itemMaster';
+//import ItemMaster from '../components/content.itemMaster';
 import SupplierMaster from '../components/content.supplierMaster';
 import UserMaster from '../components/content.userMaster';
 import GRN from '../components/content.GRN';
@@ -74,9 +74,9 @@ function Home() {
             <Route path="/" element={<Dashboard />} />
             <Route path="category-master" element={<CategoryMaster />} />
             <Route path="/unit-master" element={<UnitMaster />} />
-            <Route path="item-master" element={<ItemMaster />} />
+            {/* <Route path="item-master" element={<ItemMaster />} /> */}
             <Route path="supplier-master" element={<SupplierMaster />} />
-            <Route path="employee-master" element={<EmployeeMaster />} />
+            {/* <Route path="employee-master" element={<EmployeeMaster />} /> */}
             <Route path="user-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster formValues={customerFormValues} updateFormValues={updateCustomerFormValues}/>} />
             <Route path="good-received-note" element={<GRN />} />
