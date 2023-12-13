@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import CloseLogo from './../assets/icons/close.png';
 import RightArrowLogo from './../assets/icons/right.png';
 import DashboardLogo from './../assets/icons/dashboard.png';
 import MasterFileLogo from './../assets/icons/customer.png';
@@ -11,9 +9,6 @@ import ReportLogo from './../assets/icons/report.png';
 import MasterListLogo from './../assets/icons/list.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
-Modal.setAppElement('#root');
-
 
 const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   
@@ -68,32 +63,32 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </div>
 
       <Menu className='side-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem onClick={() => {navigateTo(`/home/category-master`); setAnchorEl(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/category-master`); setAnchorEl(null); updateHeaderText('Category Master')}}>
         <button>
             <span>Category Master</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/unit-master`); setAnchorEl(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/unit-master`); setAnchorEl(null); updateHeaderText('Unit Master')}}>
         <button>
             <span>Unit Master</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/item-master`); setAnchorEl(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/item-master`); setAnchorEl(null); updateHeaderText('Item Master')}}>
         <button>
             <span>Item Master</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/supplier-master`); setAnchorEl(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/supplier-master`); setAnchorEl(null); updateHeaderText('Supplier Master')}}>
         <button>
             <span>Supplier Master</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/employee-master`); setAnchorEl(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/employee-master`); setAnchorEl(null); updateHeaderText('Employee Master')}}>
         <button>
             <span>Employee Master</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/customer-master`); setAnchorEl(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/customer-master`); setAnchorEl(null); updateHeaderText('Customer Master')}}>
         <button>
             <span>Customer Master</span>
           </button>
@@ -101,7 +96,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </Menu>
 
       <Menu className='side-menu' anchorEl={anchorE2} keepMounted open={Boolean(anchorE2)} onClose={handleClose}>
-        <MenuItem onClick={() => {navigateTo(`/home/good-received-note`); setAnchorE2(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/good-received-note`); setAnchorE2(null); updateHeaderText('Good Received Note')}}>
         <button>
             <span>Good Received Note</span>
           </button>
@@ -109,12 +104,12 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </Menu>
 
       <Menu className='side-menu' anchorEl={anchorE3} keepMounted open={Boolean(anchorE3)} onClose={handleClose}>
-        <MenuItem onClick={() => {navigateTo(`/home/invoice-add`); setAnchorE3(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/invoice-add`); setAnchorE3(null); updateHeaderText('Invoice Add')}}>
         <button>
             <span>Invoice Add</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/invoice-display`); setAnchorE3(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/invoice-display`); setAnchorE3(null); updateHeaderText('Invoice Display')}}>
         <button>
             <span>Invoice Display</span>
           </button>
@@ -122,17 +117,17 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </Menu>
 
       <Menu className='side-menu' anchorEl={anchorE4} keepMounted open={Boolean(anchorE4)} onClose={handleClose}>
-        <MenuItem onClick={() => {navigateTo(`/home/stock-movement-reports`); setAnchorE4(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/stock-movement-reports`); setAnchorE4(null); updateHeaderText('Stock Movement Reports')}}>
         <button>
             <span>Stock Movement Reports</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/profit-loss-reports`); setAnchorE4(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/profit-loss-reports`); setAnchorE4(null); updateHeaderText('Profit & Loss Reports')}}>
         <button>
             <span>Profit & Loss Reports</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/other-reports`); setAnchorE4(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/other-reports`); setAnchorE4(null); updateHeaderText('Other Reports')}}>
         <button>
             <span>Other Reports</span>
           </button>
@@ -140,32 +135,32 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </Menu>
 
       <Menu className='side-menu' anchorEl={anchorE5} keepMounted open={Boolean(anchorE5)} onClose={handleClose}>
-        <MenuItem onClick={() => {navigateTo(`/home/category-list`); setAnchorE5(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/category-list`); setAnchorE5(null); updateHeaderText('Category List')}}>
         <button>
             <span>Category List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/employee-list`); setAnchorE5(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/employee-list`); setAnchorE5(null); updateHeaderText('Employee List')}}>
         <button>
             <span>Employee Master</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/item-list`); setAnchorE5(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/item-list`); setAnchorE5(null); updateHeaderText('Item List')}}>
         <button>
             <span>Item List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/supplier-list`); setAnchorE5(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/supplier-list`); setAnchorE5(null); updateHeaderText('Supplier List')}}>
         <button>
             <span>Supplier List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/employee-list`); setAnchorE5(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/employee-list`); setAnchorE5(null); updateHeaderText('Employee List')}}>
         <button>
             <span>Employee List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/customer-list`); setAnchorE5(null);}}>
+        <MenuItem onClick={() => {navigateTo(`/home/customer-list`); setAnchorE5(null); updateHeaderText('Customer List')}}>
         <button>
             <span>Customer List</span>
           </button>
