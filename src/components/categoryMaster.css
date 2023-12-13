@@ -1,6 +1,5 @@
-
-#button-container{
-    margin-top: 35vh;
+/* #buttons{
+    margin-top: 40vh;
 }
 
 #save{
@@ -16,8 +15,6 @@
 #save:hover{
     opacity: 80%;
 }
-
-
 
 #cancel{
     background-color: #DC143C;
@@ -52,5 +49,5 @@ label{
 
 input{
     width: 300px;
-    
-}
+    height: 30px;   
+} */

@@ -1,4 +1,4 @@
-input{
+/* input{
     padding: 15px;
     margin: 10px;
     width: 25vw;
@@ -72,22 +72,4 @@ table {
   
   tr:nth-child(even) {
     background-color: #dddddd;
-  }
- 
-  #table-container{
-   
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-  } 
-#button-container{
-  display: flex;
-  justify-content: right;
-  margin-top: 50vh;
-}
-
-.blur-background{
-  filter: blur(5px);
-}
-  
+  } */
