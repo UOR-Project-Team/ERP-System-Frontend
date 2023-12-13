@@ -22,7 +22,7 @@ function ItemMaster() {
   // Fetch categories from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/category/get') // Adjust the API endpoint based on your backend
+    axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
       .then(response => {
         setCategories(response.data.categories);
       })
