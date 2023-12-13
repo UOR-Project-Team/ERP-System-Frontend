@@ -44,9 +44,11 @@ function CategoryList() {
         if (result.isConfirmed) {
 
           Swal.fire({
-            title: "Deleted!",
-            text: "Category has been deleted.",
-            icon: "success"
+            position: "center",
+            icon: "success",
+            title: "Category Succesfully Deleted",
+            showConfirmButton: false,
+            timer: 1500
           });
 
           axios
