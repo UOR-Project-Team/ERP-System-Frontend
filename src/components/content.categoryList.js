@@ -72,12 +72,12 @@ function CategoryList() {
         <h2>Category List</h2>
        </div>
       <div id="table-container">
-           <table >
+           <table id='table'>
                 <thead>
                 <tr>
-                    <th >No</th>
-                    <th>Category Name</th>
-                    <th>Action</th>
+                    <th id='tabel-head' >No</th>
+                    <th id='tabel-head'>Category Name</th>
+                    <th id='tabel-head'>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -86,10 +86,10 @@ function CategoryList() {
                
                {
                 categories && categories.map((category , i)=>(
-                    <tr key = {i}>
-                        <td>{category.ID}</td>
-                        <td>{category.Description}</td>
-                        <td>
+                    <tr id='tabel-row' key = {i}>
+                        <td id='tabel-data'>{category.ID}</td>
+                        <td id='tabel-data'>{category.Description}</td>
+                        <td id='tabel-data'>
                             <button id = "update">Update</button>
                             <button id = "delete" onClick={()=> handleDelete(category.ID)}>Delete</button>
                         </td>
