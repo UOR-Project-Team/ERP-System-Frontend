@@ -17,7 +17,12 @@ label{
     color: white;
     border: none;
     margin: 50px;
+    cursor: pointer;
    
+
+}
+#add:hover{
+  opacity: 80%;
 }
 
 #update{
@@ -63,3 +68,17 @@ table {
   tr:nth-child(even) {
     background-color: #dddddd;
   }
+ 
+  #table-container{
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  } 
+#button-container{
+  display: flex;
+  justify-content: right;
+  margin-top: 50vh;
+}
+  

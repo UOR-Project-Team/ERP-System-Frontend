@@ -16,8 +16,11 @@ function CategoryList() {
 
   return (
     <div>
-        <table>
-
+      <div className='master-content'>
+        <h2>Category List</h2>
+       </div>
+      <div id="table-container">
+           <table >
                 <thead>
                 <tr>
                     <th>No</th>
@@ -49,7 +52,8 @@ function CategoryList() {
 
             </Link>
     </div>
+    </div>
   );
-}
+              }
 
 export default CategoryList;
