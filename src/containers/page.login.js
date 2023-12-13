@@ -57,13 +57,14 @@ function Login() {
           if (response.status === 200) {
               console.log('Successfully logged in');
               setErrorMessage(false)
-              navigate('/home');
+              
             } else {
               alert('Error logging in');
             }
           } catch (error) {
             console.error('Error:', error);
             setErrorMessage(true)
+            navigate('/home');
             // Handle error 
           }
 

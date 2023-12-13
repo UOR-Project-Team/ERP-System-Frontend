@@ -9,6 +9,11 @@
    border: none;
    border-radius: 8px;
    font-size: medium;
+   cursor: pointer;
+}
+
+#save:hover{
+    opacity: 80%;
 }
 
 #cancel{
@@ -19,12 +24,21 @@
     border: none;
     border-radius: 8px;
     margin-right: 10px;
+    cursor: pointer;
+}
+#cancel:hover{
+    opacity: 80%;
+
 }
 
+
+
+
 #input{
-    margin-top: 25vh;
+    margin-top: 30vh;
     display: flex;
     justify-content: center;
+   
     align-items: center;
 }
 
