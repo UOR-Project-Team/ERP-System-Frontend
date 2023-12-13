@@ -13,11 +13,7 @@ function CategoryMaster() {
   
   function handleSubmit(event) {
     event.preventDefault();
-    //check whether the  field is empty
-    // if (!Description.trim()) {
-    //   setErrorMessage('Category Name cannot be empty');
-    //   return;
-    // }
+   
 
     axios.post('http://localhost:8081/category/create', { Description })
       .then(res =>{
