@@ -29,7 +29,7 @@ function UnitMaster() {
     else 
     {
       //Making axios http request to insert values into db
-      axios.post('http://localhost:8081/item/create', values)
+      axios.post('http://localhost:8081/unit/create', values)
       .then((res) => {
         console.log('Unit Description:', values.Description);
         console.log('Unit SI:', values.SI);
