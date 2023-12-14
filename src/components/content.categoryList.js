@@ -32,7 +32,7 @@ function CategoryList() {
           cancelButtonColor: "#d33",
           confirmButtonText: "Yes, delete it!",
         }).then((result) => {
-          resolve(result); // Resolve the result from Swal
+          resolve(result);
         });
       });
     };
