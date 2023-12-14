@@ -13,7 +13,7 @@ import MasterListLogo from './../assets/icons/list.png';
 Modal.setAppElement('#root');
 
 
-const SidePanelCollapse = ({ onToggle }) => {
+const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   
   const navigateTo = useNavigate();
 
@@ -67,7 +67,7 @@ const SidePanelCollapse = ({ onToggle }) => {
         <button><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo" /></button>
       </div>
       <div className='body'>
-        <button title="Dashboard" onClick={() => navigateTo('/home')}><img src={DashboardLogo} alt="Dashboard Logo" /></button>
+        <button title="Dashboard" onClick={() => {navigateTo('/home'); updateHeaderText('Dashboard');}}><img src={DashboardLogo} alt="Dashboard Logo" /></button>
         <button title="Master Files" onClick={openModal1}><img src={MasterFileLogo} alt="Master File Logo" /></button>
         <button title="Purchasing" onClick={openModal2}><img src={PurchasingLogo} alt="Purchasing Logo" /></button>
         <button title="Sales" onClick={openModal3}><img src={SalesLogo} alt="Sales Logo" /></button>
@@ -83,12 +83,12 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal1}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Master Files</h2>
-        <button onClick={() => navigateModal1('category')}>Category Master</button>
-        <button onClick={() => navigateModal1('unit')}>Unit Master</button>
-        <button onClick={() => navigateModal1('item')}>Item Master</button>
-        <button onClick={() => navigateModal1('supplier')}>Supplier Master</button>
-        <button onClick={() => navigateModal1('employee')}>Employee Master</button>
-        <button onClick={() => navigateModal1('customer')}>Customer Master</button>
+        <button onClick={() => {navigateModal1('category'); updateHeaderText('Category Master');}}>Category Master</button>
+        <button onClick={() => {navigateModal1('unit'); updateHeaderText('Unit Master');}}>Unit Master</button>
+        <button onClick={() => {navigateModal1('item'); updateHeaderText('Item Master');}}>Item Master</button>
+        <button onClick={() => {navigateModal1('supplier'); updateHeaderText('Supplier Master');}}>Supplier Master</button>
+        <button onClick={() => {navigateModal1('employee'); updateHeaderText('Employee Master');}}>Employee Master</button>
+        <button onClick={() => {navigateModal1('customer'); updateHeaderText('Customer Master');}}>Customer Master</button>
       </Modal>
       <Modal
         isOpen={isModalOpen2}
@@ -99,7 +99,7 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal2}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Purchasing</h2>
-        <button onClick={() => navigateModal2('good-received-note')}>Good Recieved Note</button>
+        <button onClick={() => {navigateModal2('good-received-note'); updateHeaderText('Good Recieved Note');}}>Good Recieved Note</button>
       </Modal>
       <Modal
         isOpen={isModalOpen3}
@@ -110,8 +110,8 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal3}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Sales</h2>
-        <button onClick={() => navigateModal3('add')}>Invoice Add</button>
-        <button onClick={() => navigateModal3('display')}>Invoice Display</button>
+        <button onClick={() => {navigateModal3('add'); updateHeaderText('Invoice Add');}}>Invoice Add</button>
+        <button onClick={() => {navigateModal3('display'); updateHeaderText('Invoice Display');}}>Invoice Display</button>
       </Modal>
       <Modal
         isOpen={isModalOpen4}
@@ -122,9 +122,9 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal4}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Reports</h2>
-        <button onClick={() => navigateModal4('stock-movement')}>Stock Movement Report</button>
-        <button onClick={() => navigateModal4('profit-loss')}>Profit & Loss Report</button>
-        <button onClick={() => navigateModal4('other')}>Other Reports</button>
+        <button onClick={() => {navigateModal4('stock-movement'); updateHeaderText('Stock Movement Reports');}}>Stock Movement Report</button>
+        <button onClick={() => {navigateModal4('profit-loss'); updateHeaderText('Profit & Loss Reports');}}>Profit & Loss Report</button>
+        <button onClick={() => {navigateModal4('other'); updateHeaderText('Other Reports');}}>Other Reports</button>
       </Modal>
       <Modal
         isOpen={isModalOpen5}
@@ -135,12 +135,12 @@ const SidePanelCollapse = ({ onToggle }) => {
       >
         <button className='close' onClick={closeModal5}><img src={CloseLogo} alt="Close Logo" /></button>
         <h2>Master Lists</h2>
-        <button onClick={() => navigateModal5('category')}>Category List</button>
-        <button onClick={() => navigateModal5('item')}>Item List</button>
-        <button onClick={() => navigateModal5('supplier')}>Supplier List</button>
-        <button onClick={() => navigateModal5('employee')}>Employee List</button>
-        <button onClick={() => navigateModal5('customer')}>Customer List</button>
-        <button onClick={() => navigateModal5('invoice')}>Invoice List</button>
+        <button onClick={() => {navigateModal5('category'); updateHeaderText('Category List');}}>Category List</button>
+        <button onClick={() => {navigateModal5('item'); updateHeaderText('Item List');}}>Item List</button>
+        <button onClick={() => {navigateModal5('supplier'); updateHeaderText('Supplier List');}}>Supplier List</button>
+        <button onClick={() => {navigateModal5('employee'); updateHeaderText('Employee List');}}>Employee List</button>
+        <button onClick={() => {navigateModal5('customer'); updateHeaderText('Customer List');}}>Customer List</button>
+        <button onClick={() => {navigateModal5('invoice'); updateHeaderText('Invoice List');}}>Invoice List</button>
       </Modal>
       </div>
   );

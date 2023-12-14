@@ -1,10 +1,6 @@
 
-
-#buttons{
-    
-  
-    margin-top: 40vh;
-    
+#button-container{
+    margin-top: 35vh;
 }
 
 #save{
@@ -14,8 +10,13 @@
    border: none;
    border-radius: 8px;
    font-size: medium;
-
+   cursor: pointer;
 }
+
+#save:hover{
+    opacity: 80%;
+}
+
 #cancel{
     background-color: #DC143C;
     color: white;
@@ -24,15 +25,18 @@
     border: none;
     border-radius: 8px;
     margin-right: 10px;
+    cursor: pointer;
+}
+#cancel:hover{
+    opacity: 80%;
 
-
-   
 }
 
- 
+
+
 
 #input{
-    margin-top: 25vh;
+    margin-top: 30vh;
     display: flex;
     justify-content: center;
    
@@ -46,6 +50,5 @@ label{
 
 input{
     width: 300px;
-    height: 30px;
     
 }

@@ -35,14 +35,14 @@ function Home() {
     <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
-          <SidePanelExpand onToggle={togglePanel} />
+          <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} />
+          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} updateCountry={updateCountry} />
         )}
       </div>
       <div className="main-container">
         <div className="header-container">
-          <Header text={"Dashboard"} />
+          <Header text={headerText} />
         </div>
         <div className="body-container">
           <Routes>
@@ -51,6 +51,7 @@ function Home() {
             <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
+            {/* <Route path="employee-master" element={<EmployeeMaster />} /> */}
             <Route path="user-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
