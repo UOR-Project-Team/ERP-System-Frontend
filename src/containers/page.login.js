@@ -1,15 +1,16 @@
 import React, {useState} from 'react'
 import {validateusername,validatepassword} from  '../services/validation.login';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
-import { useNavigate } from "react-router-dom"
+
 
 function Login() {
     
     const [username, setUsername] = useState('admintest')
     const [password, setPassword] = useState('a22')
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const usernameError = validateusername(username);
     const passwordError = validatepassword(password);
