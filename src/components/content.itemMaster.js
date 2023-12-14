@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function ItemMaster() {
 
@@ -124,7 +126,9 @@ function ItemMaster() {
                       placeholder='Enter Item Code' 
                       className='form-control'
                       onChange={handleInputChange} 
-                      value={values.code}/>
+                      value={values.code}
+                      required/>
+                      
                 </div>
 
                 <div className='mb-2 col-md-3'>
@@ -135,7 +139,9 @@ function ItemMaster() {
                       placeholder='Enter Item Name' 
                       className='form-control'
                       onChange={handleInputChange} 
-                      value={values.itemName}/>
+                      value={values.itemName}
+                      required/>
+                      
                 </div>
                 
                 <div className='mb-2 col-md-3'>
@@ -146,6 +152,7 @@ function ItemMaster() {
                       onChange={handleCategoryChange}
                       placeholder="Select a category"
                       name= 'categoryId'
+                      
                     />
                     
                     {/* <input 
@@ -165,6 +172,7 @@ function ItemMaster() {
                       onChange={handleUnitChange}
                       placeholder="Select a Unit"
                       name= 'unitId'
+                      
                     />
 
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {ValidateInput} from '../services/validation.login';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function UnitMaster() {
 
@@ -33,6 +35,15 @@ function UnitMaster() {
       .then((res) => {
         console.log('Unit Description:', values.Description);
         console.log('Unit SI:', values.SI);
+
+        //For the toast message
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Category has been saved",
+          showConfirmButton: false,
+          timer: 1000,
+        });
         
         // Reset the form fields
       setValues({
@@ -73,6 +84,7 @@ function UnitMaster() {
             id="unitDescription"
             value={values.Description}
             onChange={handleInputChange}
+            required
           />
           {Errormessage && <span className='text-danger'>{unitDescriptionError} </span>}
         </div>
@@ -87,11 +99,12 @@ function UnitMaster() {
             id="unitSI"
             value={values.SI}
             onChange={handleInputChange}
+            required
           />
           {Errormessage && <span className='text-danger'>{unitSIError} </span>}
         </div>
         <button type="submit" className="btn btn-primary">
-          Submit
+          Save
         </button>
       </form>
     </div>

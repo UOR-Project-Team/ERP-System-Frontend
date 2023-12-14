@@ -3,16 +3,16 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import Swal from 'sweetalert2';
 
-function ItemList() {
+function UnitList() {
 
-  const [Item, setItems] = useState([]);
+  const [Unit, setUnits] = useState([]);
   const [isBlur , setIsBlur] = useState(false);
   
   useEffect(() => {
 
-    axios.get('http://localhost:8081/item/show')
+    axios.get('http://localhost:8081/unit/get')
       .then(response => {
-        setItems(response.data.Item);
+        setUnits(response.data.units);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -43,7 +43,7 @@ function ItemList() {
 
 
   //Handle delete 
-  const handleDelete = (itemId) => {
+  const handleDelete = (unitId) => {
     toggleBlur(true);
     Alert().then((result) => {
       toggleBlur(false);
@@ -52,21 +52,21 @@ function ItemList() {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Item is Succesfully Deleted",
+          title: "Unit is Succesfully Deleted",
           showConfirmButton: false,
           timer: 1500
         });
 
         axios
-          .delete(`http://localhost:8081/item/delete/${itemId}`)
+          .delete(`http://localhost:8081/unit/delete/${unitId}`)
           .then((res) => {
             console.log(res.data);
             axios
-              .get("http://localhost:8081/item/show")
-              .then((res) => setItems(res.data.Item))
+              .get("http://localhost:8081/unit/get")
+              .then((res) => setUnits(res.data.Unit))
               .catch((err) => console.log(err));
           })
-          .catch((err) => console.error("Error deleting item:", err));
+          .catch((err) => console.error("Error deleting unit:", err));
       }
     });
   };
@@ -75,28 +75,25 @@ function ItemList() {
 
   return (
     <div>
-      <h2>Item Information</h2>
+      <h2>Unit Information</h2>
       <table className="table table-striped table-bordered">
         <thead className="thead-dark">
           <tr>
             <th>ID</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Category ID</th>
-            <th>Unit ID</th>
+            <th>Description</th>
+            <th>SI</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
         
-        {Array.isArray(Item) && Item.length > 0 ? (
-          Item.map((item,index) => (
+        {Array.isArray(Unit) && Unit.length > 0 ? (
+          Unit.map((unit,index) => (
             <tr key={index}>
-              <td>{item.ID}</td>
-              <td>{item.Code}</td>
-              <td>{item.Name }</td>
-              <td>{item.Category_ID }</td>
-              <td>{item.Unit_ID }</td>
+              <td>{unit.ID}</td>
+              <td>{unit.Description}</td>
+              <td>{unit.SI }</td>
+
               
               <td>
                 <button 
@@ -105,14 +102,14 @@ function ItemList() {
                   style={{ marginRight: '20px' }}>update   
                 </button>
 
-                <button type='button' className='btn btn-danger' onClick={()=> handleDelete(item.ID)}>Delete</button>
+                <button type='button' className='btn btn-danger' onClick={()=> handleDelete(unit.ID)}>Delete</button>
               </td>
               
             </tr>
           ))
         ):(
           <tr>
-            <td colSpan="11">No Item data available</td>
+            <td colSpan="11">No Unit data available</td>
           </tr>
         )}
         
@@ -122,4 +119,4 @@ function ItemList() {
   )
 }
 
-export default ItemList;
+export default UnitList;
