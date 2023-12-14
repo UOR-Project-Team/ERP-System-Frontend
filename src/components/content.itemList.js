@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function ItemList() {
 
   const [Item, setItem] = useState([]);
+  const [isBlur , setIsBlur] = useState(false);
   
   useEffect(() => {
 
@@ -15,6 +18,59 @@ function ItemList() {
         console.error('Error fetching data:', error);
       });
   }, []); // Empty dependency array ensures useEffect runs once on mount
+
+
+
+  const toggleBlur = (shouldBlur) => {
+    setIsBlur(shouldBlur);
+  }
+
+  const Alert = () => {
+    return new Promise((resolve) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#4AEF3C",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        resolve(result); // Resolve the result from Swal
+      });
+    });
+  };
+
+
+  //Handle delete 
+  const handleDelete = (itemId) => {
+    toggleBlur(true);
+    Alert().then((result) => {
+      toggleBlur(false);
+      if (result.isConfirmed) {
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Item is Succesfully Deleted",
+          showConfirmButton: false,
+          timer: 1500
+        });
+
+        axios
+          .delete(`http://localhost:8081/item/delete/${itemId}`)
+          .then((res) => {
+            console.log(res.data);
+            axios
+              .get("http://localhost:8081/item/show")
+              .then((res) => setItem(res.data.Item))
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => console.error("Error deleting item:", err));
+      }
+    });
+  };
+
 
 
   return (
@@ -49,7 +105,7 @@ function ItemList() {
                   style={{ marginRight: '20px' }}>update   
                 </button>
 
-                <button type='button' className='btn btn-danger'>Delete</button>
+                <button type='button' className='btn btn-danger' onClick={()=> handleDelete(item.ID)}>Delete</button>
               </td>
               
             </tr>
