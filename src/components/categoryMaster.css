@@ -1,5 +1,5 @@
-/* #buttons{
-    margin-top: 40vh;
+#buttons{
+    margin-top: 35vh;
 }
 
 #save{
@@ -42,12 +42,12 @@
     align-items: center;
 }
 
-label{
+#form-label{
     margin-right: 30px;
     font-size: large;
 }
 
-input{
+#form-input{
     width: 300px;
     height: 30px;   
-} */
+} 

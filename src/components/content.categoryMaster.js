@@ -13,11 +13,7 @@ function CategoryMaster() {
   
   function handleSubmit(event) {
     event.preventDefault();
-    //check whether the  field is empty
-    // if (!Description.trim()) {
-    //   setErrorMessage('Category Name cannot be empty');
-    //   return;
-    // }
+   
 
     axios.post('http://localhost:8081/category/create', { Description })
       .then(res =>{
@@ -78,8 +74,8 @@ function CategoryMaster() {
        <div id='formcontainer'>
        <form onSubmit={handleSubmit}>
                 <div id="input">
-                <label>Category Name</label>
-                <input type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
+                <label id = "form-label">Category Name</label>
+                <input id="form-input" type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
 
                 </div>
                 <div id="button-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
