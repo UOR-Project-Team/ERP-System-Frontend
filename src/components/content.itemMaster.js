@@ -29,6 +29,7 @@ function ItemMaster() {
     axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
       .then(response => {
         setCategories(response.data.categories);
+
       })
       .catch(error => {
         console.error('Error fetching category data:', error);
@@ -84,20 +85,38 @@ function ItemMaster() {
     e.preventDefault();
     axios.post('http://localhost:8081/item/create', values)
       .then((res) => {
-        // toast.success('Item successfully added!', {
-        //   duration: 1000,
-        // });
+        console.log('Item Code:', values.code);
+        console.log('Item Name:', values.itemName);
+        console.log('Category ID:',{selectedCategory});
+        console.log('Unit ID:', {selectedUnit});
 
+        //For the toast message
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Item has been saved",
+          showConfirmButton: false,
+          timer: 1000,
+        });  
+
+
+        // Reset the form fields
         setSelectedCategory('');
         setSelectedUnit('');
-
         setValues({
           code: '',
           itemName: '',
           
         });
       })
-      .catch((err) => console.error(err));
+      .catch(err => {
+        console.error(err);
+      })
+      .finally(() => {
+        // Navigate to 'Item-list' after the alert is closed
+        navigate('/home/item-list');
+      });
+      
   };
 
   
