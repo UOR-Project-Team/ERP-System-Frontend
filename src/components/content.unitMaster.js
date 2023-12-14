@@ -14,6 +14,7 @@ function UnitMaster() {
     
 
   })
+  const navigate = useNavigate();
 
   const unitDescriptionError = ValidateInput(values.Description);
   const unitSIError = ValidateInput(values.SI);
@@ -40,19 +41,26 @@ function UnitMaster() {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Category has been saved",
+          title: "Unit has been saved",
           showConfirmButton: false,
           timer: 1000,
         });
         
         // Reset the form fields
-      setValues({
+        setValues({
         Description: '',
         SI: '',
         
         });
       })
-      .catch((err) => console.error(err));
+      .catch (err => {
+        console.log(err);
+      })
+      .finally(() => {
+        // Navigate to 'Unit-list' after the alert is closed
+        navigate('/home/unit-list');
+      });
+      
 
     }
 

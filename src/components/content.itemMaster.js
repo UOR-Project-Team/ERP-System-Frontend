@@ -16,6 +16,8 @@ function ItemMaster() {
 
   })
 
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   
