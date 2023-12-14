@@ -384,6 +384,98 @@ body, html {
 .body-container .master-content .form-container {
     width: 100%;
     display: flex;
+    justify-content: space-between;
+}
+
+.body-container .master-content .form-container .line-type2-content {
+    width: 48%;
+}
+
+.body-container .master-content .form-container .text-line-type2 {
+    width: 100%;
+    margin: 5px 0px;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: whitesmoke;
+}
+
+.body-container .master-content .form-container .error-text {
+    display: block;
+    color: red;
+    font-size: 12PX;
+    margin-bottom: 10PX;
+}
+
+.body-container .master-content .form-container .button-container{
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.body-container .master-content .form-container .submit-button {
+    width: 150px;
+    background-color: #260261;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 2px solid #260261;
+    transition: 0.5s ease-in;
+    font-family: 'Ubuntu', sans-serif;
+  }
+  
+.body-container .master-content .form-container .reset-button {
+    width: 150px;
+    background-color: transparent;
+    color: #260261;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 2px solid #260261;
+    transition: 0.5s ease-in;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: whitesmoke;
+}
+
+.body-container .master-content .form-container .submit-button:hover {
+    background-color: #dc143c;
+    border: 2px solid #dc143c;
+}
+  
+  .body-container .master-content .form-container .reset-button:hover {
+    color: #dc143c;
+    border: 2px solid #dc143c;
+}
+
+.body-container .master-content .search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.body-container .master-content .search-container input {
+    height: 32px;
+    width: 300px;
+    border: 1px solid #dc143c;
+    font-family: 'Ubuntu', sans-serif;
+    padding: 0px 5px;
+    border-right: 0;
+    border-radius: 3px 0px 0px 3px;
+    margin: 5px 0px;
+}
+
+.body-container .master-content .search-container button {
+    height: 32px;
+    width: 32px;
+    align-items: center;
     justify-content: center;
     margin: 20px 0px;
     font-family: 'Ubuntu', sans-serif;
@@ -502,6 +594,14 @@ body, html {
 
     .header-container .header .right .text-container .type-text {
         display: none;
+    }
+
+    .body-container .master-content .form-container h3 {
+        font-size: 15px;
+    }
+
+    .body-container .master-content .form-container {
+        width: 80%; 
     }
 
 }
