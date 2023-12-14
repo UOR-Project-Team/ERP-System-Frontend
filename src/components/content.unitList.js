@@ -63,7 +63,7 @@ function UnitList() {
             console.log(res.data);
             axios
               .get("http://localhost:8081/unit/get")
-              .then((res) => setUnits(res.data.Unit))
+              .then((res) => setUnits(res.data.units))
               .catch((err) => console.log(err));
           })
           .catch((err) => console.error("Error deleting unit:", err));
@@ -74,7 +74,7 @@ function UnitList() {
 
 
   return (
-    <div>
+    <div className={isBlur ? 'blur-background' : ''}>
       <h2>Unit Information</h2>
       <table className="table table-striped table-bordered">
         <thead className="thead-dark">
