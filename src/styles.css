@@ -313,11 +313,22 @@ body, html {
     justify-content: space-between;
 }
 
-.body-container .master-content .form-container .text-line-type2 {
+.body-container .master-content .form-container .line-type2-content {
     width: 48%;
+}
+
+.body-container .master-content .form-container .text-line-type2 {
+    width: 100%;
     margin: 5px 0px;
     font-family: 'Ubuntu', sans-serif;
     background-color: whitesmoke;
+}
+
+.body-container .master-content .form-container .error-text {
+    display: block;
+    color: red;
+    font-size: 12PX;
+    margin-bottom: 10PX;
 }
 
 .body-container .master-content .form-container .button-container{
@@ -342,7 +353,7 @@ body, html {
     font-family: 'Ubuntu', sans-serif;
   }
   
-  .body-container .master-content .form-container .reset-button {
+.body-container .master-content .form-container .reset-button {
     width: 150px;
     background-color: transparent;
     color: #260261;
@@ -546,6 +557,14 @@ body, html {
 
     .header-container .header .right img {
         margin-left: 5px;
+    }
+
+    .body-container .master-content .form-container h3 {
+        font-size: 15px;
+    }
+
+    .body-container .master-content .form-container {
+        width: 80%; 
     }
 
 }

@@ -27,33 +27,8 @@ function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [headerText, setHeaderText] = useState("Control Panel");
 
-  const [customerFormValues, setCustomerFormValues] = useState({
-    firstName: '',
-    lastName: '',
-    nationalId: '',
-    vatNumber: '',
-    email: '',
-    mobile: '',
-    street1: '',
-    street2: '',
-    city: '',
-    country: null,
-  });
-
-  const updateCustomerFormValues = (newValues) => {
-    setCustomerFormValues((prevValues) => ({ ...prevValues, ...newValues }));
-  };
-
-  const updateCountry = (newCountry) => {
-    setCustomerFormValues((prevValues) => ({ ...prevValues, country: newCountry }));
-  };
-
   const togglePanel = () => {
     setIsExpanded((prev) => !prev);
-  };
-
-  const updateHeaderText = (text) => {
-    setHeaderText(text);
   };
 
   return (
@@ -77,7 +52,7 @@ function Home() {
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
             <Route path="user-master" element={<UserMaster />} />
-            <Route path="customer-master" element={<CustomerMaster formValues={customerFormValues} updateFormValues={updateCustomerFormValues}/>} />
+            <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
             <Route path="invoice-display" element={<InvoiceDisplay />} />
