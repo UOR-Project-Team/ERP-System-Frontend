@@ -78,6 +78,7 @@ function CategoryList() {
                     <th id='tabel-head' >No</th>
                     <th id='tabel-head'>Category Name</th>
                     <th id='tabel-head'>Action</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -108,6 +109,7 @@ function CategoryList() {
 
          
    </div>
+
   );
               }
 
