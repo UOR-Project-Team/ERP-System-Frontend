@@ -1,5 +1,5 @@
 import axios from 'axios';
-const apiUrl = 'http://localhost:5000/customer';
+const apiUrl = 'http://localhost:8081/customer';
 
 const customerServices = {
   createCustomer: async (data) => {

@@ -5,11 +5,11 @@ const validateUserLoginForm = (formValues) => {
     };
   
     if (!formValues.username) {
-      errors.username = 'Username is required';
+      errors.username = 'Username is required *';
     }
   
     if (!formValues.password) {
-      errors.password = 'Password is required';
+      errors.password = 'Password is required *';
     }
 
     return errors;
