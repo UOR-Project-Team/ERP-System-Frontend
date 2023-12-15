@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function ItemMaster() {
 
@@ -14,16 +16,20 @@ function ItemMaster() {
 
   })
 
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  
 
 
   // Fetch categories from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/category/get') // Adjust the API endpoint based on your backend
+    axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
       .then(response => {
         setCategories(response.data.categories);
+
       })
       .catch(error => {
         console.error('Error fetching category data:', error);
@@ -63,6 +69,7 @@ function ItemMaster() {
       });
   }, []);
 
+
   
   // Handle unit change
   const handleUnitChange = selectedOption => {
@@ -78,20 +85,38 @@ function ItemMaster() {
     e.preventDefault();
     axios.post('http://localhost:8081/item/create', values)
       .then((res) => {
-        // toast.success('Item successfully added!', {
-        //   duration: 1000,
-        // });
+        console.log('Item Code:', values.code);
+        console.log('Item Name:', values.itemName);
+        console.log('Category ID:',{selectedCategory});
+        console.log('Unit ID:', {selectedUnit});
 
+        //For the toast message
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Item has been saved",
+          showConfirmButton: false,
+          timer: 1000,
+        });  
+
+
+        // Reset the form fields
         setSelectedCategory('');
         setSelectedUnit('');
-
         setValues({
           code: '',
           itemName: '',
           
         });
       })
-      .catch((err) => console.error(err));
+      .catch(err => {
+        console.error(err);
+      })
+      .finally(() => {
+        // Navigate to 'Item-list' after the alert is closed
+        navigate('/home/item-list');
+      });
+      
   };
 
   
@@ -122,7 +147,9 @@ function ItemMaster() {
                       placeholder='Enter Item Code' 
                       className='form-control'
                       onChange={handleInputChange} 
-                      value={values.code}/>
+                      value={values.code}
+                      required/>
+                      
                 </div>
 
                 <div className='mb-2 col-md-3'>
@@ -133,7 +160,9 @@ function ItemMaster() {
                       placeholder='Enter Item Name' 
                       className='form-control'
                       onChange={handleInputChange} 
-                      value={values.itemName}/>
+                      value={values.itemName}
+                      required/>
+                      
                 </div>
                 
                 <div className='mb-2 col-md-3'>
@@ -144,6 +173,7 @@ function ItemMaster() {
                       onChange={handleCategoryChange}
                       placeholder="Select a category"
                       name= 'categoryId'
+                      
                     />
                     
                     {/* <input 
@@ -163,6 +193,7 @@ function ItemMaster() {
                       onChange={handleUnitChange}
                       placeholder="Select a Unit"
                       name= 'unitId'
+                      
                     />
 
 
