@@ -74,9 +74,16 @@ body, html {
     width: 100%;
     height: 40px;
     display: block;
-    margin-bottom: 40px;
     padding: 0px 10px;
     font-family: 'Ubuntu', sans-serif;
+}
+
+.login-container .form-container form label {
+    margin-top: 5px;
+    margin-bottom: 30px;
+    color: red;
+    display: block;
+    font-size: 12px;
 }
 
 .login-container .form-container form button {

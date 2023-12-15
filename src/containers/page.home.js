@@ -33,13 +33,17 @@ function Home() {
     setIsExpanded((prev) => !prev);
   };
 
+  const updateHeaderText = (text) => {
+    setHeaderText(text);
+  };
+
   return (
     <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
           <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} updateCountry={updateCountry} />
+          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         )}
       </div>
       <div className="main-container">
@@ -53,7 +57,6 @@ function Home() {
             <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
-            {/* <Route path="employee-master" element={<EmployeeMaster />} /> */}
             <Route path="user-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
@@ -65,7 +68,7 @@ function Home() {
             <Route path="category-list" element={<CategoryList />} />
             <Route path="item-list" element={<ItemList />} />
             <Route path="supplier-list" element={<SupplierList />} />
-            <Route path="employee-list" element={<UserList />} />
+            <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
             <Route path="unit-list" element={<UnitList />} />
