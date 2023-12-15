@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 function ItemList() {
 
   const [Item, setItems] = useState([]);
   const [isBlur , setIsBlur] = useState(false);
+
+  const navigate = useNavigate();
   
   useEffect(() => {
 
@@ -71,6 +74,13 @@ function ItemList() {
     });
   };
 
+   //Handle Update 
+   const handleUpdate = (itemId, categoryId, unitId) => {
+    
+    navigate(`/item-update/${itemId}/${categoryId}/${unitId}`);
+  };
+
+
 
 
   return (
@@ -102,7 +112,8 @@ function ItemList() {
                 <button 
                   type='button' 
                   className='btn btn-success' 
-                  style={{ marginRight: '20px' }}>update   
+                  style={{ marginRight: '20px' }}
+                  onClick={()=> handleUpdate(item.ID, item.Category_ID, item.Unit_ID)}>update   
                 </button>
 
                 <button type='button' className='btn btn-danger' onClick={()=> handleDelete(item.ID)}>Delete</button>

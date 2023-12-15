@@ -7,12 +7,10 @@ import Swal from 'sweetalert2';
 function ItemMaster() {
 
   const[values,setValues]=useState({
-    code:'p01',
-    itemName:'Lux Soap 100g',
-    //Supplier_id:'',
-    //Unit_price:'',
-    categoryId:'1',
-    unitId:'1'
+    code:'',
+    itemName:'',
+    categoryId:'',
+    unitId:''
 
   })
 
@@ -20,8 +18,45 @@ function ItemMaster() {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  
 
+  const [units, setUnit] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  
+  useEffect(() => {
+    // Fetch item details based on the itemId
+    axios.get(`http://localhost:8081/item/get/${itemId}`)
+      .then(response => {
+        const itemDetails = response.data.item;
+        setValues({
+          code: itemDetails.code,
+          itemName: itemDetails.itemName,
+          categoryId:itemDetails.categoryId,
+          unitId:itemDetails.unitId
+        });
+        setSelectedCategory(itemDetails.categoryId)
+        setSelectedUnit(itemDetails.unitId)
+      })
+      .catch(error => {
+        console.error('Error fetching item details:', error);
+      });
+
+    // Fetch categories and units
+    axios.get('http://localhost:8081/category/show')
+      .then(response => {
+        setCategories(response.data.categories);
+      })
+      .catch(error => {
+        console.error('Error fetching category data:', error);
+      });
+
+    axios.get('http://localhost:8081/unit/get')
+      .then(response => {
+        setUnit(response.data.units);
+      })
+      .catch(error => {
+        console.error('Error fetching units data:', error);
+      });
+  }, [itemCode]);
 
   // Fetch categories from the server
   useEffect(() => {
@@ -54,8 +89,7 @@ function ItemMaster() {
     }));
   };
 
-  const [units, setUnit] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState(null);
+  
 
    // Fetch units from the server
    useEffect(() => {
