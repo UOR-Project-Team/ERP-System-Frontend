@@ -1,5 +1,14 @@
 
+input{
+    padding: 15px;
+    margin: 10px;
+    width: 25vw;
+}
 
+label{
+    margin-right: 75px;
+    font-size: 20px;
+}
 
 
 #add{
@@ -10,12 +19,14 @@
     color: white;
     border: none;
     margin: 50px;
+
     cursor: pointer;
    
 
 }
 #add:hover{
   opacity: 80%;
+
 }
 
 #update{
@@ -43,12 +54,28 @@
 
 
 
+
 #table {
+
     
     border-collapse: collapse;
     width:500px;
   }
   
+
+  td, th {
+    border: 1px solid black;
+    text-align: left;
+    padding: 8px;
+  }
+  th{
+    background-color: whitesmoke;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
 
   #tabel-head{
     background-color: whitesmoke;
@@ -69,3 +96,4 @@
   #tabel-row:nth-child(even) {
     background-color: #dddddd;
   } 
+

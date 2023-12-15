@@ -29,6 +29,7 @@ function CategoryMaster() {
 
           //navigate('/home/category-list');
 
+
       }).catch (err => {
           console.log(err);
       })
@@ -74,8 +75,10 @@ function CategoryMaster() {
        <div id='formcontainer'>
        <form onSubmit={handleSubmit}>
                 <div id="input">
+
                 <label id = "form-label">Category Name</label>
                 <input id="form-input" type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
+
 
                 </div>
                 <div id="button-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>

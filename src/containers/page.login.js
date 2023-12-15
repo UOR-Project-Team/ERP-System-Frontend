@@ -14,6 +14,7 @@ const images = [
   img3
 ];
 
+
 function Login() {
     
   const navigate = useNavigate()
@@ -35,6 +36,7 @@ function Login() {
         setImage((prevImage) => (prevImage + 1) % images.length)
       }
     }, 20000)
+
 
     return () => {
       clearInterval(interval)

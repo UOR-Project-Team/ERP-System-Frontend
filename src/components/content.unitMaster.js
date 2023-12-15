@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
+
 function UnitMaster() {
 
   //const [unitDescription, setUnitDescription] = useState('');
@@ -21,7 +22,7 @@ function UnitMaster() {
 
   const [Errormessage, setErrormessage] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     if(unitDescriptionError || unitSIError){
@@ -61,7 +62,6 @@ function UnitMaster() {
         navigate('/home/unit-list');
       });
       
-
     }
 
     

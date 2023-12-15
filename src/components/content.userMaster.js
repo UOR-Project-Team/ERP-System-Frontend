@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Style.css';
+import Toaster from '../services/ToasterMessage'
+import { useNavigate } from 'react-router-dom';
 
 function UserMaster() {
+
+
+  const [showToast, setShowToast] = useState(false);
+  const [message, setMessage] = useState('');
+  const [toastType, setToastType] = useState('');
+
+  const navigate = useNavigate();
+
 
   const [formData, setFormData] = useState({
     fullname:'admintest',
@@ -17,6 +27,12 @@ function UserMaster() {
     address: '10,Galle',
     city: 'matara',
   });
+
+  const showToastMessage = (msg, type) => {
+    setMessage(msg);
+    setToastType(type);
+    setShowToast(true);
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,10 +58,14 @@ function UserMaster() {
         if(response.status ===200){
           //setPasswordError('');
             console.log("Suucesfully Added")
-            alert("Succesfully user Addes")
-           // navigate('/home')
+            showToastMessage('Operation successful!', 'success');
+           // alert("Succesfully user Addes")
+           setTimeout(() => {
+            navigate('/home/employee-list'); // Navigate to '/home/employee-list' after 3 seconds
+          }, 3000);
         }else{
-            alert("Error Adding user")
+            //alert("Error Adding user")
+            showToastMessage('Error occurred. Please try again.', 'error');
         }
 
     }catch(error){
@@ -277,6 +297,9 @@ function UserMaster() {
           Register
         </button>
       </form>
+
+      <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} />
+
     </div>
   );
 };
