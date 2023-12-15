@@ -22,7 +22,7 @@ function UserMaster() {
     confirmPassword: 'a22',
     NIC: '54321',
     jobrole: 'admin',
-    mobileno: '89765421',
+    contactno: '89765421',
     mobileno2: '987654321',
     address: '10,Galle',
     city: 'matara',
@@ -80,7 +80,7 @@ function UserMaster() {
       confirmPassword: '',
       NIC: '',
       jobrole: '',
-      mobileno: '',
+      contactno: '',
       mobileno2: '',
       address: '',
       city: '',
@@ -180,15 +180,15 @@ function UserMaster() {
         </div>
         
         <div className="mb-3">
-          <label htmlFor="mobileno" className="form-label">
+          <label htmlFor="contactno" className="form-label">
           Mobile No
           </label>
           <input
             type="tex"
             className="form-control"
-            id="mobileno"
-            name="mobileno"
-            value={formData.mobileno}
+            id="contactno"
+            name="contactno"
+            value={formData.contactno}
             onChange={handleInputChange}
             style={{ width: '400px' }}
             required

@@ -6,6 +6,7 @@ function SupplierList() {
 
   const [Supplier, setSupplier] = useState([]);
 
+  //Toaster Message
   const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState('');
   const [toastType, setToastType] = useState('');
@@ -36,6 +37,7 @@ function SupplierList() {
           fetchData(); // Fetch data again to update the table after deletion
         }, 3000);
       } catch (error) {
+        showToastMessage('Error deleting row!', 'error');
         console.error('Error deleting row', error);
       }
     }

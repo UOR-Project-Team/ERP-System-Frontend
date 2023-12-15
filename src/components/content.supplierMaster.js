@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Style.css';
+import { useNavigate } from 'react-router-dom';
 
 
 function SupplierMaster() {
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     Fullname:'qwerqazx',
@@ -26,6 +29,17 @@ function SupplierMaster() {
     });
   };
 
+  //Toaster Message
+  const [showToast, setShowToast] = useState(false);
+  const [message, setMessage] = useState('');
+  const [toastType, setToastType] = useState('');
+
+  const showToastMessage = (msg, type) => {
+    setMessage(msg);
+    setToastType(type);
+    setShowToast(true);
+  };
+
   const handleSubmit = async(event) => {
     event.preventDefault();
   
@@ -35,8 +49,10 @@ function SupplierMaster() {
         if(response.status === 200){
           //setPasswordError('');
             console.log("Succesfully Added")
-            alert("Succesfully Supplier Addes")
-           // navigate('/home')
+            showToastMessage('Successfully Deleted!', 'success');
+        setTimeout(() => {
+          navigate('/home/supplier-list')
+        }, 3000);
         }else{
             alert("Error Adding Supplier")
         }
@@ -49,7 +65,7 @@ function SupplierMaster() {
         }
       } else {
         
-        alert('Error: Request setup failed');
+        showToastMessage('Error Retriving row!', 'error');
       }
       console.error('Error:', error);
     }
