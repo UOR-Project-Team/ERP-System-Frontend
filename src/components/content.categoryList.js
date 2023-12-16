@@ -124,9 +124,9 @@ function CategoryList() {
                     <tr key = {i}>
                         <td>{category.ID}</td>
                         <td>{category.Description}</td>
-                        <td>
-                            <button className='categorylist-updatebutton' onClick={()=> handleUpdate(category.ID)}>Update</button>
-                            <button className='categorylist-deletebutton' onClick={()=> handleDelete(category.ID)}>Delete</button>
+                        <td className='categorylist-action-column'>
+                          <div className='categorylist-updatebutton-container'> <button className='categorylist-updatebutton' onClick={()=> handleUpdate(category.ID)}>Update</button> </div> 
+                         <div className='categorylist-Deletebutton-container'>  <button className='categorylist-deletebutton' onClick={()=> handleDelete(category.ID)}>Delete</button> </div> 
                         </td>
                        
                     </tr>
