@@ -24,6 +24,7 @@ import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
 import UnitList from '../components/content.unitList';
 
+import UpdateCategory from '../components/update.categoryMaster';
 
 function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -72,6 +73,7 @@ function Home() {
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
             <Route path="unit-list" element={<UnitList />} />
+            <Route path="update-category/:id" element = {<UpdateCategory />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
