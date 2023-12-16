@@ -22,32 +22,13 @@ import SupplierList from '../components/content.supplierList';
 import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
+import UnitList from '../components/content.unitList';
+
 import UpdateCategory from '../components/update.categoryMaster';
 
 function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [headerText, setHeaderText] = useState("Control Panel");
-
-  const [customerFormValues, setCustomerFormValues] = useState({
-    firstName: '',
-    lastName: '',
-    nationalId: '',
-    vatNumber: '',
-    email: '',
-    mobile: '',
-    street1: '',
-    street2: '',
-    city: '',
-    country: null,
-  });
-
-  const updateCustomerFormValues = (newValues) => {
-    setCustomerFormValues((prevValues) => ({ ...prevValues, ...newValues }));
-  };
-
-  const updateCountry = (newCountry) => {
-    setCustomerFormValues((prevValues) => ({ ...prevValues, country: newCountry }));
-  };
 
   const togglePanel = () => {
     setIsExpanded((prev) => !prev);
@@ -63,7 +44,7 @@ function Home() {
         {isExpanded ? (
           <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} updateCountry={updateCountry} />
+          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         )}
       </div>
       <div className="main-container">
@@ -77,9 +58,8 @@ function Home() {
             <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
-            {/* <Route path="employee-master" element={<EmployeeMaster />} /> */}
-            <Route path="user-master" element={<UserMaster />} />
-            <Route path="customer-master" element={<CustomerMaster formValues={customerFormValues} updateFormValues={updateCustomerFormValues}/>} />
+            <Route path="employee-master" element={<UserMaster />} />
+            <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
             <Route path="invoice-display" element={<InvoiceDisplay />} />
@@ -89,9 +69,10 @@ function Home() {
             <Route path="category-list" element={<CategoryList />} />
             <Route path="item-list" element={<ItemList />} />
             <Route path="supplier-list" element={<SupplierList />} />
-            <Route path="employee-list" element={<UserList />} />
+            <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
+            <Route path="unit-list" element={<UnitList />} />
             <Route path="update-category/:id" element = {<UpdateCategory />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
-import {validateusername,validatepassword} from  '../services/validation.login';
-import axios from 'axios'
 import { useNavigate } from "react-router-dom"
+import axios from 'axios'
+import validateUser from '../services/validate.userLoginForms';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
 import img3 from '../assets/images/login-background-3.jpg'
@@ -12,15 +14,19 @@ const images = [
   img3
 ];
 
+
 function Login() {
     
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const usernameError = validateusername(username)
-  const passwordError = validatepassword(password)
-  const [ErrorMessage, setErrorMessage]= useState(false)
-  const [image, setImage] = useState(0);
+  const [image, setImage] = useState(0)
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  })
+  const [errorMessage, setErrorMessage] = useState({
+    username: '',
+    password: '',
+  })
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,67 +37,91 @@ function Login() {
       }
     }, 20000)
 
+
     return () => {
       clearInterval(interval)
     };
-  }, [image])
+  }, [image]);
 
-    const handleSubmit= async(event)=>{
-        event.preventDefault();
-        
-        if (usernameError || passwordError) {
-            // Handle validation errors
-            console.error('Validation Error:', usernameError, passwordError);
-            return;
-          }
-  
-  
-          try{
-          const response =await axios.post('http://localhost:8081/login', {
-            //paasing username & password
-              username: username, 
-              password: password,
-          });
-          
-          //checking the responese
-          if (response.status === 200) {
-              console.log('Successfully logged in');
-              setErrorMessage(false)
-              
-            } else {
-              alert('Error logging in');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            setErrorMessage(true)
-            navigate('/home');
-            // Handle error 
-          }
+  const handleChanges = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
-    try{
-    const response =await axios.post('http://localhost:8081/login', {
-      //paasing username & password
-        username: username, 
-        password: password,
-    });
+  const handleSubmit= async(event)=>{
+    event.preventDefault();
     
-    //checking the responese
-    if (response.status === 200) {
+    const validationErrors = validateUser(formData);
+    setErrorMessage(validationErrors);
+
+    if (Object.values(validationErrors).some((error) => error !== '')) {
+      toast.error(`Please try again`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return
+    }
+  
+    try {
+      const response =await axios.post('http://localhost:8081/login', {
+          username: formData.username, 
+          password: formData.password,
+      });
+
+      if (response.status === 200) {
         console.log('Successfully logged in');
-        setErrorMessage(false)
         navigate('/home');
       } else {
-        alert('Error logging in');
+        toast.error(`Please try again later`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      setErrorMessage(true)
-      // Handle error 
+      if (error.response && error.response.status === 401) {
+        console.error('Error:', error);
+        toast.error(`Invalid Credentials`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      } else {
+        console.error('Error:', error);
+        toast.error(`Internal Server Error`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
     }
   }
 
   return (
     <div className='login-container' style={{ backgroundImage: `url(${images[image]})` }}>
+      <ToastContainer />
       <div className='login-overlay'>
         <div className='overlay-background'></div>
       </div>
@@ -100,9 +130,11 @@ function Login() {
           <form onSubmit={handleSubmit}>
             <h3>Login</h3>
             <div className='input-label'>Username:</div>
-            <input type='text' value={username} placeholder='Enter your Username Here' onChange={(e) => setUsername(e.target.value)} />
+            <input type='text' placeholder='Username Or Email' name='username' value={formData.username} onChange={(e) => handleChanges(e)} />
+            <label>{errorMessage.username}</label>
             <div className='input-label'>Password:</div>
-            <input type='password' value={password} placeholder='Enter your Password Here'  onChange={(e) => setPassword(e.target.value)} />
+            <input type='password' placeholder='Password' name='password' value={formData.password} onChange={(e) => handleChanges(e)} />
+            <label>{errorMessage.password}</label>
             <button type='submit'>Login</button>
           </form>
         </div>
