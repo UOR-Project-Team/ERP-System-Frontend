@@ -921,6 +921,7 @@ body, html {
     display: flex;
     justify-content: flex-end;
     margin-top: 40vh;
+    margin-right: 30px;
 }
 
 .categoryMaster-save-button{
