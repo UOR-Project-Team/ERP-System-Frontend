@@ -22,6 +22,9 @@ import SupplierList from '../components/content.supplierList';
 import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
+import UnitList from '../components/content.unitList';
+
+import UpdateCategory from '../components/update.categoryMaster';
 
 function Home({ updateAuthentication }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -63,7 +66,7 @@ function Home({ updateAuthentication }) {
             <Route path="/unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
-            <Route path="user-master" element={<UserMaster />} />
+            <Route path="employee-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
@@ -77,6 +80,8 @@ function Home({ updateAuthentication }) {
             <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
+            <Route path="unit-list" element={<UnitList />} />
+            <Route path="update-category/:id" element = {<UpdateCategory />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

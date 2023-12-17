@@ -1,20 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import axios from 'axios';
+import Toaster from '../services/ToasterMessage';
 
 function SupplierList() {
 
-  const [users, setUsers] = useState([]);
+  const [Supplier, setSupplier] = useState([]);
 
-  useEffect(() => {
+  const [showToast, setShowToast] = useState(false);
+  const [message, setMessage] = useState('');
+  const [toastType, setToastType] = useState('');
+
+  const showToastMessage = (msg, type) => {
+    setMessage(msg);
+    setToastType(type);
+    setShowToast(true);
+  };
+
+  const fetchData = async() => {
 
     axios.get('http://localhost:8081/supplier/show')
       .then(response => {
-        setUsers(response.data.user);
+        setSupplier(response.data.Supplier);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  }, []); // Empty dependency array ensures useEffect runs once on mount
+  }
+
+  const handleDelete = async(id)=>{
+    if (window.confirm('Are you sure you want to delete this row?')) {
+      try {
+        await axios.delete(`http://localhost:8081/supplier/delete/${id}`); 
+        showToastMessage('Successfully Deleted!', 'success');
+        setTimeout(() => {
+          fetchData(); // Fetch data again to update the table after deletion
+        }, 3000);
+      } catch (error) {
+        console.error('Error deleting row', error);
+      }
+    }
+  }
+
+  const handleUpdate = (id)=>{
+    console.log(id)
+  }
+
+
+  useEffect(() => {
+    fetchData(); // Fetch data initially when the component mounts
+  }, []);
 
   return (
     <div>
@@ -39,9 +73,9 @@ function SupplierList() {
         </thead>
         <tbody>
         
-        {Array.isArray(users) && users.length > 0 ? (
-          users.map(user => (
-            <tr key={user.id}>
+        {Array.isArray(Supplier) && Supplier.length > 0 ? (
+          Supplier.map(user => (
+            <tr key={user.ID}>
               <td>{user.ID}</td>
               <td>{user.Fullname}</td>
               <td>{user.RegistrationNo }</td>
@@ -61,8 +95,8 @@ function SupplierList() {
                   )}
                 </td>
               <td>
-                <button type='button' className='btn btn-success'>update</button>
-                <button type='button' className='btn btn-danger'>Delete</button>
+                <button type='button' className='btn btn-success' onClick={()=>handleUpdate(user.ID)}>update</button>
+                <button type='button' className='btn btn-danger' onClick={()=>handleDelete(user.ID)}>Delete</button>
               </td>
               
             </tr>
@@ -75,6 +109,8 @@ function SupplierList() {
         
         </tbody>
       </table>
+
+      <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} />
     </div>
   )
 }

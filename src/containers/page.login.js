@@ -15,7 +15,7 @@ const images = [
 ];
 
 function Login({ updateAuthentication }) {
-    
+  
   const navigate = useNavigate()
   const [image, setImage] = useState(0)
   const [formData, setFormData] = useState({
@@ -35,6 +35,7 @@ function Login({ updateAuthentication }) {
         setImage((prevImage) => (prevImage + 1) % images.length)
       }
     }, 20000)
+
 
     return () => {
       clearInterval(interval)

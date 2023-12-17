@@ -1,32 +1,80 @@
 import React, { useState } from 'react';
 import {ValidateInput} from '../services/validation.login';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+
 
 function UnitMaster() {
 
-  const [unitDescription, setUnitDescription] = useState('');
-  const [unitSI, setUnitSI] = useState('');
+  //const [unitDescription, setUnitDescription] = useState('');
+  //const [unitSI, setUnitSI] = useState('');
+  const[values,setValues]=useState({
+    Description:'',
+    SI:''
+    
 
-  const unitDescriptionError = ValidateInput(unitDescription);
-    const unitSIError = ValidateInput(unitSI);
+  })
+  const navigate = useNavigate();
 
-    const [Errormessage, setErrormessage] = useState(false)
+  const unitDescriptionError = ValidateInput(values.Description);
+  const unitSIError = ValidateInput(values.SI);
 
-  const handleSubmit = (e) => {
+  const [Errormessage, setErrormessage] = useState(false)
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Add your form submission logic here
 
     if(unitDescriptionError || unitSIError){
       console.log("No inputs")
       setErrormessage(true)
       return
     }
+    else 
+    {
+      //Making axios http request to insert values into db
+      axios.post('http://localhost:8081/unit/create', values)
+      .then((res) => {
+        console.log('Unit Description:', values.Description);
+        console.log('Unit SI:', values.SI);
 
+        //For the toast message
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Unit has been saved",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        
+        // Reset the form fields
+        setValues({
+        Description: '',
+        SI: '',
+        
+        });
+      })
+      .catch (err => {
+        console.log(err);
+      })
+      .finally(() => {
+        // Navigate to 'Unit-list' after the alert is closed
+        navigate('/home/unit-list');
+      });
+      
+    }
 
-    console.log('Unit Description:', unitDescription);
-    console.log('Unit SI:', unitSI);
-    // Reset the form fields
-    setUnitDescription('');
-    setUnitSI('');
+    
+   
+  };
+
+  //handle input change
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setValues((prevValues)=>({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
   return (
@@ -39,10 +87,12 @@ function UnitMaster() {
           </label>
           <input
             type="text"
+            name='Description'
             className="form-control"
             id="unitDescription"
-            value={unitDescription}
-            onChange={(e) => setUnitDescription(e.target.value)}
+            value={values.Description}
+            onChange={handleInputChange}
+            required
           />
           {Errormessage && <span className='text-danger'>{unitDescriptionError} </span>}
         </div>
@@ -52,15 +102,17 @@ function UnitMaster() {
           </label>
           <input
             type="text"
+            name='SI'
             className="form-control"
             id="unitSI"
-            value={unitSI}
-            onChange={(e) => setUnitSI(e.target.value)}
+            value={values.SI}
+            onChange={handleInputChange}
+            required
           />
           {Errormessage && <span className='text-danger'>{unitSIError} </span>}
         </div>
         <button type="submit" className="btn btn-primary">
-          Submit
+          Save
         </button>
       </form>
     </div>

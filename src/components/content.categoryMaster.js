@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './categoryMaster.css'
 import axios  from 'axios';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -28,6 +27,7 @@ function CategoryMaster() {
           });
 
           //navigate('/home/category-list');
+
 
       }).catch (err => {
           console.log(err);
@@ -71,16 +71,18 @@ function CategoryMaster() {
        <div className='master-content'>
         <h2>Category Master</h2>
        </div>
-       <div id='formcontainer'>
+       <div>
        <form onSubmit={handleSubmit}>
-                <div id="input">
-                <label id = "form-label">Category Name</label>
-                <input id="form-input" type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
+                <div className='categoryMaster-input-container'>
+
+                <label className='categoryMaster-label'>Category Name</label>
+                <input className='categoryMaster-input' type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
+
 
                 </div>
-                <div id="button-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                     <button id="cancel" onClick={handleCancel}> Cancel</button>
-                    <button id = "save" type="submit">Save</button>
+                <div className='categoryMaster-buttons-container'>
+                     <button className='categoryMaster-cancel-button' onClick={handleCancel}> Cancel</button>
+                    <button className='categoryMaster-save-button' type="submit">Save</button>
                     
                 </div>
                 
