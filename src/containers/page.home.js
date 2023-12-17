@@ -73,7 +73,7 @@ function Home() {
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
             <Route path="unit-list" element={<UnitList />} />
-            <Route path="item-update" element={<ItemUpdate />} />
+            <Route path="item-update/:itemId/:itemCode/:itemName/:categoryId/:unitId" element={<ItemUpdate />}/>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

@@ -75,9 +75,12 @@ function ItemList() {
   };
 
    //Handle Update 
-   const handleUpdate = (itemId, categoryId, unitId) => {
+   const handleUpdate = (itemId,itemCode,itemName, categoryId, unitId) => {
     
-    navigate(`/item-update/${itemId}/${categoryId}/${unitId}`);
+    console.log('Updating item:', itemId, itemCode, itemName, categoryId, unitId);
+    navigate(`/home/item-update/${itemId}/${itemCode}/${itemName}/${categoryId}/${unitId}`);
+    //navigate(`/home/item-update/${itemId,itemCode,itemName,categoryId,unitId}`);
+    //navigate(`/home/item-update`);
   };
 
 
@@ -113,7 +116,7 @@ function ItemList() {
                   type='button' 
                   className='btn btn-success' 
                   style={{ marginRight: '20px' }}
-                  onClick={()=> handleUpdate(item.ID, item.Category_ID, item.Unit_ID)}>update   
+                  onClick={()=> handleUpdate(item.ID, item.Code, item.Name, item.Category_ID, item.Unit_ID)}>update   
                 </button>
 
                 <button type='button' className='btn btn-danger' onClick={()=> handleDelete(item.ID)}>Delete</button>

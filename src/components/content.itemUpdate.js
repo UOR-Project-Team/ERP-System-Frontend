@@ -1,10 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Select from 'react-select';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-function ItemMaster() {
+function ItemUpdate() {
 
   const[values,setValues]=useState({
     code:'',
@@ -14,62 +14,147 @@ function ItemMaster() {
 
   })
 
+  
+
+  const { itemId, itemCode, itemName, categoryId, unitId } = useParams();
   const navigate = useNavigate();
+
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [units, setUnit] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState(null);
-  
-  useEffect(() => {
-    // Fetch item details based on the itemId
-    axios.get(`http://localhost:8081/item/get/${itemId}`)
-      .then(response => {
-        const itemDetails = response.data.item;
-        setValues({
-          code: itemDetails.code,
-          itemName: itemDetails.itemName,
-          categoryId:itemDetails.categoryId,
-          unitId:itemDetails.unitId
-        });
-        setSelectedCategory(itemDetails.categoryId)
-        setSelectedUnit(itemDetails.unitId)
-      })
-      .catch(error => {
-        console.error('Error fetching item details:', error);
-      });
+  const [selectedUnit, setSelectedUnit] = useState({});
 
-    // Fetch categories and units
-    axios.get('http://localhost:8081/category/show')
-      .then(response => {
-        setCategories(response.data.categories);
-      })
-      .catch(error => {
-        console.error('Error fetching category data:', error);
-      });
+  const [loading, setLoading] = useState(true);
 
-    axios.get('http://localhost:8081/unit/get')
-      .then(response => {
-        setUnit(response.data.units);
-      })
-      .catch(error => {
-        console.error('Error fetching units data:', error);
-      });
-  }, [itemCode]);
 
-  // Fetch categories from the server
-  useEffect(() => {
+    // Fetch units from the database for the unit drop down
+    useEffect(() => {
     
-    axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
-      .then(response => {
-        setCategories(response.data.categories);
+      axios.get('http://localhost:8081/unit/get') // Adjust the API endpoint based on your backend
+        .then(response => {
+          setUnit(response.data.units);
+        })
+        .catch(error => {
+          console.error('Error fetching units data:', error);
+        })
+        .finally(()=>{
+            setLoading(false);
+        });
+    }, []);
+  
+    // Fetch categories from the database for the category dropdown menu
+    useEffect(() => {
+      
+      axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
+        .then(response => {
+          setCategories(response.data.categories);
+  
+        })
+        .catch(error => {
+          console.error('Error fetching category data:', error);
+        })
+        .finally(()=>{
+          setLoading(false);
+        });
+    }, []);
 
-      })
-      .catch(error => {
-        console.error('Error fetching category data:', error);
-      });
-  }, []);
+  //const [defaultCategory, setdefaultCategory] = useState([]);
+  //const [defaultUnit, setdefaultUnit] = useState([]);
+  
+  
+  // useEffect(()=>{
+  //   //Populating the fields with the information of the corresponding item
+  //   setValues({
+  //       code:itemCode,
+  //       itemName:itemName,
+  //       categoryId:categoryId,
+  //       unitId:unitId
+  //   });
+
+
+
+  // },[]);
+
+
+  // const categoryOptions = categories.map(category => ({
+  //   value: category.ID,
+  //   label: category.Description,
+  // }));
+
+  // const unitOptions = units.map(unit => ({
+  //   value: unit.ID,
+  //   label: unit.Description,
+  // }));
+
+
+
+  // Memoize categoryOptions and unitOptions
+  const categoryOptions = useMemo(() => (
+    categories.map(category => ({
+      value: category.ID,
+      label: category.Description,
+    }))
+  ), [categories]);
+
+  const unitOptions = useMemo(() => (
+    units.map(unit => ({
+      value: unit.ID,
+      label: unit.Description,
+    }))
+  ), [units]);
+
+
+  useEffect(() => {
+    // Populating the fields with the information of the corresponding item
+    setValues({
+      code: itemCode,
+      itemName: itemName,
+      categoryId: categoryId,
+      unitId: unitId
+    });
+    console.log("unitOptions:", unitOptions);
+
+    // Set default values for selectedCategory and selectedUnit based on item's category and unit
+    const selectedCategoryOption = categoryOptions.find(option => option.value === 2) || { value: '', label: '' };
+    const selectedUnitOption = unitOptions.find(option => option.value === 2) || { value: '', label: '' };
+    console.log("unitId: ",unitId);
+    console.log("cateogryId: ",categoryId);
+
+    setSelectedCategory(selectedCategoryOption);
+    setSelectedUnit(selectedUnitOption);
+    console.log(selectedUnit.label );
+  }, [categoryOptions, unitOptions]);
+
+
+
+
+  
+
+  // useEffect(() => {
+  //   // Fetch unit description by the unitId
+  //   axios.get(`http://localhost:8081/unit/get/${unitId}`)
+  //     .then(response => {
+  //       const unitDetails = response.data.unit;
+  //       setSelectedUnit(unitDetails)
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching item details:', error);
+  //     });  
+  // }, [unitId]);
+
+  //  useEffect(() => {
+  //    if (unitId) {
+  //      const selectedUnitOption = unitOptions.find(unit => unit.value === unitId);
+  //     setSelectedUnit(selectedUnitOption || {}); // set default value if found
+  //    }
+  // }, []);
+
+  
+
+  
+
 
   // Handle category change
   const handleCategoryChange = selectedOption => {
@@ -91,17 +176,7 @@ function ItemMaster() {
 
   
 
-   // Fetch units from the server
-   useEffect(() => {
-    
-    axios.get('http://localhost:8081/unit/get') // Adjust the API endpoint based on your backend
-      .then(response => {
-        setUnit(response.data.units);
-      })
-      .catch(error => {
-        console.error('Error fetching units data:', error);
-      });
-  }, []);
+   
 
 
   
@@ -117,7 +192,7 @@ function ItemMaster() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8081/item/create', values)
+    axios.post('http://localhost:8081/item/update/${itemId}', values)
       .then((res) => {
         console.log('Item Code:', values.code);
         console.log('Item Name:', values.itemName);
@@ -128,7 +203,7 @@ function ItemMaster() {
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Item has been saved",
+          title: "Item has been Updated",
           showConfirmButton: false,
           timer: 1000,
         });  
@@ -153,112 +228,85 @@ function ItemMaster() {
       
   };
 
+  if (loading) {
+    // You can render a loading indicator or a message here
+    return <div>Loading...</div>;
+  }
   
-
-
-  const categoryOptions = categories.map(category => ({
-    value: category.ID,
-    label: category.Description,
-  }));
-
-  const unitOptions = units.map(unit => ({
-    value: unit.ID,
-    label: unit.Description,
-  }));
-
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-                <h2>Add Item</h2>
-
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="ItemCode">Item Code</label>
-                    
-                    <input 
-                      type="text" 
-                      name='code' 
-                      placeholder='Enter Item Code' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.code}
-                      required/>
+  else{
+    return (
+      <div>
+        <form onSubmit={handleSubmit}>
+                  <h2>Update Item</h2>
+  
+                  <div className='mb-2 col-md-3'>
+                      <label htmlFor="ItemCode">Item Code</label>
                       
-                </div>
-
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="ItemName">Item name</label>
-                    <input 
-                      type="text" 
-                      name='itemName' 
-                      placeholder='Enter Item Name' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.itemName}
-                      required/>
+                      <input 
+                        type="text" 
+                        name='code' 
+                        placeholder='Enter Item Code' 
+                        className='form-control'
+                        onChange={handleInputChange} 
+                        value={values.code}
+                        required/>
+                        
+                  </div>
+  
+                  <div className='mb-2 col-md-3'>
+                      <label htmlFor="ItemName">Item name</label>
+                      <input 
+                        type="text" 
+                        name='itemName' 
+                        placeholder='Enter Item Name' 
+                        className='form-control'
+                        onChange={handleInputChange} 
+                        value={values.itemName}
+                        required/>
+                        
+                  </div>
+                  
+                  <div className='mb-2 col-md-3'>
+                      <label htmlFor="Cateogory">Category</label>
+                      <Select
+                        options={categoryOptions}
+                        value={selectedCategory}
+                        defaultValue={categoryOptions[2]}
+                        onChange={handleCategoryChange}
+                        placeholder="Select a category"
+                        name= 'categoryId'
+                        
+                      />
                       
-                </div>
-                
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="Cateogory">Category</label>
-                    <Select
-                      options={categoryOptions}
-                      value={selectedCategory}
-                      onChange={handleCategoryChange}
-                      placeholder="Select a category"
-                      name= 'categoryId'
-                      
-                    />
-                    
-                    {/* <input 
-                      type="text" 
-                      name='categoryId' 
-                      placeholder='Enter Category ID' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.categoryId}/> */}
-                </div>
+                  </div>
+  
+                  <div className='mb-2 col-md-3'>
+                      <label htmlFor="UnitId">Unit ID</label>
+                      <Select
+                        options={unitOptions}
+                        //value={{ value: selectedUnit.ID, label: selectedUnit.Description }}
+                        value={selectedUnit}
+                        //defaultValue={selectedUnit.Description}
+                        //clearValue={!selectedUnit.value} // clear value if undefined
+                        //defaultValue={{ value: defaultUnit.ID, label: defaultUnit.Description }}
+                        onChange={handleUnitChange}
+                        placeholder="Select a Unit"
+                        name= 'unitId'
+                        
+                      />
+  
+                  </div>
+                  
+  
+                  <button className='btn btn-success'>Update</button>
+  
+              </form>
+      </div>
+    );
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="UnitId">Unit ID</label>
-                    <Select
-                      options={unitOptions}
-                      value={selectedUnit}
-                      onChange={handleUnitChange}
-                      placeholder="Select a Unit"
-                      name= 'unitId'
-                      
-                    />
+  }
 
-
-                    {/* <input 
-                      type="text" 
-                      name='unitId' 
-                      placeholder='Enter Unit ID' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.unitId}/> */}
-                </div>
-
-
-                {/* <div className='mb-2'>
-                    <label htmlFor="">Supplier</label>
-                    <input type="text" placeholder='Enter Supplier' className='form-control'
-                    onChange={e=>setValues({...values, Supplier_id:e.target.value})}/>
-                </div> */}
-
-                {/* <div className='mb-2'>
-                    <label htmlFor="">Unit Price</label>
-                    <input type="text" placeholder='Enter unit price ' className='form-control'
-                    onChange={e=>setValues({...values, Unit_price:e.target.value})}/>
-                </div> */}
-
-                
-
-                <button className='btn btn-success'>Save</button>
-
-            </form>
-    </div>
-  );
+  
 }
 
-export default ItemMaster;
+export default ItemUpdate;
