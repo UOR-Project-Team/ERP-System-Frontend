@@ -23,13 +23,13 @@ const validateCustomer = (formData) => {
   }
 
   if (!formData.nic) {
-      errors.nic = 'NIC/Passport is required';
+      errors.nic = 'NIC/Passport is required *';
   } else if (!/^[A-Za-z0-9]+$/i.test(formData.nic)) {
       errors.nic = 'Invalid NIC/Passport format';
   }
 
   if (!formData.contactno) {
-      errors.contactno = 'Contact No is required *';
+      errors.contactno = 'Contact number is required *';
     } else if (!/^\+?\d+$/.test(formData.contactno)) {
       errors.contactno = 'Contact No must contain only numbers';
     } else if (formData.contactno.length < 10) {
