@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
 import axios from 'axios'
 import validateUser from '../services/validate.userLoginForms';
@@ -14,9 +14,8 @@ const images = [
   img3
 ];
 
-
-function Login() {
-    
+function Login({ updateAuthentication }) {
+  
   const navigate = useNavigate()
   const [image, setImage] = useState(0)
   const [formData, setFormData] = useState({
@@ -76,6 +75,9 @@ function Login() {
 
       if (response.status === 200) {
         console.log('Successfully logged in');
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        updateAuthentication(true)
         navigate('/home');
       } else {
         toast.error(`Please try again later`, {
