@@ -204,7 +204,6 @@ function CustomerMaster() {
               <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
             </div>
         </form>
-        {formData.country}
       </div>
     </div>
   );

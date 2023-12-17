@@ -26,7 +26,7 @@ import UnitList from '../components/content.unitList';
 
 import UpdateCategory from '../components/update.categoryMaster';
 
-function Home() {
+function Home({ updateAuthentication }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [headerText, setHeaderText] = useState("Control Panel");
 
@@ -36,6 +36,14 @@ function Home() {
 
   const updateHeaderText = (text) => {
     setHeaderText(text);
+  };
+
+  const getHeaderText = () => {
+    return headerText;
+  }
+
+  const toggleupdateAuthentication = () => {
+    updateAuthentication(false)
   };
 
   return (
@@ -49,7 +57,7 @@ function Home() {
       </div>
       <div className="main-container">
         <div className="header-container">
-          <Header text={headerText} />
+          <Header getHeaderText={getHeaderText} toggleupdateAuthentication={toggleupdateAuthentication} />
         </div>
         <div className="body-container">
           <Routes>
