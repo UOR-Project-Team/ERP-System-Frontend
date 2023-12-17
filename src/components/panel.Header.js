@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom"
 import Modal from 'react-modal';
+import { jwtDecode } from "jwt-decode";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import {
@@ -19,12 +21,34 @@ import NotificationLogo from './../assets/icons/notification.png';
 
 Modal.setAppElement('#root');
 
-const Header = (props) => {
+const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelContent, setModelContent] = useState('profile');
   const [removeClick, setDialogOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({
+    username: '',
+    fullname: '',
+    status: false
+  })
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // Get the token from localStorage
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setCurrentUser({
+        username: decodedToken.username,
+        fullname: decodedToken.fullname,
+        status: decodedToken.status
+      })
+      console.log(decodedToken);
+    } else {
+      console.log('Token not found');
+    }
+  }, []); 
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,10 +64,17 @@ const Header = (props) => {
     setIsModalOpen(true);
   }
 
+  const handleLogout = () => {
+    setAnchorEl(null);
+    toggleupdateAuthentication()
+    localStorage.removeItem('token');
+    navigate('/');
+  }
+
     return (
       <div className="header">
           <div className="left">
-            <h2>{props.text}</h2>
+            <h2>{getHeaderText()}</h2>
           </div>
           <div className="middle">
           </div>
@@ -51,8 +82,8 @@ const Header = (props) => {
             <span>
             <button onClick={() => handleRequest('profile')}>
                 <span className='text-container'>
-                  <div className='uname-text'>Nuvindu Senarathne</div>
-                  <div className='type-text'>Administrator</div>
+                  <div className='uname-text'>{currentUser.fullname}</div>
+                  <div className='type-text'>{currentUser.status ? ('Administrator') : ('System User')}</div>
                 </span>
                 <span><img src={DownLogo} alt="Down Logo"/></span>
               </button>
@@ -99,7 +130,7 @@ const Header = (props) => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button color="primary">
+                <Button color="primary" onClick={handleLogout}>
                   Yes
                 </Button>
                 <Button color="primary" autoFocus onClick={() => setDialogOpen(false)}>

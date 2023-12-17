@@ -34,6 +34,19 @@ const customerServices = {
     }
   },
 
+  updateCustomer: async (customerId, data) => {
+    try {
+      const response = await axios.put(`${apiUrl}/${customerId}`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error updating customer: ${error.message}`);
+    }
+  },
+
   deleteCustomer: async (customerId) => {
     try {
       const response = await axios.delete(`${apiUrl}/${customerId}`);
