@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './containers/page.home';
 import Login from './containers/page.login';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
 function App() {
 
