@@ -23,7 +23,8 @@ import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
 import UnitList from '../components/content.unitList';
-import ItemUpdate from '../components/content.itemUpdate';
+import ItemUpdate from '../components/update.itemMaster';
+import UnitUpdate from '../components/update.unitMaster';
 
 
 function Home() {
@@ -74,6 +75,7 @@ function Home() {
             <Route path="invoice-list" element={<InvoiceList />} />
             <Route path="unit-list" element={<UnitList />} />
             <Route path="item-update/:itemId/:itemCode/:itemName/:categoryId/:unitId" element={<ItemUpdate />}/>
+            <Route path="unit-update/:unitId/:unitDescription/:unitSI" element={<UnitUpdate />}/>
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

@@ -220,7 +220,7 @@ function ItemMaster() {
 
                 
 
-                <button className='btn btn-success'>Save</button>
+                <button type="submit" className='btn btn-success'>Save</button>
 
             </form>
     </div>

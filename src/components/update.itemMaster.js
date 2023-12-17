@@ -192,21 +192,12 @@ function ItemUpdate() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8081/item/update/${itemId}', values)
+    axios.put(`http://localhost:8081/item/update/${itemId}`, values)
       .then((res) => {
         console.log('Item Code:', values.code);
         console.log('Item Name:', values.itemName);
         console.log('Category ID:',{selectedCategory});
-        console.log('Unit ID:', {selectedUnit});
-
-        //For the toast message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Item has been Updated",
-          showConfirmButton: false,
-          timer: 1000,
-        });  
+        console.log('Unit ID:', {selectedUnit});  
 
 
         // Reset the form fields
@@ -223,10 +214,24 @@ function ItemUpdate() {
       })
       .finally(() => {
         // Navigate to 'Item-list' after the alert is closed
+         //For the toast message
+         Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Item has been Updated",
+          showConfirmButton: false,
+          timer: 1000,
+        });
         navigate('/home/item-list');
       });
       
   };
+
+  //Handle Cancel 
+  const handleCancel = () => { 
+    navigate(`/home/item-list`);
+  };
+  
 
   if (loading) {
     // You can render a loading indicator or a message here
@@ -298,7 +303,8 @@ function ItemUpdate() {
                   </div>
                   
   
-                  <button className='btn btn-success'>Update</button>
+                  <button type="submit" className='btn btn-success' style={{ marginRight: '20px' }}>Update</button>
+                  <button className='btn btn-danger' onClick={handleCancel}>Cancel</button>
   
               </form>
       </div>

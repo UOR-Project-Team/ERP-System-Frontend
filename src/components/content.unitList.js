@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 function UnitList() {
 
   const [Unit, setUnits] = useState([]);
   const [isBlur , setIsBlur] = useState(false);
+
+  const navigate = useNavigate();
   
   useEffect(() => {
 
@@ -71,6 +74,14 @@ function UnitList() {
     });
   };
 
+  //Handle Update 
+  const handleUpdate = (unitId,unitDescription,unitSI) => {
+    
+    console.log('Updating Unit:', unitId, unitDescription, unitSI);
+    navigate(`/home/unit-update/${unitId}/${unitDescription}/${unitSI}`);
+
+  };
+
 
 
   return (
@@ -99,6 +110,7 @@ function UnitList() {
                 <button 
                   type='button' 
                   className='btn btn-success' 
+                  onClick={()=> handleUpdate(unit.ID, unit.Description, unit.SI,)}
                   style={{ marginRight: '20px' }}>update   
                 </button>
 

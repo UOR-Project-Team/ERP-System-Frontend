@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {ValidateInput} from '../services/validation.login';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 
-function UnitMaster() {
+function UpdateUnitMaster() {
 
   //const [unitDescription, setUnitDescription] = useState('');
   //const [unitSI, setUnitSI] = useState('');
@@ -15,6 +15,8 @@ function UnitMaster() {
     
 
   })
+
+  const {unitId, unitDescription, unitSI } = useParams();
   const navigate = useNavigate();
 
   const unitDescriptionError = ValidateInput(values.Description);
@@ -22,6 +24,18 @@ function UnitMaster() {
 
   const [Errormessage, setErrormessage] = useState(false)
 
+  useEffect(() => {
+    // Populating the fields with the information of the corresponding item
+    setValues({
+      Description: unitDescription,
+      SI: unitSI,
+
+    });
+    
+  }, []);
+
+
+  //Handle update
   const handleSubmit = async(e) => {
     e.preventDefault();
 
@@ -33,19 +47,12 @@ function UnitMaster() {
     else 
     {
       //Making axios http request to insert values into db
-      axios.post('http://localhost:8081/unit/create', values)
+      axios.put(`http://localhost:8081/unit/update/${unitId}`, values)
       .then((res) => {
         console.log('Unit Description:', values.Description);
         console.log('Unit SI:', values.SI);
 
-        //For the toast message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Unit has been saved",
-          showConfirmButton: false,
-          timer: 1000,
-        });
+        
         
         // Reset the form fields
         setValues({
@@ -60,6 +67,15 @@ function UnitMaster() {
       .finally(() => {
         // Navigate to 'Unit-list' after the alert is closed
         navigate('/home/unit-list');
+
+        //For the toast message
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Unit has been updated",
+            showConfirmButton: false,
+            timer: 1000,
+          });
       });
       
     }
@@ -76,6 +92,9 @@ function UnitMaster() {
       [name]: value,
     }));
   };
+
+
+
 
   return (
     <div className="container mt-4">
@@ -112,11 +131,11 @@ function UnitMaster() {
           {Errormessage && <span className='text-danger'>{unitSIError} </span>}
         </div>
         <button type="submit" className="btn btn-success">
-          Save
+          Update
         </button>
       </form>
     </div>
   );
 }
 
-export default UnitMaster;
+export default UpdateUnitMaster;
