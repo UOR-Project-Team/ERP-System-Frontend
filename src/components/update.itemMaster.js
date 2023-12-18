@@ -117,8 +117,8 @@ function ItemUpdate() {
     console.log("unitOptions:", unitOptions);
 
     // Set default values for selectedCategory and selectedUnit based on item's category and unit
-    const selectedCategoryOption = categoryOptions.find(option => option.value === 2) || { value: '', label: '' };
-    const selectedUnitOption = unitOptions.find(option => option.value === 2) || { value: '', label: '' };
+    const selectedCategoryOption = categoryOptions.find(option => option.value == categoryId) || { value: '', label: '' };
+    const selectedUnitOption = unitOptions.find(option => option.value == unitId ) || { value: '', label: '' };
     console.log("unitId: ",unitId);
     console.log("cateogryId: ",categoryId);
 
