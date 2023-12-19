@@ -1,3 +1,4 @@
+
 input{
     padding: 15px;
     margin: 10px;
@@ -9,6 +10,7 @@ label{
     font-size: 20px;
 }
 
+
 #add{
     width: 150px;
     font-size: medium;
@@ -17,7 +19,14 @@ label{
     color: white;
     border: none;
     margin: 50px;
+
+    cursor: pointer;
    
+
+}
+#add:hover{
+  opacity: 80%;
+
 }
 
 #update{
@@ -45,12 +54,15 @@ label{
 
 
 
-table {
+
+#table {
+
     
     border-collapse: collapse;
     width:500px;
   }
   
+
   td, th {
     border: 1px solid black;
     text-align: left;
@@ -63,3 +75,25 @@ table {
   tr:nth-child(even) {
     background-color: #dddddd;
   }
+
+
+  #tabel-head{
+    background-color: whitesmoke;
+    text-align: center;
+    border: 1px solid black;
+    width: 10px;
+    
+    padding: 8px;
+  }
+  #tabel-data{
+    text-align: left;
+    border: 1px solid black;
+    width: 10px;
+    
+    padding: 8px;
+  }
+  
+  #tabel-row:nth-child(even) {
+    background-color: #dddddd;
+  } 
+

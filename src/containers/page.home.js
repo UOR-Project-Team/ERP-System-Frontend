@@ -22,26 +22,33 @@ import SupplierList from '../components/content.supplierList';
 import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
+import UnitList from '../components/content.unitList';
+
 
 function Home() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [headerText, setHeaderText] = useState("Control Panel");
 
   const togglePanel = () => {
     setIsExpanded((prev) => !prev);
+  };
+
+  const updateHeaderText = (text) => {
+    setHeaderText(text);
   };
 
   return (
     <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
-          <SidePanelExpand onToggle={togglePanel} />
+          <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} />
+          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         )}
       </div>
       <div className="main-container">
         <div className="header-container">
-          <Header text={"Dashboard"} />
+          <Header text={headerText} />
         </div>
         <div className="body-container">
           <Routes>
@@ -61,9 +68,10 @@ function Home() {
             <Route path="category-list" element={<CategoryList />} />
             <Route path="item-list" element={<ItemList />} />
             <Route path="supplier-list" element={<SupplierList />} />
-            <Route path="employee-list" element={<UserList />} />
+            <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
+            <Route path="unit-list" element={<UnitList />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

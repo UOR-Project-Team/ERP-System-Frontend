@@ -290,6 +290,7 @@ function SupplierMaster() {
           Register
         </button>
       </form>
+
     </div>
   );
 }
