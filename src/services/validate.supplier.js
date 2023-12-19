@@ -4,11 +4,11 @@ const validateSupplier = (formData) => {
       RegistrationNo: '',
       Email: '',
       ContactNo: '',
-      FAX: '',
+      Fax: '',
       Address: '',
       City: '',
       Description: '',
-      VATNo: '',
+      VatNo: '',
       
     };
   
@@ -36,12 +36,12 @@ const validateSupplier = (formData) => {
       } 
 
 
-    if (!formData.FAX) {
-        errors.FAX = 'Fax number is required *';
-      } else if (!/^\+?\d+$/.test(formData.FAX)) {
-        errors.FAX = 'FAX No must contain only numbers';
-      } else if (formData.FAX.length < 10) {
-        errors.FAX = 'FAX No must be at least 10 digits';
+    if (!formData.Fax) {
+        errors.Fax = 'Fax number is required *';
+      } else if (!/^\+?\d+$/.test(formData.Fax)) {
+        errors.Fax = 'FAX No must contain only numbers';
+      } else if (formData.Fax.length < 10) {
+        errors.Fax = 'FAX No must be at least 10 digits';
       } 
   
     if (!formData.Address) {
@@ -56,8 +56,8 @@ const validateSupplier = (formData) => {
         errors.Description = 'Description is required *';
     }
 
-    if (!formData.VATNo) {
-        errors.VATNo = 'VAT number is required *';
+    if (!formData.VatNo) {
+        errors.VatNo = 'VAT number is required *';
     }
   
     return errors;
