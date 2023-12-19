@@ -1,84 +1,146 @@
-import React, {useState} from 'react'
-import {validateusername,validatepassword} from  '../services/validation.login';
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom"
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import validateUser from '../services/validate.userLoginForms';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import img1 from '../assets/images/login-background-1.jpg'
+import img2 from '../assets/images/login-background-2.jpg'
+import img3 from '../assets/images/login-background-3.jpg'
+
+const images = [
+  img1,
+  img2,
+  img3
+];
+
+function Login({ updateAuthentication }) {
+  
+  const navigate = useNavigate()
+  const [image, setImage] = useState(0)
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  })
+  const [errorMessage, setErrorMessage] = useState({
+    username: '',
+    password: '',
+  })
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (image === images.length - 1) {
+        setImage(0);
+      } else {
+        setImage((prevImage) => (prevImage + 1) % images.length)
+      }
+    }, 20000)
 
 
+    return () => {
+      clearInterval(interval)
+    };
+  }, [image]);
 
-function Login() {
+  const handleChanges = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit= async(event)=>{
+    event.preventDefault();
     
-    const [username, setUsername] = useState('admintest')
-    const [password, setPassword] = useState('a22')
+    const validationErrors = validateUser(formData);
+    setErrorMessage(validationErrors);
 
-    const navigate = useNavigate();
-
-    const usernameError = validateusername(username);
-    const passwordError = validatepassword(password);
-
-    const [ErrorMessage, setErrorMessage]= useState(false)
-
-
-
-    const handleSubmit= async(event)=>{
-        event.preventDefault();
-        
-        if (usernameError || passwordError) {
-            // Handle validation errors
-            console.error('Validation Error:', usernameError, passwordError);
-            return;
-          }
-  
-  
-          try{
-          const response =await axios.post('http://localhost:8081/login', {
-            //paasing username & password
-              username: username, 
-              password: password,
-          });
-          
-          //checking the responese
-          if (response.status === 200) {
-              console.log('Successfully logged in');
-              setErrorMessage(false)
-              navigate('/home');
-            } else {
-              alert('Error logging in');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            setErrorMessage(true)
-            // Handle error 
-          }
-
-
+    if (Object.values(validationErrors).some((error) => error !== '')) {
+      toast.error(`Please try again`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return
     }
+  
+    try {
+      const response =await axios.post('http://localhost:8081/login', {
+          username: formData.username, 
+          password: formData.password,
+      });
+
+      if (response.status === 200) {
+        console.log('Successfully logged in');
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        updateAuthentication(true)
+        navigate('/home');
+      } else {
+        toast.error(`Please try again later`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      if (error.response && error.response.status === 401) {
+        console.error('Error:', error);
+        toast.error(`Invalid Credentials`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      } else {
+        console.error('Error:', error);
+        toast.error(`Internal Server Error`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    }
+  }
 
   return (
-    <div style={{ backgroundColor: '#260261' }} className='d-flex justify-content-center align-items-center vh-100'>
-        
-        <div className='text-center'>
-            <h1 className="text-white mb-3 p-3 rounded w-100 ">ERP System of ABC </h1>
-            <div className='bg-white p-3 rounded w-100'>
-                <h2>Sign-In</h2>
-                {ErrorMessage && <div className='text-danger'>Login Faild</div>}
-                <form action="" onSubmit={handleSubmit} >
-                    <div className='mb-3 text-start'>
-                        <label htmlFor="uname"><strong>User Name</strong></label>
-                        <input type="text" placeholder='Enter Name' name='username' onChange={(event) => setUsername(event.target.value)} value={username} className='form-control rounded-0'/>
-                        {usernameError && <span className='text-danger'>{usernameError}</span>}
-
-                    </div>
-                    <div className='mb-3 text-start'>
-                        <label htmlFor="password"><strong>Password</strong></label>
-                        <input type="password" placeholder='Enter Password' name='password'
-                        onChange={(event) => setPassword(event.target.value)} value={password} className='form-control rounded-0'/>
-                        {passwordError && <span className='text-danger'>{passwordError}</span>}
-                    </div>
-                    <button type='submit' className='btn btn-success w-100'>Log in</button>
-                    
-                </form>
-            </div>
+    <div className='login-container' style={{ backgroundImage: `url(${images[image]})` }}>
+      <ToastContainer />
+      <div className='login-overlay'>
+        <div className='overlay-background'></div>
+      </div>
+      <div className='form-container-wrapper'>
+        <div className='form-container'>
+          <form onSubmit={handleSubmit}>
+            <h3>Login</h3>
+            <div className='input-label'>Username:</div>
+            <input type='text' placeholder='Username Or Email' name='username' value={formData.username} onChange={(e) => handleChanges(e)} />
+            <label>{errorMessage.username}</label>
+            <div className='input-label'>Password:</div>
+            <input type='password' placeholder='Password' name='password' value={formData.password} onChange={(e) => handleChanges(e)} />
+            <label>{errorMessage.password}</label>
+            <button type='submit'>Login</button>
+          </form>
         </div>
+      </div>
     </div>
   )
 }
