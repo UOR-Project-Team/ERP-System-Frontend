@@ -51,6 +51,7 @@ function Home() {
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
             <Route path="employee-master" element={<UserMaster />} />
+            <Route path="employee-master/:id" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
