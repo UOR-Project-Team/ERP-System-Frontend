@@ -107,7 +107,7 @@ function CategoryMaster(){
         return(
             <div>
                 <ToastContainer />
-                <div className='master-content' style={{height: '100vh'}}>
+                <div className='master-content' style={{height: '92vh'}}>
                     <form className='form-container' style={{marginTop:'25vh'}}>
                         <h3>Category Details</h3>
                             <TextField className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
