@@ -996,17 +996,7 @@ body, html {
     opacity: 80%;
 }
 
-.categorylist-updatebutton{
-    background-color: rgb(30, 30, 244);
-    color:blue;
-    font-size: medium;
-    border: none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right:0px;
-    
 
-}
 
 .categorylist-deletebutton{
     background-color: rgb(248, 55, 55);
@@ -1022,10 +1012,7 @@ body, html {
 
 
 }
-/* .categorylist-action-column{
-    display: flex;
-    justify-content: center;
-} */
+
 .categorylist-updatebutton-container{
    margin-left: -50px; 
    margin-bottom: -7px;
@@ -1042,8 +1029,8 @@ body, html {
  
  }
 
-/*-------------------- Category Master & Update Category -----------------------*/
 
+ 
 .categoryMaster-buttons-container{
     display: flex;
     justify-content: flex-end;
@@ -1101,3 +1088,45 @@ body, html {
     font-size: large;  
     text-align: center;
 }
+/*-------------------- Supplier list-----------------------*/
+
+
+.supplierlist-inActivebutton{
+    background-color: rgb(248, 55, 55);
+
+    color:red;
+    font-size: small;
+    font-weight: bold;
+    border:none;
+    border-radius: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+    
+
+
+}
+
+.supplierlist-Activebutton{
+    background-color: #194c14;
+
+    color:#14A44D;
+    font-size: small;
+    font-weight: bold;
+   
+    border:none;
+    border-radius: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+    
+
+
+}
+
+.supplierlist-Statusbutton-container{
+   
+    display: flex;
+    justify-content: center;
+ 
+ }

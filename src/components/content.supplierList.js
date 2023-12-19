@@ -97,6 +97,8 @@ function SupplierList() {
     fetchSuppliers();
   }, []);
 
+
+
   const fetchSuppliers = async () => {
     try {
       const supplierData = await supplierServices.getAllSuppliers();
@@ -285,11 +287,11 @@ function SupplierList() {
                 RegistrationNo: foundSupplier.RegistrationNo || '',
                 Email: foundSupplier.Email || '',
                 ContactNo: foundSupplier.ContactNo || '',
-                FAX: foundSupplier.Fax || '',
+                Fax: foundSupplier.Fax || '',
                 Address: foundSupplier.Address || '',
                 City: foundSupplier.City || '',
                 Description: foundSupplier.Description || '',
-                VATNo: foundSupplier.VatNo || ''
+                VatNo: foundSupplier.VatNo || ''
 
               });
             } else {
@@ -358,7 +360,7 @@ function SupplierList() {
     const headers = [["ID","Full Name", "Registratoin No", "Email", "Contact Number", "FAX", "Address", "City", "Description","VAT No","Credit"]];
 
     // Map customer data
-    const data = suppliers.map(elt=> [elt.Fullname, elt.RegistrationNo, elt.Email, elt.ContactNo, elt.FAX, elt.Address, elt.City, elt.Description, elt.VATNo, elt.Credit]);
+    const data = suppliers.map(elt=> [elt.Fullname, elt.RegistrationNo, elt.Email, elt.ContactNo, elt.Fax, elt.Address, elt.City, elt.Description, elt.VatNo, elt.Credit]);
 
     // Set table content
     let content = {
@@ -474,11 +476,13 @@ function SupplierList() {
                     <td style={{ display: fields.VatNo ? 'table-cell' : 'none' }}>{supplier.VatNo}</td>
                     <td style={{ display: fields.Credit ? 'table-cell' : 'none' }}>{supplier.Credit}</td>
                     <td style={{ display: fields.Status ? 'table-cell' : 'none' }}>
+                      <div className='supplierlist-Statusbutton-container'>
                         {supplier.Status === 0 ?(
-                            <button type='button' className='btn btn-danger'>Inactive</button>
+                            <button type='button' className='supplierlist-inActivebutton'>Inactive</button>
                         ) : (
-                            <button type='button' className='btn btn-success'>Active</button>
+                            <button type='button' className='supplierlist-Activebutton'>Active</button>
                         )}
+                      </div>
                         
                         </td>
 

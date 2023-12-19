@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import supplierServices from '../services/services.supplier';
 import validateSupplier from '../services/validate.supplier';
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,11 +14,11 @@ function SupplierMaster() {
     RegistrationNo: '',
     Email: '',
     ContactNo: '',
-    FAX: '',
+    Fax: '',
     Address: '',
     City: '',
     Description: '',
-    VATNo: '',
+    VatNo: '',
   });
 
   const [errorMessage, setErrorMessage] = useState({
@@ -27,11 +26,11 @@ function SupplierMaster() {
     RegistrationNo: '',
     Email: '',
     ContactNo: '',
-    FAX: '',
+    Fax: '',
     Address: '',
     City: '',
     Description: '',
-    VATNo: '',
+    VatNo: '',
   });
 
   const handleChanges = (e) => {
@@ -112,7 +111,7 @@ function SupplierMaster() {
         RegistrationNo: '',
         Email: '',
         ContactNo: '',
-        FAX: '',
+        Fax: '',
         Address: '',
         City: '',
         Description: '',
@@ -123,7 +122,7 @@ function SupplierMaster() {
         RegistrationNo: '',
         Email: '',
         ContactNo: '',
-        FAX: '',
+        Fax: '',
         Address: '',
         City: '',
         Description: '',
@@ -147,8 +146,8 @@ function SupplierMaster() {
                 <label className='error-text'>{errorMessage.Description}</label>
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='VATNo' value={formData.VATNo} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.VATNo}</label>
+                <TextField className='text-line-type2' name='VatNo' value={formData.VatNo} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
+                <label className='error-text'>{errorMessage.VatNo}</label>
               </div>
             </div>
             <h3>Contact Details</h3>
@@ -164,8 +163,8 @@ function SupplierMaster() {
               </div>
               <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='FAX' value={formData.FAX} onChange={(e) => handleChanges(e)} label="FAX number" variant="outlined" />
-                <label className='error-text'>{errorMessage.FAX}</label>
+                <TextField className='text-line-type2' name='FAX' value={formData.Fax} onChange={(e) => handleChanges(e)} label="FAX number" variant="outlined" />
+                <label className='error-text'>{errorMessage.Fax}</label>
               </div>
             
             </div>
