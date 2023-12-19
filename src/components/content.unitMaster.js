@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {ValidateInput} from '../services/validation.login';
+import axios from 'axios';
 
 function UnitMaster() {
 
@@ -11,7 +12,7 @@ function UnitMaster() {
 
     const [Errormessage, setErrormessage] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     // Add your form submission logic here
 
@@ -20,6 +21,27 @@ function UnitMaster() {
       setErrormessage(true)
       return
     }
+
+    try{
+      const response =await axios.post('http://localhost:8081/unit/create', {
+        //paasing username & password
+        unitDescription: unitDescription, 
+        unitSI: unitSI,
+      });
+      
+      //checking the responese
+      if (response.status === 200) {
+          console.log('Successfully unit Added');
+          setErrormessage(false)
+          //navigate('/home');
+        } else {
+          alert('Error logging in');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setErrormessage(true)
+        // Handle error 
+      }
 
 
     console.log('Unit Description:', unitDescription);
