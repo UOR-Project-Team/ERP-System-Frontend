@@ -1,96 +1,138 @@
 import React, { useState } from 'react';
-import './categoryMaster.css'
-import axios  from 'axios';
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import validateCategory from '../services/validate.category';
+import categoryServices from '../services/services.category';
+import TextField from '@mui/material/TextField';
 
-function CategoryMaster() {
+function CategoryMaster(){
 
-  const [Description, setDescription] = useState('');
-
-  //const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
-  
-  function handleSubmit(event) {
-    event.preventDefault();
-   
-
-    axios.post('http://localhost:8081/category/create', { Description })
-      .then(res =>{
-          console.log(res);
-
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Category has been saved",
-            showConfirmButton: false,
-            timer: 1000,
-          });
-
-          //navigate('/home/category-list');
-
-
-      }).catch (err => {
-          console.log(err);
-      })
-      .finally(() => {
-        // Navigate to 'category-list' after the alert is closed
-        navigate('/home/category-list');
-      });
-  
-  }
-
-  function handleCancel() {
+    const navigate = useNavigate();
     
-    navigate('/home');
-  }
+    const [formData , setFormData] = useState({
+            Description:''
+    });
 
-  function handleInputChange(e){
-    setDescription(e.target.value);
-   // setErrorMessage('');
-   e.target.setCustomValidity('');
-  
-   
-    
-  }
-  function handleInputBlur(e) {
-    if (!e.target.value.trim()) {
-      e.target.setCustomValidity('Category Name cannot be empty');
-    } else {
-      e.target.setCustomValidity('');
-    }
-  }
+    const [errorMessage , setErrorMessage] = useState({
+            Description:''
+    });
 
+    const handleChanges = (e) => {
+        const { name , value } = e.target;
+        setFormData((prevdata) => ({...prevdata , [name]: value}));
+    };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
+        const validationErrors = validateCategory(formData);
+        setErrorMessage(validationErrors);
 
+        if (Object.values(validationErrors).some((error) => error !== '')) {
+            toast.error(`Check the inputs again`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+            return
+        }
+          
+          try {
+            const response = await categoryServices.createCategory({ Description: formData.Description });
+            
+            toast.success('Successfully Added', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              
+              });
+            console.log('Category created:', response);
+            handleReset();
+            
 
-  return (
-    
-     
-    <div>
-       <div className='master-content'>
-        <h2>Category Master</h2>
-       </div>
-       <div id='formcontainer'>
-       <form onSubmit={handleSubmit}>
-                <div id="input">
+            setTimeout(() => {
+              navigate('/home/category-list');
+            }, 2000);
 
-                <label id = "form-label">Category Name</label>
-                <input id="form-input" type="text" placeholder="Category Name" onChange = {handleInputChange} onBlur={handleInputBlur}required ></input>
+           
 
+          } catch(error){
+            console.error('Error creating category:', error.message);
+            if (error.response && error.response.data && error.response.data.error) {
+              toast.error(`Error Occured`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            } else {
+              toast.error('Error Occured', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+          }
+          }
+        };
 
-                </div>
-                <div id="button-container" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                     <button id="cancel" onClick={handleCancel}> Cancel</button>
-                    <button id = "save" type="submit">Save</button>
+        const handleReset = () =>{
+            setFormData((prevdata) => ({
+                Description:''
+            }));
+            setErrorMessage({
+                Description:''
+            });
+        };
+
+        return(
+            <div>
+                <ToastContainer />
+                <div className='master-content' style={{height: '92vh'}}>
+                    <form className='form-container' style={{marginTop:'25vh'}}>
+                        <h3>Category Details</h3>
+                            <TextField className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
+                            <label className='error-text'>{errorMessage.Description}</label>
+                            <div className='button-container'>
+                                 <button type='submit' class='submit-button' onClick={handleSubmit}>Submit</button>
+                                 <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+                            </div>
+                    </form>
                     
                 </div>
-                
-            </form>
             </div>
-    </div>
-  );
+        )
+
+
+
+
+
+
+
+
+
+
+
+    
 }
 
 export default CategoryMaster;

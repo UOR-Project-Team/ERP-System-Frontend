@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import customerServices from '../services/services.customer';
@@ -33,12 +33,6 @@ function CustomerMaster() {
     country: '',
     vatno: '',
   });
-
-  const [initialCountry, setInitialCountry] = useState('');
-
-  useEffect(() => {
-    setInitialCountry(formData.country);
-  }, [formData]);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
@@ -110,8 +104,6 @@ function CustomerMaster() {
 
   const handleReset = () => {
     setFormData((prevData) => ({
-      ...prevData,
-      country: '',
       firstname: '',
       lastname: '',
       nic: '',
@@ -212,7 +204,6 @@ function CustomerMaster() {
               <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
             </div>
         </form>
-        {formData.country}
       </div>
     </div>
   );

@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {ValidateInput} from '../services/validation.login';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from 'sweetalert2';
-import TextField from '@mui/material/TextField';
 
 
-const handleChanges = () => {
-  // Handle changes here
-};
-
-
-
-function UnitMaster() {
+function UpdateUnitMaster() {
 
   //const [unitDescription, setUnitDescription] = useState('');
   //const [unitSI, setUnitSI] = useState('');
@@ -22,6 +15,8 @@ function UnitMaster() {
     
 
   })
+
+  const {unitId, unitDescription, unitSI } = useParams();
   const navigate = useNavigate();
 
   const unitDescriptionError = ValidateInput(values.Description);
@@ -29,6 +24,18 @@ function UnitMaster() {
 
   const [Errormessage, setErrormessage] = useState(false)
 
+  useEffect(() => {
+    // Populating the fields with the information of the corresponding item
+    setValues({
+      Description: unitDescription,
+      SI: unitSI,
+
+    });
+    
+  }, []);
+
+
+  //Handle update
   const handleSubmit = async(e) => {
     e.preventDefault();
 
@@ -40,19 +47,12 @@ function UnitMaster() {
     else 
     {
       //Making axios http request to insert values into db
-      axios.post('http://localhost:8081/unit/create', values)
+      axios.put(`http://localhost:8081/unit/update/${unitId}`, values)
       .then((res) => {
         console.log('Unit Description:', values.Description);
         console.log('Unit SI:', values.SI);
 
-        //For the toast message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Unit has been saved",
-          showConfirmButton: false,
-          timer: 1000,
-        });
+        
         
         // Reset the form fields
         setValues({
@@ -67,6 +67,15 @@ function UnitMaster() {
       .finally(() => {
         // Navigate to 'Unit-list' after the alert is closed
         navigate('/home/unit-list');
+
+        //For the toast message
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Unit has been updated",
+            showConfirmButton: false,
+            timer: 1000,
+          });
       });
       
     }
@@ -75,7 +84,17 @@ function UnitMaster() {
    
   };
 
-  
+  //handle input change
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setValues((prevValues)=>({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+
+
 
   return (
     <div className="container mt-4">
@@ -85,43 +104,38 @@ function UnitMaster() {
           <label htmlFor="unitDescription" className="form-label">
             Unit Description
           </label>
-          
-
-          <TextField className='form-control' type="text" name='Description' id="unitDescription" value={values.Description}  onchange={(e) => handleChanges(e)} label="Description" variant="outlined" required/>
-
+          <input
+            type="text"
+            name='Description'
+            className="form-control"
+            id="unitDescription"
+            value={values.Description}
+            onChange={handleInputChange}
+            required
+          />
           {Errormessage && <span className='text-danger'>{unitDescriptionError} </span>}
-          
-            
-
         </div>
-
-            
         <div className="mb-3">
           <label htmlFor="unitSI" className="form-label">
             Unit SI
           </label>
-          <TextField className='form-control'  name='SI' id="unitSI" value={values.SI}  onchange={(e) => handleChanges(e)} label="SI" variant="outlined" />
-
+          <input
+            type="text"
+            name='SI'
+            className="form-control"
+            id="unitSI"
+            value={values.SI}
+            onChange={handleInputChange}
+            required
+          />
           {Errormessage && <span className='text-danger'>{unitSIError} </span>}
         </div>
         <button type="submit" className="btn btn-success">
-          Save
-        </button>
-        
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        
-        <button type="reset" className="btn btn-success">
-          Reset
+          Update
         </button>
       </form>
     </div>
   );
 }
 
-export default UnitMaster;
+export default UpdateUnitMaster;

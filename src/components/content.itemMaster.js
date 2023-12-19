@@ -139,8 +139,7 @@ function ItemMaster() {
 
                 <div className='mb-2 col-md-3'>
                     <label htmlFor="ItemCode">Item Code</label>
-                    {/* <input type="text" placeholder='Enter Item Code' className='form-control'
-                    onChange={e=>setValues({...values, code:e.target.value})} value={values.code}/> */}
+                    
                     <input 
                       type="text" 
                       name='code' 
@@ -221,7 +220,7 @@ function ItemMaster() {
 
                 
 
-                <button className='btn btn-success'>Save</button>
+                <button type="submit" className='btn btn-success'>Save</button>
 
             </form>
     </div>
