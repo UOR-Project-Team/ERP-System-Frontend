@@ -3,6 +3,13 @@ import {ValidateInput} from '../services/validation.login';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import TextField from '@mui/material/TextField';
+
+
+const handleChanges = () => {
+  // Handle changes here
+};
+
 
 
 function UnitMaster() {
@@ -68,14 +75,7 @@ function UnitMaster() {
    
   };
 
-  //handle input change
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setValues((prevValues)=>({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
+  
 
   return (
     <div className="container mt-4">
@@ -85,34 +85,39 @@ function UnitMaster() {
           <label htmlFor="unitDescription" className="form-label">
             Unit Description
           </label>
-          <input
-            type="text"
-            name='Description'
-            className="form-control"
-            id="unitDescription"
-            value={values.Description}
-            onChange={handleInputChange}
-            required
-          />
+          
+
+          <TextField className='form-control' type="text" name='Description' id="unitDescription" value={values.Description}  onchange={(e) => handleChanges(e)} label="Description" variant="outlined" required/>
+
           {Errormessage && <span className='text-danger'>{unitDescriptionError} </span>}
+          
+            
+
         </div>
+
+            
         <div className="mb-3">
           <label htmlFor="unitSI" className="form-label">
             Unit SI
           </label>
-          <input
-            type="text"
-            name='SI'
-            className="form-control"
-            id="unitSI"
-            value={values.SI}
-            onChange={handleInputChange}
-            required
-          />
+          <TextField className='form-control'  name='SI' id="unitSI" value={values.SI}  onchange={(e) => handleChanges(e)} label="SI" variant="outlined" />
+
           {Errormessage && <span className='text-danger'>{unitSIError} </span>}
         </div>
         <button type="submit" className="btn btn-success">
           Save
+        </button>
+        
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        
+        <button type="reset" className="btn btn-success">
+          Reset
         </button>
       </form>
     </div>
