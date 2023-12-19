@@ -476,11 +476,13 @@ function SupplierList() {
                     <td style={{ display: fields.VatNo ? 'table-cell' : 'none' }}>{supplier.VatNo}</td>
                     <td style={{ display: fields.Credit ? 'table-cell' : 'none' }}>{supplier.Credit}</td>
                     <td style={{ display: fields.Status ? 'table-cell' : 'none' }}>
+                      <div className='supplierlist-Statusbutton-container'>
                         {supplier.Status === 0 ?(
-                            <button type='button' className='btn btn-danger'>Inactive</button>
+                            <button type='button' className='supplierlist-inActivebutton'>Inactive</button>
                         ) : (
-                            <button type='button' className='btn btn-success'>Active</button>
+                            <button type='button' className='supplierlist-Activebutton'>Active</button>
                         )}
+                      </div>
                         
                         </td>
 
