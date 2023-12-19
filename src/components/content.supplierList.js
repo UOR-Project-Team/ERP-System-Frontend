@@ -521,8 +521,8 @@ function SupplierList() {
         isOpen={isModalOpen}
         onRequestClose={() => {setIsModalOpen(false)}}
         contentLabel="Header-Model"
-        className="modal-content"
-        overlayClassName="modal-overlay"
+        className="modal-contents"
+        overlayClassName="modal-overlays"
         >
           {modelContent === "filter" ? (
             <div className='feature-modal'>
