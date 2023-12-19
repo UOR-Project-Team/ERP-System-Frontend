@@ -996,32 +996,9 @@ body, html {
     opacity: 80%;
 }
 
-.categorylist-updatebutton{
-    background-color: rgb(30, 30, 244);
-    color:blue;
-    font-size: medium;
-    border: none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right:0px;
-    
-
-}
-
-.categorylist-deletebutton{
-    background-color: rgb(248, 55, 55);
-
-    color:red;
-    font-size: medium;
-    border:none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-    display: flex;
-    
 
 
-}
+
 /* .categorylist-action-column{
     display: flex;
     justify-content: center;
