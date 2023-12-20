@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
 
 * {
     box-sizing: border-box;
@@ -218,7 +219,7 @@ body, html {
     height: 14px;
 }
 
- .side-menu button {
+.side-menu button {
     width: 160px;
     background-color: transparent;
     border: 0;
@@ -235,8 +236,9 @@ body, html {
     height: 100%;
     cursor: pointer;
     z-index: 999;
-  }
-  .modal-overlays {
+}
+
+.modal-overlays {
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
@@ -245,7 +247,7 @@ body, html {
     height: 100%;
     cursor: pointer;
     z-index: 999;
-  }
+}
   
 .modal-content {
     width: 60%;
@@ -369,8 +371,6 @@ body, html {
     transition: 0.3s ease;
 }
 
-
-
 .settings-menu button {
     padding: 0;
     margin: 0;
@@ -402,6 +402,123 @@ body, html {
     height: calc(100vh - 60px);
     background-color: #FFFFFF;
 }
+
+/*-------------------- Dashboard Container -----------------------*/
+
+.body-container .dashboard-container {
+    width: 100%;
+    padding: 10px;
+}
+
+.body-container .dashboard-container .row-container1 {
+    width: 100%;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-family: 'Ubuntu', sans-serif;
+    justify-content: center;
+}
+
+.body-container .dashboard-container .row-container1 #b1 {
+    background-color: #55B4B0;
+}
+
+.body-container .dashboard-container .row-container1 #b2 {
+    background-color: #D2386C;
+}
+
+.body-container .dashboard-container .row-container1 #b3 {
+    background-color: #926AA6;
+}
+
+.body-container .dashboard-container .row-container1 #b4 {
+    background-color: #FF6F61;
+}
+
+.body-container .dashboard-container .row-container1 .box {
+    width: 280px;
+    padding: 20px;
+    border-radius: 5px;
+    color: whitesmoke;
+    margin: 0px 10px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r2, .r3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0px;
+    height: 32px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r2 img {
+    height: 24px;
+    width: 24px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r2 .c2 {
+    font-size: 26px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r3 .c2 {
+    text-align: right;
+}
+
+.body-container .dashboard-container .row-container2 {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Roboto Condensed', sans-serif;
+    justify-content: center;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 {
+    width: 60%;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 .r1 {
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 .r2 {
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.body-container .dashboard-container .row-container2 .column-container2 {
+    width: 40%;
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-left: 5px;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 .r1 .c1, .body-container .dashboard-container .row-container2 .column-container1 .r2 .c1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.body-container .dashboard-container .row-container2 .column-container2 .r1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+
+
+
+
 
 .body-container .master-content {
     width: 100%;
