@@ -1,280 +1,193 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import './Style.css';
-
+import TextField from '@mui/material/TextField';
+import supplierServices from '../services/services.supplier';
+import validateSupplier from '../services/validate.supplier';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 function SupplierMaster() {
 
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    Fullname:'qwerqazx',
-    RegistrationNo: '12345',
-    Email: 'admintest@gmail.com',
-    ContactNo: '1234564321',
-    FAX: '1234567',
-    Address: '10 Colombo 5',
-    City: 'Colombo',
-    Description: 'Atlas Pvt ltd in Srilanka',
-    VatNo: '0001',
-
-  });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async(event) => {
-    event.preventDefault();
-  
-    try{
-        const response = await axios.post('http://localhost:8081/supplier/create', formData)
-
-        if(response.status === 200){
-          //setPasswordError('');
-            console.log("Succesfully Added")
-            alert("Succesfully Supplier Addes")
-           // navigate('/home')
-        }else{
-            alert("Error Adding Supplier")
-        }
-
-    }catch(error){
-      if (error.response) {
-        if (error.response.data && error.response.data.error) {
-          
-          alert(`Server Error : ${error.response.data.error}`);
-        }
-      } else {
-        
-        alert('Error: Request setup failed');
-      }
-      console.error('Error:', error);
-    }
-    //reset the form
-    setFormData({
     Fullname:'',
     RegistrationNo: '',
     Email: '',
     ContactNo: '',
-    FAX: '',
+    Fax: '',
     Address: '',
     City: '',
     Description: '',
     VatNo: '',
-        
-  })
+  });
+
+  const [errorMessage, setErrorMessage] = useState({
+    Fullname:'',
+    RegistrationNo: '',
+    Email: '',
+    ContactNo: '',
+    Fax: '',
+    Address: '',
+    City: '',
+    Description: '',
+    VatNo: '',
+  });
+
+  const handleChanges = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validateSupplier(formData);
+    setErrorMessage(validationErrors);
+
+    if (Object.values(validationErrors).some((error) => error !== '')) {
+      toast.error(`Check the inputs again`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return
+    }
+    
+    try {
+      const response = await supplierServices.createSupplier(formData)
+      toast.success('Successfully Added', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+      console.log('Supplier created:', response);
+      handleReset();
+      setTimeout(() => {
+        navigate('/home/supplier-list');
+      }, 2000);
+
+    } catch(error) {
+      console.error('Error creating supplier:', error.message);
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(`Error Occured`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      } else {
+        toast.error('Error Occured', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+    }
+    }
+
+  };
+
+  const handleReset = () => {
+    setFormData((prevData) => ({
+        Fullname:'',
+        RegistrationNo: '',
+        Email: '',
+        ContactNo: '',
+        Fax: '',
+        Address: '',
+        City: '',
+        Description: '',
+        VatNo: '',
+    }));
+    setErrorMessage({
+        Fullname:'',
+        RegistrationNo: '',
+        Email: '',
+        ContactNo: '',
+        Fax: '',
+        Address: '',
+        City: '',
+        Description: '',
+        VatNo: '',
+    });
   };
 
   return (
-    <div className="container mt-4">
-      {/* <div><h2>Registration Form</h2></div> */}
-      <form onSubmit={handleSubmit}>
-        
-
-
-      <div className="mb-3">
-          <label htmlFor="Fullname" className="form-label">
-            Full Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="Fullname"
-            name="Fullname"
-            value={formData.Fullname}
-            onChange={handleInputChange}
-            style={{ width: '850px' }}
+    <div>
+      <ToastContainer />
+      <div className='master-content'>
+        <form className='form-container'>
+          <h3>Supplier Details</h3>
+            <TextField className='text-line-type1' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full name" variant="outlined" />
+            <label className='error-text'>{errorMessage.Fullname}</label>
+            <TextField className='text-line-type1' name='RegistrationNo' value={formData.RegistrationNo} onChange={(e) => handleChanges(e)} label="Registration Number" variant="outlined" />
+            <label className='error-text'>{errorMessage.RegistrationNo}</label>
+            <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant="outlined" />
+                <label className='error-text'>{errorMessage.Description}</label>
+              </div>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='VatNo' value={formData.VatNo} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
+                <label className='error-text'>{errorMessage.VatNo}</label>
+              </div>
+            </div>
+            <h3>Contact Details</h3>
+            <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='Email' value={formData.Email} onChange={(e) => handleChanges(e)} label="Email Address" variant="outlined"/>
+                <label className='error-text'>{errorMessage.Email}</label>
+              </div>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='ContactNo' value={formData.ContactNo} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
+                <label className='error-text'>{errorMessage.ContactNo}</label>
+              </div>
+              </div>
+              <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='FAX' value={formData.Fax} onChange={(e) => handleChanges(e)} label="FAX number" variant="outlined" />
+                <label className='error-text'>{errorMessage.Fax}</label>
+              </div>
             
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="RegistrationNo" className="form-label">
-            Registration NO
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="RegistrationNo"
-            name="RegistrationNo"
-            value={formData.RegistrationNo}
-            onChange={handleInputChange}
-            style={{ width: '850px' }}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            value={formData.Email}
-            onChange={handleInputChange}
-            style={{ width: '850px' }}
-            required
-          />
-        </div>
-
+            </div>
+            <h3>Address</h3>
+            <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='Address' value={formData.Address} onChange={(e) => handleChanges(e)} label="Address" variant="outlined"/>
+                <label className='error-text'>{errorMessage.Address}</label>
+              </div>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='City' value={formData.City} onChange={(e) => handleChanges(e)} label="City" variant="outlined" />
+                <label className='error-text'>{errorMessage.City}</label>
+              </div>
+            </div>          
+                 
+            <div className='button-container'>
+              <button type='submit' class='submit-button' onClick={handleSubmit}>Submit</button>
+              <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+            </div>
+        </form>
         
-
-        {/* ========================================================================== */}
-
-
-        <div className="side-by-side">
-        <div className="mb-3">
-          <label htmlFor="ContactNo" className="form-label">
-            Contact NO
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="ContactNo"
-            name="ContactNo"
-            value={formData.ContactNo}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="FAX" className="form-label">
-          FAX
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="FAX"
-            name="FAX"
-            value={formData.FAX}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div>
-        
-        {/* <div className="mb-3">
-          <label htmlFor="City" className="form-label">
-          City
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="City"
-            name="City"
-            value={formData.City}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div> */}
-
-        </div>
-
-{/* ================================================================== */}
-        
-      
-      <div className="side-by-side">
-
-
-      {/* <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            style={{ width: '420px' }}
-            required
-          />
-        </div> */}
-
-        <div className="mb-3">
-          <label htmlFor="VatNo" className="form-label">
-            VAT NO
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="VatNo"
-            name="VatNo"
-            value={formData.VatNo}
-            onChange={handleInputChange}
-            style={{ width: '420px' }}
-            
-          />
-        </div>
-
-
-        <div className="mb-3">
-          <label htmlFor="City" className="form-label">
-          City
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="City"
-            name="City"
-            value={formData.City}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div>
-
-        </div>
-
-        {/* ================================================== */}
-        <br/>
-        <div className="mt-5 mb-3">
-          <label htmlFor="address" className="form-label">
-            Address
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="address"
-            name="address"
-            value={formData.Address}
-            onChange={handleInputChange}
-            style={{ width: '850px'}}
-          />
-        </div>
-
-        <div className="mt-5 mb-3">
-          <label htmlFor="Description" className="form-label">
-          Description
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="Description"
-            name="Description"
-            value={formData.Description}
-            onChange={handleInputChange}
-            style={{ width: '850px'}}
-          />
-        </div>
-
-        <button 
-          type="submit" 
-          className="btn btn-primary mt-3 mb-3"
-          >
-          Register
-        </button>
-      </form>
-
+      </div>
     </div>
   );
 }

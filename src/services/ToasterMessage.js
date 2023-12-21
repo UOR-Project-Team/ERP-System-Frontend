@@ -16,7 +16,7 @@ const Toaster = ({ message, showToast, type, setShowToast }) => {
       <div className={`toaster-container ${showToast ? 'show' : ''}`}>
         <div className={`toaster ${type}`}>
           <div className="toast-content">
-            <p>Alert.....</p>
+            
             <p>{message} </p>
           </div>
         </div>
