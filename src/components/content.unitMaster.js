@@ -1,33 +1,81 @@
 import React, { useState } from 'react';
 import {ValidateInput} from '../services/validation.login';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import TextField from '@mui/material/TextField';
+
+
+const handleChanges = () => {
+  // Handle changes here
+};
+
+
 
 function UnitMaster() {
 
-  const [unitDescription, setUnitDescription] = useState('');
-  const [unitSI, setUnitSI] = useState('');
+  //const [unitDescription, setUnitDescription] = useState('');
+  //const [unitSI, setUnitSI] = useState('');
+  const[values,setValues]=useState({
+    Description:'',
+    SI:''
+    
 
-  const unitDescriptionError = ValidateInput(unitDescription);
-    const unitSIError = ValidateInput(unitSI);
+  })
+  const navigate = useNavigate();
 
-    const [Errormessage, setErrormessage] = useState(false)
+  const unitDescriptionError = ValidateInput(values.Description);
+  const unitSIError = ValidateInput(values.SI);
 
-  const handleSubmit = (e) => {
+  const [Errormessage, setErrormessage] = useState(false)
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Add your form submission logic here
 
     if(unitDescriptionError || unitSIError){
       console.log("No inputs")
       setErrormessage(true)
       return
     }
+    else 
+    {
+      //Making axios http request to insert values into db
+      axios.post('http://localhost:8081/unit/create', values)
+      .then((res) => {
+        console.log('Unit Description:', values.Description);
+        console.log('Unit SI:', values.SI);
 
+        //For the toast message
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Unit has been saved",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        
+        // Reset the form fields
+        setValues({
+        Description: '',
+        SI: '',
+        
+        });
+      })
+      .catch (err => {
+        console.log(err);
+      })
+      .finally(() => {
+        // Navigate to 'Unit-list' after the alert is closed
+        navigate('/home/unit-list');
+      });
+      
+    }
 
-    console.log('Unit Description:', unitDescription);
-    console.log('Unit SI:', unitSI);
-    // Reset the form fields
-    setUnitDescription('');
-    setUnitSI('');
+    
+   
   };
+
+  
 
   return (
     <div className="container mt-4">
@@ -37,30 +85,39 @@ function UnitMaster() {
           <label htmlFor="unitDescription" className="form-label">
             Unit Description
           </label>
-          <input
-            type="text"
-            className="form-control"
-            id="unitDescription"
-            value={unitDescription}
-            onChange={(e) => setUnitDescription(e.target.value)}
-          />
+          
+
+          <TextField className='form-control' type="text" name='Description' id="unitDescription" value={values.Description}  onchange={(e) => handleChanges(e)} label="Description" variant="outlined" required/>
+
           {Errormessage && <span className='text-danger'>{unitDescriptionError} </span>}
+          
+            
+
         </div>
+
+            
         <div className="mb-3">
           <label htmlFor="unitSI" className="form-label">
             Unit SI
           </label>
-          <input
-            type="text"
-            className="form-control"
-            id="unitSI"
-            value={unitSI}
-            onChange={(e) => setUnitSI(e.target.value)}
-          />
+          <TextField className='form-control'  name='SI' id="unitSI" value={values.SI}  onchange={(e) => handleChanges(e)} label="SI" variant="outlined" />
+
           {Errormessage && <span className='text-danger'>{unitSIError} </span>}
         </div>
-        <button type="submit" className="btn btn-primary">
-          Submit
+        <button type="submit" className="btn btn-success">
+          Save
+        </button>
+        
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        
+        <button type="reset" className="btn btn-success">
+          Reset
         </button>
       </form>
     </div>

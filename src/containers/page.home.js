@@ -22,26 +22,44 @@ import SupplierList from '../components/content.supplierList';
 import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
+import UnitList from '../components/content.unitList';
+import ItemUpdate from '../components/update.itemMaster';
+import UnitUpdate from '../components/update.unitMaster';
 
-function Home() {
+import UpdateCategory from '../components/update.categoryMaster';
+
+function Home({ updateAuthentication }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [headerText, setHeaderText] = useState("Control Panel");
 
   const togglePanel = () => {
     setIsExpanded((prev) => !prev);
   };
 
+  const updateHeaderText = (text) => {
+    setHeaderText(text);
+  };
+
+  const getHeaderText = () => {
+    return headerText;
+  }
+
+  const toggleupdateAuthentication = () => {
+    updateAuthentication(false)
+  };
+
   return (
-    <div className="container">
+    <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
         {isExpanded ? (
-          <SidePanelExpand onToggle={togglePanel} />
+          <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} />
+          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         )}
       </div>
       <div className="main-container">
         <div className="header-container">
-          <Header text={"Dashboard"} />
+          <Header getHeaderText={getHeaderText} toggleupdateAuthentication={toggleupdateAuthentication} />
         </div>
         <div className="body-container">
           <Routes>
@@ -51,6 +69,7 @@ function Home() {
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
             <Route path="user-master" element={<UserMaster />} />
+            <Route path="user-master/:id" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />
@@ -61,9 +80,14 @@ function Home() {
             <Route path="category-list" element={<CategoryList />} />
             <Route path="item-list" element={<ItemList />} />
             <Route path="supplier-list" element={<SupplierList />} />
-            <Route path="employee-list" element={<UserList />} />
+            <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />
+            <Route path="unit-list" element={<UnitList />} />
+            <Route path="item-update/:itemId/:itemCode/:itemName/:categoryId/:unitId" element={<ItemUpdate />}/>
+            <Route path="unit-update/:unitId/:unitDescription/:unitSI" element={<UnitUpdate />}/>
+            <Route path="update-category/:id" element = {<UpdateCategory />} />
+
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
