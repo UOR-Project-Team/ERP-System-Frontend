@@ -501,7 +501,7 @@ function SupplierList() {
       </div>
       <div className='categorylist-addbutton-container'>
             <Link to = "/home/supplier-master">
-                <button className='categorylist-addbutton'>Add Category</button>
+                <button className='categorylist-addbutton'>Add Supplier</button>
 
             </Link>
             </div>
