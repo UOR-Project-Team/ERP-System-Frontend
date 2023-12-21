@@ -3,12 +3,13 @@ import axios from 'axios';
 import './Style.css';
 import Toaster from '../services/ToasterMessage'
 import { useNavigate, useParams } from 'react-router-dom';
-import { FeaturedVideoRounded } from '@mui/icons-material';
+import TextField from '@mui/material/TextField';
 
 function UserMaster() {
 
-  const[registerbtn, setRegisterbtn] = useState(false)
+  const[registerbtn, setRegisterbtn] = useState(false);
   const[updatebtn, setUpdatebtn] = useState(false);
+  const [errorMessage, setErrorMessage] =useState();
 
   const [showToast, setShowToast] = useState(false);
   const [message, setMessage] = useState('');
@@ -24,11 +25,9 @@ function UserMaster() {
     email: 'admintest@gmail.com',
     username: 'admintest',
     password: 'a22',
-    confirmPassword: 'a22',
     NIC: '123',
     jobrole: 'admin',
     contactno: '89765421',
-    mobileno2: '987654321',
     address: '10,Galle',
     city: 'matara',
   });
@@ -46,24 +45,18 @@ function UserMaster() {
   const handleSubmit = async(event) => {
     event.preventDefault();
     
-    if (formData.password !== formData.confirmPassword) {
-      //setPasswordError('Passwords do not match');
-      return;
-    }
 
     try{
         const response = await axios.post('http://localhost:8081/user/create', formData)
 
         if(response.status ===200){
-          //setPasswordError('');
             console.log("Suucesfully Added")
             showToastMessage('Operation successful!', 'success');
-           //alert("Succesfully user Addes")
+          
            setTimeout(() => {
-            navigate('/home/employee-list'); // Navigate to '/home/employee-list' after 3 seconds
+            navigate('/home/user-list'); // Navigate to '/home/employee-list' after 3 seconds
           }, 3000);
         }else{
-            //alert("Error Adding user")
             showToastMessage('Error occurred. Please try again.', 'error');
         }
 
@@ -89,8 +82,6 @@ function UserMaster() {
 
 
   const [dataFetched, setDataFetched] = useState(false);
-
-  // ... (other states and variables)
 
   const testflag = () => {
     if (!id) {
@@ -168,7 +159,7 @@ function UserMaster() {
           console.log("Suucesfully Updated")
           showToastMessage('Successful! Updated', 'success'); 
          setTimeout(() => {
-          navigate('/home/employee-list'); // Navigate to '/home/employee-list' after 3 seconds
+          navigate('/home/user-list'); // Navigate to '/home/employee-list' after 3 seconds
         }, 3000);
       }else{
         //alert("Error Adding user")
@@ -180,233 +171,126 @@ function UserMaster() {
   };
 
 
+  const handleReset = () => {
+    setFormData({
+      Fullname:'',
+      email: '',
+      username: '',
+      password: '',
+      confirmPassword: '',
+      NIC: '',
+      jobrole: '',
+      contactno: '',
+      address: '',
+      city: '',
+        
+  });
+    setErrorMessage({
+      Fullname:'',
+      email: '',
+      username: '',
+      password: '',
+      confirmPassword: '',
+      NIC: '',
+      jobrole: '',
+      contactno: '',
+      address: '',
+      city: '',
+    });
+  };
 
 
 
   return (
-    <div className="container mt-4">
-      {/* <div><h2>Registration Form</h2></div> */}
-      <form>
-        
 
+  <div className='master-content'>
+        <form className='form-container'>
+          <h3>Customer Details</h3>
+            <TextField className='text-line-type1' name='Fullname' value={formData.Fullname} onChange={handleInputChange} label="Full Name" variant="outlined" />
+            {/* <label className='error-text'>{errorMessage.Fullname}</label> */}
+            <TextField className='text-line-type1' name='username' value={formData.username} onChange={handleInputChange} label=" Username" variant="outlined" />
+            {/* <label className='error-text'>{errorMessage.username}</label> */}
+            <TextField className='text-line-type1' name='password' value={formData.password} onChange={handleInputChange} label=" Password" variant="outlined" />
+            {/* <label className='error-text'>{errorMessage.password}</label> */}
 
-      <div className="mb-3">
-          <label htmlFor="fullname" className="form-label">
-            Full Name
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="Fullname"
-            name="Fullname"
-            value={formData.Fullname}
-            onChange={handleInputChange}
-            style={{ width: '850px' }}
-            required
-          />
-        </div>
+            <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='NIC' value={formData.NIC} onChange={handleInputChange} label="National ID / Passport" variant="outlined" />
+                {/* <label className='error-text'>{errorMessage.NIC}</label> */}
+              </div>
+              <div className='line-type2-content'>
+                  <TextField
+                    className='text-line-type2'
+                    name='jobrole'
+                    value={formData.jobrole}
+                    onChange={handleInputChange}
+                    label="Select Job Role"
+                    variant="outlined"
+                    select
+                    SelectProps={{
+                      native: true,
+                    }}
+                  >
+                    <option value=""></option>
+                    <option value="admin">Admin</option>
+                    <option value="user">Staff</option>
+                  </TextField>
+                  {/* <label className='error-text'>{errorMessage.jobrole}</label> */}
+              </div>
+            </div>
 
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            style={{ width: '850px' }}
-            required
-          />
-        </div>
+            <h3>Contact Details</h3>
+            <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='email' value={formData.email} onChange={handleInputChange} label="Email" variant="outlined"/>
+                {/* <label className='error-text'>{errorMessage.email}</label> */}
+              </div>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={handleInputChange} label="Contact Number" variant="outlined" />
+                {/* <label className='error-text'>{errorMessage.contactno}</label> */}
+              </div>
+            </div>
 
-        <div className="mb-3">
-          <label htmlFor="username" className="form-label">
-            Username
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            style={{ width: '850px' }}
-            required
-          />
-        </div>
+            <h3>Address</h3>
+            <div className='line-type2-container'>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='address' value={formData.address} onChange={handleInputChange} label="Address" variant="outlined"/>
+                {/* <label className='error-text'>{errorMessage.address}</label> */}
+              </div>
+              <div className='line-type2-content'>
+                <TextField className='text-line-type2' name='city' value={formData.city} onChange={handleInputChange} label="City" variant="outlined" />
+                {/* <label className='error-text'>{errorMessage.city}</label> */}
+              </div>
+            </div>
 
-        {/* ========================================================================== */}
+            <div className='button-container'>
+               {registerbtn &&
+                <button 
+                  type="submit" 
+                  class='submit-button'
+                  onClick={handleSubmit}>
+                  Register
+                </button>
+                }
 
+                {updatebtn &&
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary mt-3 mb-3"
+                    onClick={handleUpdate}
+                    >
+                    Update
+                  </button>
+                }
+              
+              <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+            </div>
 
-        <div className="side-by-side">
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div>
+        </form>
 
-        <div className="mb-3">
-          <label htmlFor="NIC" className="form-label">
-          NIC
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="NIC"
-            name="NIC"
-            value={formData.NIC}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div>
-        
-        <div className="mb-3">
-          <label htmlFor="contactno" className="form-label">
-          Mobile No
-          </label>
-          <input
-            type="tex"
-            className="form-control"
-            id="contactno"
-            name="contactno"
-            value={formData.contactno}
-            onChange={handleInputChange}
-            style={{ width: '400px' }}
-            required
-          />
-        </div>
-
-        </div>
-
-{/* ================================================================== */}
-        
+        <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} />
+  </div>
       
-      <div className="side-by-side">
-
-
-      <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            style={{ width: '420px' }}
-            required
-          />
-        </div>
-
-        <div className="mt-2 mb-3">
-      <label htmlFor="jobrole">
-        Job Role
-      </label>
-      <select
-        className="form-control"
-        id="jobrole"
-        name="jobrole"
-        value={formData.jobrole}
-        onChange={handleInputChange}
-        style={{ width: '420px' }}
-      >
-        <option value="">Select a job Role</option>
-        <option value="admin">Admin</option>
-        <option value="user">Staff</option>
-        {/* Add more options as needed */}
-      </select>
-    </div>
-
-
-    <div className="mb-3">
-          <label htmlFor="mobileno2" className="form-label">
-            Tel
-          </label>
-          <input
-            type="tel"
-            className="form-control"
-            id="mobileno2"
-            name="mobileno2"
-            value={formData.mobileno2}
-            onChange={handleInputChange}
-            style={{ width: '420px' }}
-            
-          />
-        </div>
-
-        </div>
-
-        {/* ================================================== */}
-        <div></div>
-        <div className="mt-5 mb-3">
-          <label htmlFor="address" className="form-label">
-            Address
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-            style={{ width: '850px'}}
-          />
-        </div>
-
-        <div className="mt-5 mb-3">
-          <label htmlFor="city" className="form-label">
-            City
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            style={{ width: '850px'}}
-          />
-        </div>
-
-        {registerbtn &&
-        <button 
-          type="submit" 
-          className="btn btn-primary mt-3 mb-3"
-          onClick={handleSubmit}
-          >
-          Register
-        </button>
-        }
-        {updatebtn &&
-        <button 
-          type="submit" 
-          className="btn btn-primary mt-3 mb-3"
-          onClick={handleUpdate}
-          >
-          Update
-        </button>
-        }
-      </form>
-
-      <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} />
-
-    </div>
   );
 };
 
