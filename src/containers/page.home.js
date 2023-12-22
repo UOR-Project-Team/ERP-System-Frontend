@@ -65,10 +65,10 @@ function Home({ updateAuthentication }) {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="category-master" element={<CategoryMaster />} />
-            <Route path="/unit-master" element={<UnitMaster />} />
+            <Route path="unit-master" element={<UnitMaster />} />
             <Route path="item-master" element={<ItemMaster />} />
             <Route path="supplier-master" element={<SupplierMaster />} />
-            <Route path="employee-master" element={<UserMaster />} />
+            <Route path="user-master" element={<UserMaster />} />
             <Route path="customer-master" element={<CustomerMaster />} />
             <Route path="good-received-note" element={<GRN />} />
             <Route path="invoice-add" element={<InvoiceAdd />} />

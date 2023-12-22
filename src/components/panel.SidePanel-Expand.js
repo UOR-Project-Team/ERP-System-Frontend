@@ -69,7 +69,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
             </button>
             <button onClick={() => {navigateTo('/home/user-master'); ; updateHeaderText('User Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
-              <span>Employee Master</span>
+              <span>User Master</span>
             </button>
             <button onClick={() => {navigateTo('/home/customer-master'); ; updateHeaderText('Customer Master')}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
@@ -131,6 +131,10 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Category List</span>
             </button>
+            <button onClick={() => {navigateTo('/home/unit-list'); updateHeaderText('Unit List');}}>
+              <img src={DoubleRightLogo} alt="Double RightLogo"/>
+              <span>Unit List</span>
+            </button>
             <button onClick={() => {navigateTo('/home/item-list'); updateHeaderText('Item List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Item List</span>
@@ -141,7 +145,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
             </button>
             <button onClick={() => {navigateTo('/home/user-list'); updateHeaderText('User List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
-              <span>Employee List</span>
+              <span>User List</span>
             </button>
             <button onClick={() => {navigateTo('/home/customer-list'); updateHeaderText('Customer List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>

@@ -163,7 +163,7 @@ function SupplierMaster() {
               </div>
               <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='FAX' value={formData.Fax} onChange={(e) => handleChanges(e)} label="FAX number" variant="outlined" />
+                <TextField className='text-line-type2' name='Fax' value={formData.Fax} onChange={(e) => handleChanges(e)} label="FAX number" variant="outlined" />
                 <label className='error-text'>{errorMessage.Fax}</label>
               </div>
             
