@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate,Link } from 'react-router-dom';
-import Toaster from '../services/ToasterMessage';
+import TextField from '@mui/material/TextField';
 import Dialogbox from '../services/Dialogbox'
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Modal from 'react-modal';
 
 import SearchLogo from './../assets/icons/search.png';
 import PdfLogo from './../assets/icons/pdf.png';
@@ -12,6 +15,7 @@ import EditLogo from './../assets/icons/edit.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import GreenCircle from '../assets/icons/green-circle.png'
 import GreyCircle from '../assets/icons/Grey-circle.png'
+import ActionLogo from './../assets/icons/action.png';
 
 function UserList() {
 
@@ -160,6 +164,11 @@ function UserList() {
                     <button type='button' ><img src ={GreenCircle} alt='Active'/></button>
                   )}
                 </td>
+                <td>
+                      <button onClick={(event) => { handleClick(event); setCurrentuser(user.ID); }}>
+                        <img src={ActionLogo} alt='Action Logo' />
+                      </button>
+                    </td>
               <td style={{ display: 'flex', gap: '5px' }}>
                 <button type='button' onClick={()=>handleUpdate(user.ID)}><img src={EditLogo} alt='Update'/></button>
                 <button type='button' onClick={() => handleDeleteUser(user.ID)}><img src ={DeleteLogo} alt='Delete' /></button>
@@ -180,7 +189,7 @@ function UserList() {
                 handleClose={handleCloseDialog}
                 handleConfirm={handleDelete}
                 title="Confirm Operation"
-                confirmText="Perform"
+                confirmText="Ok"
               />
         
         </tbody>
@@ -195,7 +204,22 @@ function UserList() {
       </div>
       </div>
 
-      <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} />
+      <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+        <MenuItem>
+          <button onClick={() => {fetchCustomer(); handleRequest('edit');}}>
+            <img src={EditLogo} alt="Edit Logo"/>
+            <span>Edit Customer</span>
+          </button>
+        </MenuItem>
+        <MenuItem onClick={() => {setDialogTitle('Delete Customer'); setDialogDescription('Do you want to delete this customer record?'); setDialogOpen(true); setAnchorEl(null);}}>
+          <button>
+            <img src={DeleteLogo} alt="Delete Logo"/>
+            <span>Delete Customer</span>
+          </button>
+        </MenuItem>
+      </Menu>
+
+      {/* <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} /> */}
               
     </div>
   )

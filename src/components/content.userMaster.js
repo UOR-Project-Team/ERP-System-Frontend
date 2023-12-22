@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Style.css';
-import Toaster from '../services/ToasterMessage'
 import { useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UserMaster() {
 
@@ -16,7 +19,7 @@ function UserMaster() {
   const [toastType, setToastType] = useState('');
 
   const navigate = useNavigate();
-  const {master,id} =useParams();
+  const {id} =useParams();
   
 
 
@@ -51,13 +54,14 @@ function UserMaster() {
 
         if(response.status ===200){
             console.log("Suucesfully Added")
-            showToastMessage('Operation successful!', 'success');
-          
+           // showToastMessage('Operation successful!', 'success');
+           showSuccessToast('User created successfully!');
            setTimeout(() => {
             navigate('/home/user-list'); // Navigate to '/home/employee-list' after 3 seconds
           }, 3000);
         }else{
-            showToastMessage('Error occurred. Please try again.', 'error');
+           // showToastMessage('Error occurred. Please try again.', 'error');
+            showErrorToast('Failed to create user. Please try again.');
         }
 
     }catch(error){
@@ -69,7 +73,6 @@ function UserMaster() {
       email: '',
       username: '',
       password: '',
-      confirmPassword: '',
       NIC: '',
       jobrole: '',
       contactno: '',
@@ -157,13 +160,14 @@ function UserMaster() {
       if(response.status ===200){
         //setPasswordError('');
           console.log("Suucesfully Updated")
-          showToastMessage('Successful! Updated', 'success'); 
+          //showToastMessage('Successful! Updated', 'success'); 
+          showSuccessToast('User Updated successfully!');
          setTimeout(() => {
           navigate('/home/user-list'); // Navigate to '/home/employee-list' after 3 seconds
-        }, 3000);
+        }, 1000);
       }else{
-        //alert("Error Adding user")
-        showToastMessage('Error occurred. Please try again.', 'error');
+       // showToastMessage('Error occurred. Please try again.', 'error');
+        showErrorToast('Failed to create user. Please try again.');
     }
     } catch (error) {
       console.error('Error updating user', error);
@@ -177,7 +181,6 @@ function UserMaster() {
       email: '',
       username: '',
       password: '',
-      confirmPassword: '',
       NIC: '',
       jobrole: '',
       contactno: '',
@@ -190,7 +193,6 @@ function UserMaster() {
       email: '',
       username: '',
       password: '',
-      confirmPassword: '',
       NIC: '',
       jobrole: '',
       contactno: '',
@@ -288,7 +290,8 @@ function UserMaster() {
 
         </form>
 
-        <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} />
+        {/* <Toaster message={message} showToast={showToast} type={toastType} setShowToast={setShowToast} /> */}
+        <ToastContainer/>
   </div>
       
   );
