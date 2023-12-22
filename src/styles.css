@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
 
 * {
     box-sizing: border-box;
@@ -218,7 +219,7 @@ body, html {
     height: 14px;
 }
 
- .side-menu button {
+.side-menu button {
     width: 160px;
     background-color: transparent;
     border: 0;
@@ -235,8 +236,9 @@ body, html {
     height: 100%;
     cursor: pointer;
     z-index: 999;
-  }
-  .modal-overlays {
+}
+
+.modal-overlays {
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
@@ -245,7 +247,7 @@ body, html {
     height: 100%;
     cursor: pointer;
     z-index: 999;
-  }
+}
   
 .modal-content {
     width: 60%;
@@ -369,8 +371,6 @@ body, html {
     transition: 0.3s ease;
 }
 
-
-
 .settings-menu button {
     padding: 0;
     margin: 0;
@@ -402,6 +402,134 @@ body, html {
     height: calc(100vh - 60px);
     background-color: #FFFFFF;
 }
+
+/*-------------------- Dashboard Container -----------------------*/
+
+.body-container .dashboard-container {
+    width: 100%;
+    padding: 10px;
+}
+
+.body-container .dashboard-container .row-container1 {
+    width: 100%;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-family: 'Ubuntu', sans-serif;
+    justify-content: center;
+}
+
+.body-container .dashboard-container .row-container1 #b1 {
+    background-color: #55B4B0;
+}
+
+.body-container .dashboard-container .row-container1 #b2 {
+    background-color: #D2386C;
+}
+
+.body-container .dashboard-container .row-container1 #b3 {
+    background-color: #926AA6;
+}
+
+.body-container .dashboard-container .row-container1 #b4 {
+    background-color: #FF6F61;
+}
+
+.body-container .dashboard-container .row-container1 .box {
+    width: 280px;
+    padding: 20px;
+    border-radius: 5px;
+    color: whitesmoke;
+    margin: 0px 10px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r2, .r3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0px;
+    height: 32px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r2 img {
+    height: 24px;
+    width: 24px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r2 .c2 {
+    font-size: 26px;
+}
+
+.body-container .dashboard-container .row-container1 .box .r3 .c2 {
+    text-align: right;
+}
+
+.body-container .dashboard-container .row-container2 {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Roboto Condensed', sans-serif;
+    justify-content: center;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 {
+    width: 60%;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 .r1 {
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 .r2 {
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.body-container .dashboard-container .row-container2 .column-container2 {
+    width: 40%;
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-left: 5px;
+}
+
+.body-container .dashboard-container .row-container2 .column-container1 .r1 .c1, .body-container .dashboard-container .row-container2 .column-container1 .r2 .c1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.body-container .dashboard-container .row-container2 .column-container2 .r1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*-------------------- Master Container -----------------------*/
 
 .body-container .master-content {
     width: 100%;
@@ -770,7 +898,196 @@ body, html {
     border: 2px solid #dc143c;
 }
 
-@media only screen and (max-width: 1200px) {
+/*-------------------- Category List -----------------------*/
+
+.categorylist-addbutton-container{
+    display: flex;
+    justify-content: right;
+}
+.categorylist-addbutton{
+    width: 150px;
+    font-size: medium;
+    background-color: #4AEF3C;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    margin: 30px;
+    cursor: pointer;
+}
+.categorylist-addbutton:hover{
+    opacity: 80%;
+}
+
+
+
+.categorylist-deletebutton{
+    background-color: rgb(248, 55, 55);
+    color:red;
+    font-size: medium;
+    border:none;
+    border-radius: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+}
+
+.categorylist-updatebutton-container{
+   margin-left: -50px; 
+   margin-bottom: -7px;
+   display: flex;
+   justify-content: center;
+}
+.categorylist-Deletebutton-container{
+    margin-right: -100px; 
+    margin-top: -28px;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: center;
+ }
+
+.categoryMaster-buttons-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40vh;
+    margin-right: 30px;
+}
+
+.categoryMaster-save-button{
+    background-color: #4AEF3C;
+    width: 150px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: medium;
+    cursor: pointer;
+}
+
+.categoryMaster-save-button:hover{
+    opacity: 80% ;
+}
+
+.categoryMaster-cancel-button{
+    background-color: #DC143C;
+    color: white;
+    width:150px;
+    font-size: medium;
+    border: none;
+    border-radius: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.categoryMaster-cancel-button:hover{
+    opacity: 80%;
+}
+
+.categoryMaster-input-container{
+    margin-top: 25vh;
+    display: flex;
+    justify-content: center;
+}
+
+.categoryMaster-label{
+    margin-right: 30px;
+    font-size: large;
+    margin-top: 12px;
+}
+
+.categoryMaster-input{
+    width: 300px;
+    height: 50px;
+    font-size: large;  
+    text-align: center;
+}
+
+/*-------------------- Supplier list-----------------------*/
+
+.supplierlist-inActivebutton{
+    background-color: rgb(248, 55, 55);
+    color:red;
+    font-size: small;
+    font-weight: bold;
+    border:none;
+    border-radius: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+}
+
+.supplierlist-Activebutton{
+    background-color: #194c14;
+    color:#14A44D;
+    font-size: small;
+    font-weight: bold;
+    border:none;
+    border-radius: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+}
+
+.supplierlist-Statusbutton-container{
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 940px) {
+
+    
+    .body-container .dashboard-container .row-container1 .box {
+        width: 150px;
+        padding: 10px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r1 {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r2, .r3 {
+        height: 24px;
+    }
+
+    .body-container .dashboard-container .row-container1 .box .r2 img {
+        height: 18px;
+        width: 18px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r2 .c2 {
+        font-size: 14px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r3 {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 1300px), (max-height: 600px) {
+
+    .login-container .form-container form {
+        width: 360px;
+    }
+
+    .login-container .form-container h3 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .login-container .form-container form label {
+        font-size: 10px;
+    }
+    
+    .login-container .form-container form input {
+        height: 36px;
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+    
+    .login-container .form-container form button {
+        height: 36px;
+        margin-top: 32px;
+        font-size: 15px;
+    }
     
     .login-container .form-container form {
         width: 360px;
@@ -796,7 +1113,6 @@ body, html {
         margin-top: 32px;
         font-size: 15px;
     }
-    
     
     .sidepanel-container img {
         width: 20px;
@@ -851,6 +1167,34 @@ body, html {
 
     .header-container .header .right img {
         margin-left: 5px;
+    }
+
+    .body-container .dashboard-container .row-container1 .box {
+        width: 200px;
+        padding: 10px;
+        margin: 0px 5px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r1 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r2, .r3 {
+        height: 26px;
+    }
+
+    .body-container .dashboard-container .row-container1 .box .r2 img {
+        height: 20px;
+        width: 20px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r2 .c2 {
+        font-size: 16px;
+    }
+    
+    .body-container .dashboard-container .row-container1 .box .r3 {
+        font-size: 14px;
     }
     
     .body-container .master-content .search-container input {
@@ -913,34 +1257,6 @@ body, html {
         width: 100%;
         background-color: rgb(38, 2, 97, 0.5);
     }
-} 
-
-@media only screen and (max-height: 600px) {
-    
-    .login-container .form-container form {
-        width: 360px;
-    }
-
-    .login-container .form-container h3 {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-    
-    .login-container .form-container form label {
-        font-size: 10px;
-    }
-    
-    .login-container .form-container form input {
-        height: 36px;
-        margin-top: 8px;
-        margin-bottom: 14px;
-    }
-    
-    .login-container .form-container form button {
-        height: 36px;
-        margin-top: 32px;
-        font-size: 15px;
-    }
 }
 
 @media only screen and (max-height: 400px), (max-width: 500px) {
@@ -975,158 +1291,3 @@ body, html {
 }
 
 }
-
-/*-------------------- Category List -----------------------*/
-
-.categorylist-addbutton-container{
-    display: flex;
-    justify-content: right;
-}
-.categorylist-addbutton{
-    width: 150px;
-    font-size: medium;
-    background-color: #4AEF3C;
-    border-radius: 8px;
-    color: white;
-    border: none;
-    margin: 30px;
-    cursor: pointer;
-}
-.categorylist-addbutton:hover{
-    opacity: 80%;
-}
-
-
-
-.categorylist-deletebutton{
-    background-color: rgb(248, 55, 55);
-
-    color:red;
-    font-size: medium;
-    border:none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-    display: flex;
-    
-
-
-}
-
-.categorylist-updatebutton-container{
-   margin-left: -50px; 
-   margin-bottom: -7px;
-   display: flex;
-   justify-content: center;
-
-}
-.categorylist-Deletebutton-container{
-    margin-right: -100px; 
-    margin-top: -28px;
-    margin-bottom: 0px;
-    display: flex;
-    justify-content: center;
- 
- }
-
-
- 
-.categoryMaster-buttons-container{
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 40vh;
-    margin-right: 30px;
-}
-
-.categoryMaster-save-button{
-    background-color: #4AEF3C;
-    width: 150px;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: medium;
-    cursor: pointer;
-}
-
-.categoryMaster-save-button:hover{
-    opacity: 80% ;
-}
-
-.categoryMaster-cancel-button{
-    background-color: #DC143C;
-    color: white;
-    width:150px;
-    font-size: medium;
-    border: none;
-    border-radius: 8px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-.categoryMaster-cancel-button:hover{
-    opacity: 80%;
-}
-
-.categoryMaster-input-container{
-    margin-top: 25vh;
-    display: flex;
-    justify-content: center;
-   
-   
-    
-}
-
-.categoryMaster-label{
-    margin-right: 30px;
-    font-size: large;
-    margin-top: 12px;
-}
-
-.categoryMaster-input{
-    width: 300px;
-    height: 50px;
-    font-size: large;  
-    text-align: center;
-}
-/*-------------------- Supplier list-----------------------*/
-
-
-.supplierlist-inActivebutton{
-    background-color: rgb(248, 55, 55);
-
-    color:red;
-    font-size: small;
-    font-weight: bold;
-    border:none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-    display: flex;
-    
-
-
-}
-
-.supplierlist-Activebutton{
-    background-color: #194c14;
-
-    color:#14A44D;
-    font-size: small;
-    font-weight: bold;
-   
-    border:none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-    display: flex;
-    
-
-
-}
-
-.supplierlist-Statusbutton-container{
-   
-    display: flex;
-    justify-content: center;
- 
- }
