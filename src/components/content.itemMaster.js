@@ -3,14 +3,19 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import TextField from '@mui/material/TextField';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Autocomplete from '@mui/material/Autocomplete';
+
+
+
 
 function ItemMaster() {
 
   const[values,setValues]=useState({
     code:'p01',
     itemName:'Lux Soap 100g',
-    //Supplier_id:'',
-    //Unit_price:'',
     categoryId:'1',
     unitId:'1'
 
@@ -20,13 +25,28 @@ function ItemMaster() {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const [units, setUnit] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState(null);
   
+  const [errorMessage, setErrorMessage] = useState({
+    code: '',
+    itemName: '',
+    categoryId: '',
+    unitId: '',
+  })
+
+  //Error message style
+  const errorLabelStyle = {
+    color: 'red',
+    fontSize: '0.8em', // Optional: adjust the font size
+  };
 
 
   // Fetch categories from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
+    axios.get('http://localhost:8081/category/show') 
       .then(response => {
         setCategories(response.data.categories);
 
@@ -36,31 +56,10 @@ function ItemMaster() {
       });
   }, []);
 
-  // Handle category change
-  const handleCategoryChange = selectedOption => {
-    setSelectedCategory(selectedOption);
-    setValues(prevValues => ({
-      ...prevValues,
-      categoryId: selectedOption.value
-    }));
-  };
-
-  //handle input change
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setValues((prevValues)=>({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
-
-  const [units, setUnit] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState(null);
-
-   // Fetch units from the server
-   useEffect(() => {
+  // Fetch units from the server
+  useEffect(() => {
     
-    axios.get('http://localhost:8081/unit/get') // Adjust the API endpoint based on your backend
+    axios.get('http://localhost:8081/unit/get') 
       .then(response => {
         setUnit(response.data.units);
       })
@@ -70,19 +69,102 @@ function ItemMaster() {
   }, []);
 
 
-  
-  // Handle unit change
-  const handleUnitChange = selectedOption => {
-    setSelectedUnit(selectedOption);
+  // Handle category change
+  const handleCategoryChange = selectedOption => {
+    setSelectedCategory(selectedOption);
+
+    
     setValues(prevValues => ({
       ...prevValues,
-      unitId: selectedOption.value
+      categoryId: selectedOption?.value||''
+    }));
+
+    setErrorMessage((prevErrors) => ({
+      ...prevErrors,
+      categoryId: '',
+    }));
+  };
+
+    //Handle unit change
+    const handleUnitChange = selectedOption => {
+      setSelectedUnit(selectedOption);
+      //const selectedValue = selectedOption ? selectedOption.value : ''; // Handle null case
+      console.log(selectedOption.value);
+      
+      
+      setValues(prevValues => ({
+        ...prevValues,
+        unitId: selectedOption.value || ''
+      }));
+
+      setErrorMessage((prevErrors) => ({
+        ...prevErrors,
+        unitId: '',
+      }));
+      
+    };
+
+
+
+  //handle input change
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setValues((prevValues)=>({
+      ...prevValues,
+      [name]: value,
+    }));
+
+    setErrorMessage((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
     }));
   };
 
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validation
+    let isValid = true;
+    const newErrors = {};
+
+    if (!values.code.trim()) {
+      isValid = false;
+      newErrors.code = 'Item Code is required *';
+    }
+
+    if (!values.itemName.trim()) {
+      isValid = false;
+      newErrors.itemName = 'Item Name is required *';
+    }
+
+    if (!selectedCategory) {
+      isValid = false;
+      newErrors.categoryId = 'Category is required *';
+    }
+
+    if (!selectedUnit) {
+      isValid = false;
+      newErrors.unitId = 'Unit is required *';
+    }
+
+    if (!isValid) {
+      setErrorMessage(newErrors);
+      toast.error(`Check the inputs again`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return;
+    }
+
+    
     axios.post('http://localhost:8081/item/create', values)
       .then((res) => {
         console.log('Item Code:', values.code);
@@ -91,13 +173,16 @@ function ItemMaster() {
         console.log('Unit ID:', {selectedUnit});
 
         //For the toast message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Item has been saved",
-          showConfirmButton: false,
-          timer: 1000,
-        });  
+        toast.success('Successfully Added', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });  
 
 
         // Reset the form fields
@@ -106,15 +191,32 @@ function ItemMaster() {
         setValues({
           code: '',
           itemName: '',
+          categoryId: '',
+          unitId: ''
           
         });
       })
+      
       .catch(err => {
         console.error(err);
+        if (err) {
+          toast.error(`Error Occured`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
       })
       .finally(() => {
-        // Navigate to 'Item-list' after the alert is closed
-        navigate('/home/item-list');
+        // Navigate to 'Item-list' after two seconds
+        setTimeout(()=>{
+          navigate('/home/item-list');
+        },2000); 
       });
       
   };
@@ -132,97 +234,147 @@ function ItemMaster() {
     label: unit.Description,
   }));
 
+
+  //Handle Reset
+  const handleReset = () => {
+    setValues((prevValues) => ({
+      code:'',
+      itemName:'',
+      categoryId:'',
+      unitId:''
+    }));
+    setErrorMessage({
+      code: '',
+      itemName: '',
+      categoryId: '',
+      unitId: '',
+    });
+  };
+
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-                <h2>Add Item</h2>
+    <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
+      <ToastContainer />
+      <div className='master-content'  >
+      
+  
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="ItemCode">Item Code</label>
-                    
-                    <input 
-                      type="text" 
-                      name='code' 
-                      placeholder='Enter Item Code' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.code}
-                      required/>
+        <form onSubmit={handleSubmit} className='form-container'  >
+                  
+                  <h2>Add Item</h2>
+
+                  <div className='mb-2 col-md-3'>
+                      <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
+                      <label style={errorLabelStyle}>{errorMessage.code}</label>       
                       
-                </div>
+                  </div>
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="ItemName">Item name</label>
-                    <input 
-                      type="text" 
-                      name='itemName' 
-                      placeholder='Enter Item Name' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.itemName}
-                      required/>
+                  <div className='mb-2 col-md-3'>
+
+                      <TextField className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
+                      <label style={errorLabelStyle}>{errorMessage.itemName}</label>
+                        
+                  </div>
+                  
+                  <div className='mb-2 col-md-3'>
+                      {/* <label htmlFor="Cateogory">Category</label> */}
+                      <Select
+                        options={categoryOptions}
+                        value={selectedCategory}
+                        onChange={handleCategoryChange}
+                        placeholder="Category"
+                        name= 'categoryId'
+                        
+                      />
                       
-                </div>
-                
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="Cateogory">Category</label>
-                    <Select
-                      options={categoryOptions}
-                      value={selectedCategory}
-                      onChange={handleCategoryChange}
-                      placeholder="Select a category"
-                      name= 'categoryId'
                       
-                    />
-                    
-                    {/* <input 
-                      type="text" 
-                      name='categoryId' 
-                      placeholder='Enter Category ID' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.categoryId}/> */}
-                </div>
+                      {/* <Autocomplete
+                        disablePortal
+                        className='text-line-type2'
+                        options={categoryOptions}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Category"
+                            name='categoryId' 
+                            value={selectedCategory ? selectedCategory.label || '' : ''} //Check null before accessing label
+                            onChange={(e) => {
+                              handleInputChange(e);
+                            }}
+                          />
+                        )}
+                        onChange={(_, newValue) => {
+                          setValues(newValue);
+                        }}
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="UnitId">Unit ID</label>
-                    <Select
-                      options={unitOptions}
-                      value={selectedUnit}
-                      onChange={handleUnitChange}
-                      placeholder="Select a Unit"
-                      name= 'unitId'
+                        // onClear={() => {
+                        //   setSelectedCategory({ label: '', value: '' });
+                        //   setValues((prevValues) => ({
+                        //     ...prevValues,
+                        //     categoryId: '',
+                        //   }));
+                        // }}
+                        
+                        
+                      /> */}
+                      <label style={errorLabelStyle}>{errorMessage.categoryId}</label>
+                  </div>
+
+                  <div className='mb-2 col-md-3'>
+                      {/* <label htmlFor="UnitId">Unit ID</label> */}
+                      <Select
+                        
+                        className='text-line-type2'
+                        options={unitOptions}
+                        value={selectedUnit}
+                        onChange={handleUnitChange}
+                        placeholder="Unit"
+                        name= 'unitId'
+                        
+                      />  
                       
-                    />
 
+                       {/* <Autocomplete
+                        disablePortal
+                        className='text-line-type2'
+                        options={unitOptions}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Unit"
+                            name='unitId' 
+                            value={selectedUnit ? selectedUnit.label || '' : ''} // Check for null before accessing label
+                            onChange={(e) => {
+                              handleInputChange(e);
+                            }}
+                          />
+                        )}
+                        onChange={(_, newValue) => {
+                          setValues(newValue);
+                        }}
 
-                    {/* <input 
-                      type="text" 
-                      name='unitId' 
-                      placeholder='Enter Unit ID' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.unitId}/> */}
-                </div>
+                        // onClear={() => {
+                        //   setSelectedUnit({ label: '', value: '' });
+                        //   setValues((prevValues) => ({
+                        //     ...prevValues,
+                        //     unitId: '',
+                        //   }));
+                        // }}
+                        
+                      />  */}
+                      <label style={errorLabelStyle}>{errorMessage.unitId}</label>
 
+                  </div>
+                  <div className='button-container'>
+                    <button type="submit" class='submit-button'>Save</button>
+                    <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+                  </div>
 
-                {/* <div className='mb-2'>
-                    <label htmlFor="">Supplier</label>
-                    <input type="text" placeholder='Enter Supplier' className='form-control'
-                    onChange={e=>setValues({...values, Supplier_id:e.target.value})}/>
-                </div> */}
+                  
 
-                {/* <div className='mb-2'>
-                    <label htmlFor="">Unit Price</label>
-                    <input type="text" placeholder='Enter unit price ' className='form-control'
-                    onChange={e=>setValues({...values, Unit_price:e.target.value})}/>
-                </div> */}
-
-                
-
-                <button type="submit" className='btn btn-success'>Save</button>
-
-            </form>
+              </form>
+              
+            </div>
     </div>
   );
 }
