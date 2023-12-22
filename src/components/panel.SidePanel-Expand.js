@@ -151,6 +151,11 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice List</span>
             </button>
+            <button onClick={() => {navigateTo('/home/unit-list'); updateHeaderText('Unit List');}}>
+              <img src={DoubleRightLogo} alt="Double RightLogo"/>
+              <span>Unit List</span>
+            </button>
+
           </div>
       </div>
     </div>

@@ -165,6 +165,11 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
             <span>Customer List</span>
           </button>
         </MenuItem>
+        <MenuItem onClick={() => {navigateTo(`/home/unit-list`); setAnchorE5(null); updateHeaderText('Unit List')}}>
+        <button>
+            <span>Unit List</span>
+          </button>
+        </MenuItem>
       </Menu>
 
       </div>
