@@ -140,9 +140,9 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
             <span>Category List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/user-list`); setAnchorE5(null); updateHeaderText('User List')}}>
+        <MenuItem onClick={() => {navigateTo(`/home/unit-list`); setAnchorE5(null); updateHeaderText('Unit List')}}>
         <button>
-            <span>Employee Master</span>
+            <span>Unit List</span>
           </button>
         </MenuItem>
         <MenuItem onClick={() => {navigateTo(`/home/item-list`); setAnchorE5(null); updateHeaderText('Item List')}}>
@@ -155,7 +155,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
             <span>Supplier List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/user-list`); setAnchorE5(null); updateHeaderText('Employee List')}}>
+        <MenuItem onClick={() => {navigateTo(`/home/user-list`); setAnchorE5(null); updateHeaderText('User List')}}>
         <button>
             <span>User List</span>
           </button>
@@ -163,6 +163,11 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
         <MenuItem onClick={() => {navigateTo(`/home/customer-list`); setAnchorE5(null); updateHeaderText('Customer List')}}>
         <button>
             <span>Customer List</span>
+          </button>
+        </MenuItem>
+        <MenuItem onClick={() => {navigateTo(`/home/invoice-list`); setAnchorE5(null); updateHeaderText('Invoice List')}}>
+        <button>
+            <span>Invoice List</span>
           </button>
         </MenuItem>
       </Menu>

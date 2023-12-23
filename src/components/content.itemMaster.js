@@ -1,16 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ItemMaster() {
 
   const[values,setValues]=useState({
     code:'p01',
     itemName:'Lux Soap 100g',
-    //Supplier_id:'',
-    //Unit_price:'',
     categoryId:'1',
     unitId:'1'
 
@@ -20,13 +20,21 @@ function ItemMaster() {
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  
 
+  const [units, setUnit] = useState([]);
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  
+  const [errorMessage, setErrorMessage] = useState({
+    code: '',
+    itemName: '',
+    categoryId: '',
+    unitId: '',
+  })
 
   // Fetch categories from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
+    axios.get('http://localhost:8081/category/') 
       .then(response => {
         setCategories(response.data.categories);
 
@@ -36,13 +44,51 @@ function ItemMaster() {
       });
   }, []);
 
+  // Fetch units from the server
+  useEffect(() => {
+    
+    axios.get('http://localhost:8081/unit/get') 
+      .then(response => {
+        setUnit(response.data.units);
+      })
+      .catch(error => {
+        console.error('Error fetching units data:', error);
+      });
+  }, []);
+
   // Handle category change
   const handleCategoryChange = selectedOption => {
     setSelectedCategory(selectedOption);
+
+    
     setValues(prevValues => ({
       ...prevValues,
-      categoryId: selectedOption.value
+      categoryId: selectedOption?.value||''
     }));
+
+    setErrorMessage((prevErrors) => ({
+      ...prevErrors,
+      categoryId: '',
+    }));
+  };
+
+  //Handle unit change
+  const handleUnitChange = selectedOption => {
+    setSelectedUnit(selectedOption);
+    //const selectedValue = selectedOption ? selectedOption.value : ''; // Handle null case
+    console.log(selectedOption.value);
+    
+    
+    setValues(prevValues => ({
+      ...prevValues,
+      unitId: selectedOption.value || ''
+    }));
+
+    setErrorMessage((prevErrors) => ({
+      ...prevErrors,
+      unitId: '',
+    }));
+    
   };
 
   //handle input change
@@ -52,37 +98,56 @@ function ItemMaster() {
       ...prevValues,
       [name]: value,
     }));
-  };
 
-  const [units, setUnit] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState(null);
-
-   // Fetch units from the server
-   useEffect(() => {
-    
-    axios.get('http://localhost:8081/unit/get') // Adjust the API endpoint based on your backend
-      .then(response => {
-        setUnit(response.data.units);
-      })
-      .catch(error => {
-        console.error('Error fetching units data:', error);
-      });
-  }, []);
-
-
-  
-  // Handle unit change
-  const handleUnitChange = selectedOption => {
-    setSelectedUnit(selectedOption);
-    setValues(prevValues => ({
-      ...prevValues,
-      unitId: selectedOption.value
+    setErrorMessage((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
     }));
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validation
+    let isValid = true;
+    const newErrors = {};
+
+    if (!values.code.trim()) {
+      isValid = false;
+      newErrors.code = 'Item Code is required *';
+    }
+
+    if (!values.itemName.trim()) {
+      isValid = false;
+      newErrors.itemName = 'Item Name is required *';
+    }
+
+    if (!selectedCategory) {
+      isValid = false;
+      newErrors.categoryId = 'Category is required *';
+    }
+
+    if (!selectedUnit) {
+      isValid = false;
+      newErrors.unitId = 'Unit is required *';
+    }
+
+    if (!isValid) {
+      setErrorMessage(newErrors);
+      toast.error(`Check the inputs again`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return;
+    }
+
+    
     axios.post('http://localhost:8081/item/create', values)
       .then((res) => {
         console.log('Item Code:', values.code);
@@ -91,13 +156,16 @@ function ItemMaster() {
         console.log('Unit ID:', {selectedUnit});
 
         //For the toast message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Item has been saved",
-          showConfirmButton: false,
-          timer: 1000,
-        });  
+        toast.success('Successfully Added', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });  
 
 
         // Reset the form fields
@@ -106,15 +174,32 @@ function ItemMaster() {
         setValues({
           code: '',
           itemName: '',
+          categoryId: '',
+          unitId: ''
           
         });
       })
+      
       .catch(err => {
         console.error(err);
+        if (err) {
+          toast.error(`Error Occured`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
       })
       .finally(() => {
-        // Navigate to 'Item-list' after the alert is closed
-        navigate('/home/item-list');
+        // Navigate to 'Item-list' after two seconds
+        setTimeout(()=>{
+          navigate('/home/item-list');
+        },2000); 
       });
       
   };
@@ -132,97 +217,89 @@ function ItemMaster() {
     label: unit.Description,
   }));
 
+
+  //Handle Reset
+  const handleReset = () => {
+    setValues((prevValues) => ({
+      code:'',
+      itemName:'',
+      categoryId:'',
+      unitId:''
+    }));
+    setErrorMessage({
+      code: '',
+      itemName: '',
+      categoryId: '',
+      unitId: '',
+    });
+  };
+
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-                <h2>Add Item</h2>
+    <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
+      <ToastContainer />
+      <div className='master-content'  >
+        <form onSubmit={handleSubmit} className='form-container'  >
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="ItemCode">Item Code</label>
-                    
-                    <input 
-                      type="text" 
-                      name='code' 
-                      placeholder='Enter Item Code' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.code}
-                      required/>
-                      
-                </div>
+          <h3>Item Details</h3>
+          <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
+          <label className='error-text'>{errorMessage.code}</label>       
+          <TextField className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
+          <label className='error-text'>{errorMessage.itemName}</label>
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="ItemName">Item name</label>
-                    <input 
-                      type="text" 
-                      name='itemName' 
-                      placeholder='Enter Item Name' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.itemName}
-                      required/>
-                      
-                </div>
-                
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="Cateogory">Category</label>
-                    <Select
-                      options={categoryOptions}
-                      value={selectedCategory}
-                      onChange={handleCategoryChange}
-                      placeholder="Select a category"
-                      name= 'categoryId'
-                      
-                    />
-                    
-                    {/* <input 
-                      type="text" 
-                      name='categoryId' 
-                      placeholder='Enter Category ID' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.categoryId}/> */}
-                </div>
+          <h3>Category Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={categoryOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Category"
+                name='categoryId' 
+                value={values.categoryId}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
+            }}
+            value={values.categoryId}
+          />
+          <label className='error-text'>{errorMessage.categoryId}</label>
 
-                <div className='mb-2 col-md-3'>
-                    <label htmlFor="UnitId">Unit ID</label>
-                    <Select
-                      options={unitOptions}
-                      value={selectedUnit}
-                      onChange={handleUnitChange}
-                      placeholder="Select a Unit"
-                      name= 'unitId'
-                      
-                    />
+          <h3>Unit Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={unitOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Unit"
+                name='unitId' 
+                value={values.unitId}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, unitId: newValue?.label || '' }));
+            }}
+            value={values.unitId}
+          />
+          <label className='error-text'>{errorMessage.unitId}</label>
 
+          <div className='button-container'>
+            <button type="submit" class='submit-button'>Save</button>
+            <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+          </div>
 
-                    {/* <input 
-                      type="text" 
-                      name='unitId' 
-                      placeholder='Enter Unit ID' 
-                      className='form-control'
-                      onChange={handleInputChange} 
-                      value={values.unitId}/> */}
-                </div>
-
-
-                {/* <div className='mb-2'>
-                    <label htmlFor="">Supplier</label>
-                    <input type="text" placeholder='Enter Supplier' className='form-control'
-                    onChange={e=>setValues({...values, Supplier_id:e.target.value})}/>
-                </div> */}
-
-                {/* <div className='mb-2'>
-                    <label htmlFor="">Unit Price</label>
-                    <input type="text" placeholder='Enter unit price ' className='form-control'
-                    onChange={e=>setValues({...values, Unit_price:e.target.value})}/>
-                </div> */}
-
-                
-
-                <button type="submit" className='btn btn-success'>Save</button>
-
-            </form>
+        </form>
+      </div>
     </div>
   );
 }
