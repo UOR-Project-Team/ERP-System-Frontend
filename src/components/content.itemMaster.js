@@ -1,15 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Autocomplete from '@mui/material/Autocomplete';
-
-
-
 
 function ItemMaster() {
 
@@ -36,17 +31,10 @@ function ItemMaster() {
     unitId: '',
   })
 
-  //Error message style
-  const errorLabelStyle = {
-    color: 'red',
-    fontSize: '0.8em', // Optional: adjust the font size
-  };
-
-
   // Fetch categories from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/category/show') 
+    axios.get('http://localhost:8081/category/') 
       .then(response => {
         setCategories(response.data.categories);
 
@@ -68,7 +56,6 @@ function ItemMaster() {
       });
   }, []);
 
-
   // Handle category change
   const handleCategoryChange = selectedOption => {
     setSelectedCategory(selectedOption);
@@ -85,26 +72,24 @@ function ItemMaster() {
     }));
   };
 
-    //Handle unit change
-    const handleUnitChange = selectedOption => {
-      setSelectedUnit(selectedOption);
-      //const selectedValue = selectedOption ? selectedOption.value : ''; // Handle null case
-      console.log(selectedOption.value);
-      
-      
-      setValues(prevValues => ({
-        ...prevValues,
-        unitId: selectedOption.value || ''
-      }));
+  //Handle unit change
+  const handleUnitChange = selectedOption => {
+    setSelectedUnit(selectedOption);
+    //const selectedValue = selectedOption ? selectedOption.value : ''; // Handle null case
+    console.log(selectedOption.value);
+    
+    
+    setValues(prevValues => ({
+      ...prevValues,
+      unitId: selectedOption.value || ''
+    }));
 
-      setErrorMessage((prevErrors) => ({
-        ...prevErrors,
-        unitId: '',
-      }));
-      
-    };
-
-
+    setErrorMessage((prevErrors) => ({
+      ...prevErrors,
+      unitId: '',
+    }));
+    
+  };
 
   //handle input change
   const handleInputChange = (event) => {
@@ -119,8 +104,6 @@ function ItemMaster() {
       [name]: '',
     }));
   };
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -256,125 +239,67 @@ function ItemMaster() {
     <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
       <ToastContainer />
       <div className='master-content'  >
-      
-  
-
         <form onSubmit={handleSubmit} className='form-container'  >
-                  
-                  <h2>Add Item</h2>
 
-                  <div className='mb-2 col-md-3'>
-                      <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
-                      <label style={errorLabelStyle}>{errorMessage.code}</label>       
-                      
-                  </div>
+          <h3>Item Details</h3>
+          <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
+          <label className='error-text'>{errorMessage.code}</label>       
+          <TextField className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
+          <label className='error-text'>{errorMessage.itemName}</label>
 
-                  <div className='mb-2 col-md-3'>
+          <h3>Category Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={categoryOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Category"
+                name='categoryId' 
+                value={values.categoryId}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
+            }}
+            value={values.categoryId}
+          />
+          <label className='error-text'>{errorMessage.categoryId}</label>
 
-                      <TextField className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
-                      <label style={errorLabelStyle}>{errorMessage.itemName}</label>
-                        
-                  </div>
-                  
-                  <div className='mb-2 col-md-3'>
-                      {/* <label htmlFor="Cateogory">Category</label> */}
-                      <Select
-                        options={categoryOptions}
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        placeholder="Category"
-                        name= 'categoryId'
-                        
-                      />
-                      
-                      
-                      {/* <Autocomplete
-                        disablePortal
-                        className='text-line-type2'
-                        options={categoryOptions}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Category"
-                            name='categoryId' 
-                            value={selectedCategory ? selectedCategory.label || '' : ''} //Check null before accessing label
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                          />
-                        )}
-                        onChange={(_, newValue) => {
-                          setValues(newValue);
-                        }}
+          <h3>Unit Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={unitOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Unit"
+                name='unitId' 
+                value={values.unitId}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, unitId: newValue?.label || '' }));
+            }}
+            value={values.unitId}
+          />
+          <label className='error-text'>{errorMessage.unitId}</label>
 
-                        // onClear={() => {
-                        //   setSelectedCategory({ label: '', value: '' });
-                        //   setValues((prevValues) => ({
-                        //     ...prevValues,
-                        //     categoryId: '',
-                        //   }));
-                        // }}
-                        
-                        
-                      /> */}
-                      <label style={errorLabelStyle}>{errorMessage.categoryId}</label>
-                  </div>
+          <div className='button-container'>
+            <button type="submit" class='submit-button'>Save</button>
+            <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+          </div>
 
-                  <div className='mb-2 col-md-3'>
-                      {/* <label htmlFor="UnitId">Unit ID</label> */}
-                      <Select
-                        
-                        className='text-line-type2'
-                        options={unitOptions}
-                        value={selectedUnit}
-                        onChange={handleUnitChange}
-                        placeholder="Unit"
-                        name= 'unitId'
-                        
-                      />  
-                      
-
-                       {/* <Autocomplete
-                        disablePortal
-                        className='text-line-type2'
-                        options={unitOptions}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Unit"
-                            name='unitId' 
-                            value={selectedUnit ? selectedUnit.label || '' : ''} // Check for null before accessing label
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                          />
-                        )}
-                        onChange={(_, newValue) => {
-                          setValues(newValue);
-                        }}
-
-                        // onClear={() => {
-                        //   setSelectedUnit({ label: '', value: '' });
-                        //   setValues((prevValues) => ({
-                        //     ...prevValues,
-                        //     unitId: '',
-                        //   }));
-                        // }}
-                        
-                      />  */}
-                      <label style={errorLabelStyle}>{errorMessage.unitId}</label>
-
-                  </div>
-                  <div className='button-container'>
-                    <button type="submit" class='submit-button'>Save</button>
-                    <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
-                  </div>
-
-                  
-
-              </form>
-              
-            </div>
+        </form>
+      </div>
     </div>
   );
 }

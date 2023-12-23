@@ -9,8 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 function CustomerMaster() {
 
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
+    title: '',
+    fullname: '',
     email: '',
     nic: '',
     contactno: '',
@@ -22,8 +22,8 @@ function CustomerMaster() {
   });
 
   const [errorMessage, setErrorMessage] = useState({
-    firstname: '',
-    lastname: '',
+    title: '',
+    fullname: '',
     email: '',
     nic: '',
     contactno: '',
@@ -47,7 +47,7 @@ function CustomerMaster() {
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
       toast.error(`Check the inputs again`, {
-        position: "top-center",
+        position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -62,8 +62,8 @@ function CustomerMaster() {
     try {
       const response = await customerServices.createCustomer(formData)
       toast.success('Successfully Added', {
-        position: "top-center",
-        autoClose: 5000,
+        position: "top-right",
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -73,39 +73,50 @@ function CustomerMaster() {
         });
       console.log('Customer created:', response);
       handleReset();
-    } catch(error) {
-      console.error('Error creating customer:', error.message);
-      if (error.response && error.response.data && error.response.data.error) {
-        toast.error(`Error Occured`, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      } else {
-        toast.error('Error Occured', {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-    }
-    }
+    } catch (error) {
+      const { message, attributeName } = error.response.data;
+
+      toast.error(`${message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    
+      if (attributeName) {
+        if(attributeName==='Email') {
+          setErrorMessage({
+            email: 'This Email already Exists',
+          });
+        } else if(attributeName==='NIC') {
+          setErrorMessage({
+            nic: 'This National ID/Passport already Exists',
+          });
+        } else if(attributeName==='ContactNo') {
+          setErrorMessage({
+            contactno: 'This Contact Number already Exists',
+          });
+        } else if(attributeName==='VatNo') {
+          setErrorMessage({
+            vatno: 'This VAT Number already Exists',
+          });
+        }
+      }
+
+      console.error('Error:', message);
+
+    }     
 
   };
 
   const handleReset = () => {
     setFormData((prevData) => ({
-      firstname: '',
-      lastname: '',
+      title: '',
+      fullname: '',
       nic: '',
       vatno: '',
       email: '',
@@ -116,8 +127,8 @@ function CustomerMaster() {
       country: ''
     }));
     setErrorMessage({
-      firstname: '',
-      lastname: '',
+      title: '',
+      fullname: '',
       nic: '',
       vatno: '',
       email: '',
@@ -135,10 +146,35 @@ function CustomerMaster() {
       <div className='master-content'>
         <form className='form-container'>
           <h3>Customer Details</h3>
-            <TextField className='text-line-type1' name='firstname' value={formData.firstname} onChange={(e) => handleChanges(e)} label="First Name" variant="outlined" />
-            <label className='error-text'>{errorMessage.firstname}</label>
-            <TextField className='text-line-type1' name='lastname' value={formData.lastname} onChange={(e) => handleChanges(e)} label="Last Name" variant="outlined" />
-            <label className='error-text'>{errorMessage.lastname}</label>
+            <div className='line-type3-container'>
+              <div className='line-type3-left-content'>
+                <Autocomplete
+                  disablePortal
+                  className='text-line-type2'
+                  options={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Title"
+                      name='title' 
+                      value={formData.title}
+                      onChange={(e) => {
+                        handleChanges(e);
+                      }}
+                    />
+                  )}
+                  onChange={(_, newValue) => {
+                    setFormData((prevData) => ({ ...prevData, title: newValue?.label || '' }));
+                  }}
+                  value={formData.title}
+                />
+                <label className='error-text'>{errorMessage.title}</label>
+              </div>
+              <div className='line-type3-right-content'>
+                <TextField className='text-line-type2' name='fullname' value={formData.fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
+                <label className='error-text'>{errorMessage.fullname}</label>
+              </div>
+            </div>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
                 <TextField className='text-line-type2' name='nic' value={formData.nic} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
@@ -195,6 +231,7 @@ function CustomerMaster() {
                   onChange={(_, newValue) => {
                     setFormData((prevData) => ({ ...prevData, country: newValue?.label || '' }));
                   }}
+                  value={formData.country}
                 />
                 <label className='error-text'>{errorMessage.country}</label>
               </div>

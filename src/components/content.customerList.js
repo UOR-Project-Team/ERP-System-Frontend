@@ -40,8 +40,8 @@ function CustomerList() {
   const [currentCustomer, setCurrentCustomer] = useState(0);
 
   const [fields, setFields] = useState({
-    firstname: true,
-    lastname: true,
+    title: true,
+    fullname: true,
     email: true,
     nic: false,
     contactno: true,
@@ -53,8 +53,8 @@ function CustomerList() {
   });
 
   const [tempFields, setTempFields] = useState({
-    firstname: true,
-    lastname: true,
+    title: true,
+    fullname: true,
     email: true,
     nic: false,
     contactno: true,
@@ -66,8 +66,8 @@ function CustomerList() {
   });
 
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
+    title: '',
+    fullname: '',
     email: '',
     nic: '',
     contactno: '',
@@ -79,8 +79,8 @@ function CustomerList() {
   });
 
   const [errorMessage, setErrorMessage] = useState({
-    firstname: '',
-    lastname: '',
+    title: '',
+    fullname: '',
     email: '',
     nic: '',
     contactno: '',
@@ -111,7 +111,6 @@ function CustomerList() {
   
       return regex.test(values);
     });
-  
     setCustomers(result);
   };
 
@@ -141,8 +140,8 @@ function CustomerList() {
     e.preventDefault();
     setIsModalOpen(false);
     setFields({
-      firstname: tempFields.firstname,
-      lastname: tempFields.lastname,
+      title: tempFields.title,
+      fullname: tempFields.fullname,
       email: tempFields.email,
       nic: tempFields.nic,
       contactno: tempFields.contactno,
@@ -211,16 +210,18 @@ function CustomerList() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  // OnSubmit Update Form
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
 
+    // Validations
     const validationErrors = validateCustomer(formData);
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
       toast.error(`Check the inputs again`, {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -236,22 +237,8 @@ function CustomerList() {
       fetchCustomers();
       setIsModalOpen(false);
       toast.success('Successfully Updated', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
-      console.log('Customer updated:', response);
-      handleUpdateReset();
-    } catch(error) {
-      console.error('Error Updating customer:', error.message);
-      toast.error('Error Occured', {
-        position: "top-center",
-        autoClose: 5000,
+        position: "top-right",
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -259,6 +246,43 @@ function CustomerList() {
         progress: undefined,
         theme: "dark",
       });
+      handleUpdateReset();
+      console.log('Customer updated:', response);
+    } catch(error) {
+      const { message, attributeName } = error.response.data;
+      toast.error(`${message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    
+      if (attributeName) {
+        if(attributeName==='Email') {
+          setErrorMessage({
+            email: 'This Email already Exists',
+          });
+        } else if(attributeName==='NIC') {
+          setErrorMessage({
+            nic: 'This National ID/Passport already Exists',
+          });
+        } else if(attributeName==='ContactNo') {
+          setErrorMessage({
+            contactno: 'This Contact Number already Exists',
+          });
+        } else if(attributeName==='VatNo') {
+          setErrorMessage({
+            vatno: 'This VAT Number already Exists',
+          });
+        }
+      }
+
+      console.error('Error:', message);
+
     }
 
   };
@@ -268,8 +292,8 @@ function CustomerList() {
 
     if (foundCustomer) {
       setFormData({
-        firstname: foundCustomer.Firstname || '',
-        lastname: foundCustomer.Lastname || '',
+        title: foundCustomer.Title || '',
+        fullname: foundCustomer.Fullname || '',
         email: foundCustomer.Email || '',
         nic: foundCustomer.NIC || '',
         contactno: foundCustomer.ContactNo || '',
@@ -296,8 +320,8 @@ function CustomerList() {
 
   const handleUpdateReset = () => {
     setFormData(() => ({
-      firstname: '',
-      lastname: '',
+      title: '',
+      fullname: '',
       nic: '',
       vatno: '',
       email: '',
@@ -308,8 +332,8 @@ function CustomerList() {
       country: ''
     }));
     setErrorMessage({
-      firstname: '',
-      lastname: '',
+      title: '',
+      fullname: '',
       nic: '',
       vatno: '',
       email: '',
@@ -341,10 +365,10 @@ function CustomerList() {
     };
 
     // Set table headers
-    const headers = [["FirstName", "LastName", "Email", "Mobile", "Street1", "Street2", "City", "Country"]];
+    const headers = [["Title", "Fullname", "Email", "Mobile", "Street1", "Street2", "City", "Country"]];
 
     // Map customer data
-    const data = customers.map(elt=> [elt.Firstname, elt.Lastname, elt.Email, elt.ContactNo, elt.Street1, elt.Street2, elt.City, elt.Country]);
+    const data = customers.map(elt=> [elt.Title, elt.Fullname, elt.Email, elt.ContactNo, elt.Street1, elt.Street2, elt.City, elt.Country]);
 
     // Set table content
     let content = {
@@ -369,11 +393,11 @@ function CustomerList() {
   };
 
   const exportCSV = () => {
-    const headers = ["FirstName", "LastName", "Email", "Mobile", "Street1", "Street2", "City", "Country"];
+    const headers = ["Title", "Fullname", "Email", "Mobile", "Street1", "Street2", "City", "Country"];
   
     const data = customers.map(elt => [
-      elt.Firstname,
-      elt.Lastname,
+      elt.Title,
+      elt.Fullname,
       elt.Email,
       elt.ContactNo,
       elt.Street1,
@@ -417,8 +441,8 @@ function CustomerList() {
           <table>
             <thead>
               <tr>
-                <th style={{ display: fields.firstname ? 'table-cell' : 'none' }}>Firstname</th>
-                <th style={{ display: fields.lastname ? 'table-cell' : 'none' }}>Lastname</th>
+                <th style={{ display: fields.title ? 'table-cell' : 'none' }}>Title</th>
+                <th style={{ display: fields.fullname ? 'table-cell' : 'none' }}>Fullname</th>
                 <th style={{ display: fields.email ? 'table-cell' : 'none' }}>Email</th>
                 <th style={{ display: fields.nic ? 'table-cell' : 'none' }}>NIC</th>
                 <th style={{ display: fields.contactno ? 'table-cell' : 'none' }}>Contact No</th>
@@ -438,8 +462,8 @@ function CustomerList() {
               ) : (
                 customers.map((customer) => (
                   <tr key={customer.id}>
-                    <td style={{ display: fields.firstname ? 'table-cell' : 'none' }}>{customer.Firstname}</td>
-                    <td style={{ display: fields.lastname ? 'table-cell' : 'none' }}>{customer.Lastname}</td>
+                    <td style={{ display: fields.title ? 'table-cell' : 'none' }}>{customer.Title}</td>
+                    <td style={{ display: fields.fullname ? 'table-cell' : 'none' }}>{customer.Fullname}</td>
                     <td style={{ display: fields.email ? 'table-cell' : 'none' }}>{customer.Email}</td>
                     <td style={{ display: fields.nic ? 'table-cell' : 'none' }}>{customer.NIC}</td>
                     <td style={{ display: fields.contactno ? 'table-cell' : 'none' }}>{customer.ContactNo}</td>
@@ -489,12 +513,12 @@ function CustomerList() {
               <form onSubmit={handleFilterSubmit}>
                 <div className='checkbox-container'>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='firstname' checked={tempFields.firstname} onChange={handleCheckboxChange} />
-                    <label>Firstname</label>
+                    <input type='checkbox' name='title' checked={tempFields.title} onChange={handleCheckboxChange} />
+                    <label>Title</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='lastname' checked={tempFields.lastname} onChange={handleCheckboxChange} />
-                    <label>Lastname</label>
+                    <input type='checkbox' name='fullname' checked={tempFields.fullname} onChange={handleCheckboxChange} />
+                    <label>Fullname</label>
                   </div>
                   <div className='checkbox-content'>
                     <input type='checkbox' name='email' checked={tempFields.email} onChange={handleCheckboxChange} />
@@ -537,74 +561,100 @@ function CustomerList() {
               <h3>Update Customer</h3>
               <form className='form-container'>
                 <h3>Customer Details</h3>
-                  <TextField className='text-line-type1' name='firstname' value={formData.firstname} onChange={(e) => handleChanges(e)} label="First Name" variant="outlined" />
-                  <label className='error-text'>{errorMessage.firstname}</label>
-                  <TextField className='text-line-type1' name='lastname' value={formData.lastname} onChange={(e) => handleChanges(e)} label="Last Name" variant="outlined" />
-                  <label className='error-text'>{errorMessage.lastname}</label>
-                  <div className='line-type2-container'>
-                    <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='nic' value={formData.nic} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
-                      <label className='error-text'>{errorMessage.nic}</label>
-                    </div>
-                    <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='vatno' value={formData.vatno} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
-                      <label className='error-text'>{errorMessage.vatno}</label>
-                    </div>
+                <div className='line-type3-container'>
+                  <div className='line-type3-left-content'>
+                    <Autocomplete
+                      disablePortal
+                      className='text-line-type2'
+                      options={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Title"
+                          name='title' 
+                          value={formData.title}
+                          onChange={(e) => {
+                            handleChanges(e);
+                          }}
+                        />
+                      )}
+                      onChange={(_, newValue) => {
+                        setFormData((prevData) => ({ ...prevData, title: newValue?.label || '' }));
+                      }}
+                      value={formData.title}
+                    />
+                    <label className='error-text'>{errorMessage.title}</label>
                   </div>
-                  <h3>Contact Details</h3>
-                  <div className='line-type2-container'>
-                    <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
-                      <label className='error-text'>{errorMessage.email}</label>
-                    </div>
-                    <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
-                      <label className='error-text'>{errorMessage.contactno}</label>
-                    </div>
+                  <div className='line-type3-right-content'>
+                    <TextField className='text-line-type2' name='fullname' value={formData.fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
+                    <label className='error-text'>{errorMessage.fullname}</label>
                   </div>
-                  <h3>Address</h3>
-                  <div className='line-type2-container'>
-                    <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='street1' value={formData.street1} onChange={(e) => handleChanges(e)} label="Street 1" variant="outlined"/>
-                      <label className='error-text'>{errorMessage.street1}</label>
-                    </div>
-                    <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='street2' value={formData.street2} onChange={(e) => handleChanges(e)} label="Street 2" variant="outlined" />
-                      <label className='error-text'>{errorMessage.street2}</label>
-                    </div>
-                  </div>
-                  <div className='line-type2-container'>
+                </div>
+                <div className='line-type2-container'>
                   <div className='line-type2-content'>
-                      <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
-                      <label className='error-text'>{errorMessage.city}</label>
-                    </div>
-                    <div className='line-type2-content'>
-                      <Autocomplete
-                        disablePortal
-                        className='text-line-type2'
-                        options={[{ label: 'Sri Lanka' }, { label: 'India' }]}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Country"
-                            name='country' 
-                            value={formData.country}
-                            onChange={(e) => {
-                              handleChanges(e);
-                            }}
-                          />
-                        )}
-                        onChange={(_, newValue) => {
-                          setFormData((prevData) => ({ ...prevData, country: newValue?.label || '' }));
-                        }}
-                      />
-                      <label className='error-text'>{errorMessage.country}</label>
-                    </div>
+                    <TextField className='text-line-type2' name='nic' value={formData.nic} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
+                    <label className='error-text'>{errorMessage.nic}</label>
                   </div>
-                  <div className='button-container'>
-                    <button type='submit' class='submit-button' onClick={handleUpdateSubmit}>Submit</button>
-                    <button type='reset' class='reset-button' onClick={handleUpdateReset}>Reset</button>
+                  <div className='line-type2-content'>
+                    <TextField className='text-line-type2' name='vatno' value={formData.vatno} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
+                    <label className='error-text'>{errorMessage.vatno}</label>
                   </div>
+                </div>
+                <h3>Contact Details</h3>
+                <div className='line-type2-container'>
+                  <div className='line-type2-content'>
+                    <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
+                    <label className='error-text'>{errorMessage.email}</label>
+                  </div>
+                  <div className='line-type2-content'>
+                    <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
+                    <label className='error-text'>{errorMessage.contactno}</label>
+                  </div>
+                </div>
+                <h3>Address</h3>
+                <div className='line-type2-container'>
+                  <div className='line-type2-content'>
+                    <TextField className='text-line-type2' name='street1' value={formData.street1} onChange={(e) => handleChanges(e)} label="Street 1" variant="outlined"/>
+                    <label className='error-text'>{errorMessage.street1}</label>
+                  </div>
+                  <div className='line-type2-content'>
+                    <TextField className='text-line-type2' name='street2' value={formData.street2} onChange={(e) => handleChanges(e)} label="Street 2" variant="outlined" />
+                    <label className='error-text'>{errorMessage.street2}</label>
+                  </div>
+                </div>
+                <div className='line-type2-container'>
+                <div className='line-type2-content'>
+                    <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
+                    <label className='error-text'>{errorMessage.city}</label>
+                  </div>
+                  <div className='line-type2-content'>
+                    <Autocomplete
+                      disablePortal
+                      className='text-line-type2'
+                      options={[{ label: 'Sri Lanka' }, { label: 'India' }]}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Country"
+                          name='country' 
+                          value={formData.country}
+                          onChange={(e) => {
+                            handleChanges(e);
+                          }}
+                        />
+                      )}
+                      onChange={(_, newValue) => {
+                        setFormData((prevData) => ({ ...prevData, country: newValue?.label || '' }));
+                      }}
+                      value={formData.country}
+                    />
+                    <label className='error-text'>{errorMessage.country}</label>
+                  </div>
+                </div>
+                <div className='button-container'>
+                  <button type='submit' class='submit-button' onClick={handleUpdateSubmit}>Submit</button>
+                  <button type='reset' class='reset-button' onClick={handleUpdateReset}>Reset</button>
+                </div>
               </form>
             </div>
           ) : (

@@ -568,6 +568,20 @@ body, html {
     background-color: whitesmoke;
 }
 
+.body-container .master-content .form-container .line-type3-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.body-container .master-content .form-container .line-type3-left-content {
+    width: 23%;
+}
+
+.body-container .master-content .form-container .line-type3-right-content {
+    width: 73%;
+}
+
 .body-container .master-content .form-container .error-text {
     display: block;
     color: red;

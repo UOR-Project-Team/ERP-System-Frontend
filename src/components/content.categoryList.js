@@ -116,9 +116,8 @@ const handleSearchInputChange = async (e) => {
     } else if(dialogTitle === 'Delete Category') {
       try {
         await categoryServices.deleteCategory(currentCategory);
-        setDialogOpen(false);
         fetchCategories();
-
+        setDialogOpen(false);
         toast.success('Successfully Deleted', {
           position: "top-right",
           autoClose: 2000,
