@@ -12,7 +12,7 @@ const customerServices = {
       });
       return response.data;
     } catch (error) {
-      throw new Error('Error creating customer');
+      throw error;
     }
   },
 
@@ -43,7 +43,7 @@ const customerServices = {
       });
       return response.data;
     } catch (error) {
-      throw new Error(`Error updating customer: ${error.message}`);
+      throw error;
     }
   },
 
