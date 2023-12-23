@@ -46,7 +46,7 @@ function ItemMaster() {
   // Fetch categories from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/category/show') 
+    axios.get('http://localhost:8081/category') 
       .then(response => {
         setCategories(response.data.categories);
 
