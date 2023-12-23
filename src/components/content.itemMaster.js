@@ -47,7 +47,7 @@ function ItemMaster() {
   // Fetch units from the server
   useEffect(() => {
     
-    axios.get('http://localhost:8081/unit/get') 
+    axios.get('http://localhost:8081/unit') 
       .then(response => {
         setUnit(response.data.units);
       })
