@@ -3,6 +3,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Select from 'react-select';
 import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import TextField from '@mui/material/TextField';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Autocomplete from '@mui/material/Autocomplete';
+
 
 function ItemUpdate() {
 
@@ -47,7 +52,7 @@ function ItemUpdate() {
     // Fetch categories from the database for the category dropdown menu
     useEffect(() => {
       
-      axios.get('http://localhost:8081/category/show') // Adjust the API endpoint based on your backend
+      axios.get('http://localhost:8081/category') // Adjust the API endpoint based on your backend
         .then(response => {
           setCategories(response.data.categories);
   
@@ -240,12 +245,14 @@ function ItemUpdate() {
   
   else{
     return (
-      <div>
-        <form onSubmit={handleSubmit}>
+      <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
+        
+        <div className='master-content'>
+          <form onSubmit={handleSubmit}>
                   <h2>Update Item</h2>
   
-                  <div className='mb-2 col-md-3'>
-                      <label htmlFor="ItemCode">Item Code</label>
+                  <div>
+                      {/* <label htmlFor="ItemCode">Item Code</label>
                       
                       <input 
                         type="text" 
@@ -254,12 +261,13 @@ function ItemUpdate() {
                         className='form-control'
                         onChange={handleInputChange} 
                         value={values.code}
-                        required/>
+                        required/> */}
                         
+                        <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
                   </div>
   
-                  <div className='mb-2 col-md-3'>
-                      <label htmlFor="ItemName">Item name</label>
+                  <div>
+                      {/* <label htmlFor="ItemName">Item name</label>
                       <input 
                         type="text" 
                         name='itemName' 
@@ -267,13 +275,15 @@ function ItemUpdate() {
                         className='form-control'
                         onChange={handleInputChange} 
                         value={values.itemName}
-                        required/>
+                        required/> */}
                         
+                        <TextField className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
                   </div>
                   
-                  <div className='mb-2 col-md-3'>
-                      <label htmlFor="Cateogory">Category</label>
+                  <div>
+                      {/* <label htmlFor="Cateogory">Category</label> */}
                       <Select
+                        className = 'text-line-type2'
                         options={categoryOptions}
                         value={selectedCategory}
                         defaultValue={categoryOptions[2]}
@@ -285,9 +295,11 @@ function ItemUpdate() {
                       
                   </div>
   
-                  <div className='mb-2 col-md-3'>
-                      <label htmlFor="UnitId">Unit ID</label>
+                  <div>
+                      {/* <label htmlFor="UnitId">Unit ID</label> */}
                       <Select
+                        
+                        className = 'text-line-type2'
                         options={unitOptions}
                         //value={{ value: selectedUnit.ID, label: selectedUnit.Description }}
                         value={selectedUnit}
@@ -302,12 +314,17 @@ function ItemUpdate() {
   
                   </div>
                   
-  
-                  <button type="submit" className='btn btn-success' style={{ marginRight: '20px' }}>Update</button>
-                  <button className='btn btn-danger' onClick={handleCancel}>Cancel</button>
-  
-              </form>
+                  <div className='button-container'>
+                    <button type="submit" className='submit-button' >Update</button>
+                    <button className='reset-button' onClick={handleCancel}>Cancel</button>
+                  </div>
+
+ 
+            </form>
+        </div>
       </div>
+
+      
     );
 
   }
