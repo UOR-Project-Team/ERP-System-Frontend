@@ -1,19 +1,23 @@
-const validateCustomer = (formData) => {
+const validateUser = (formData) => {
     const errors = {
-      Fulltname: '',
+      Fullname: '',
       username: '',
       email: '',
       password: '',
       NIC: '',
       contactno: '',
       jobrole: '',
-      Address: '',
+      address: '',
       city: '',
     };
   
-    if (!formData.Fulltname || !formData.username) {
-        errors.Fulltname = 'First Name is required *';
+    if (!formData.Fullname ) {
+        errors.Fullname = 'FullName is required *';
     }
+
+    if (!formData.username ) {
+      errors.username = 'Username is required *';
+  }
   
     if (!formData.email) {
         errors.email = 'Email is required *';
@@ -43,11 +47,11 @@ const validateCustomer = (formData) => {
         errors.jobrole = 'jobrole is required *';
     }
   
-    if (!formData.Address) {
-        errors.Address = 'Country is required *';
+    if (!formData.address) {
+        errors.address = 'Country is required *';
     }
   
     return errors;
   };
   
-  export default validateCustomer;
+  export default validateUser;
