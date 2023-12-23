@@ -269,7 +269,7 @@ function ItemMaster() {
             // }}
 
             onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, categoryId: newValue?.value || '' }));
+              setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
             }}
 
             value={values.categoryId}
@@ -293,10 +293,10 @@ function ItemMaster() {
               />
             )}
             onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, unitId: newValue?.value || '' }));
+              setValues((prevData) => ({ ...prevData, unitId: newValue?.label || '' }));
             }}
-            // onChange={(e) => {
-            //   handleUnitChange(e);
+            // onChange={(_, newValue) => {
+            //   handleUnitChange(newValue);
             // }}
             value={values.unitId}
           />

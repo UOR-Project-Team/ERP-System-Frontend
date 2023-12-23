@@ -37,7 +37,7 @@ function ItemUpdate() {
     // Fetch units from the database for the unit drop down
     useEffect(() => {
     
-      axios.get('http://localhost:8081/unit/get') // Adjust the API endpoint based on your backend
+      axios.get('http://localhost:8081/unit') // Adjust the API endpoint based on your backend
         .then(response => {
           setUnit(response.data.units);
         })
