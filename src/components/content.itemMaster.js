@@ -258,14 +258,20 @@ function ItemMaster() {
                 label="Category"
                 name='categoryId' 
                 value={values.categoryId}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+                // onChange={(e) => {
+                //   handleCategoryChange(e);
+                // }}
               />
             )}
+            
+            // onChange={(e) => {
+            //   handleCategoryChange(e);
+            // }}
+
             onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
+              setValues((prevData) => ({ ...prevData, categoryId: newValue?.value || '' }));
             }}
+
             value={values.categoryId}
           />
           <label className='error-text'>{errorMessage.categoryId}</label>
@@ -281,14 +287,17 @@ function ItemMaster() {
                 label="Unit"
                 name='unitId' 
                 value={values.unitId}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+                // onChange={(e) => {
+                //   handleUnitChange(e);
+                // }}
               />
             )}
             onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, unitId: newValue?.label || '' }));
+              setValues((prevData) => ({ ...prevData, unitId: newValue?.value || '' }));
             }}
+            // onChange={(e) => {
+            //   handleUnitChange(e);
+            // }}
             value={values.unitId}
           />
           <label className='error-text'>{errorMessage.unitId}</label>
