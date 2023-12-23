@@ -1,127 +1,144 @@
 import React, { useState } from 'react';
-import {ValidateInput} from '../services/validation.login';
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import validateUnit from '../services/validate.unit';
+import unitServices from '../services/services.unit';
 import TextField from '@mui/material/TextField';
 
+function UnitMaster(){
 
-const handleChanges = () => {
-  // Handle changes here
-};
-
-
-
-function UnitMaster() {
-
-  //const [unitDescription, setUnitDescription] = useState('');
-  //const [unitSI, setUnitSI] = useState('');
-  const[values,setValues]=useState({
-    Description:'',
-    SI:''
+    const navigate = useNavigate();
     
+    const [formData , setFormData] = useState({
+            Description:'',
+            SI: ''
+    });
 
-  })
-  const navigate = useNavigate();
+    const [errorMessage , setErrorMessage] = useState({
+            Description:'',
+            SI: ''
+    });
 
-  const unitDescriptionError = ValidateInput(values.Description);
-  const unitSIError = ValidateInput(values.SI);
+    const handleChanges = (e) => {
+        const { name , value } = e.target;
+        setFormData((prevdata) => ({...prevdata , [name]: value}));
+    };
 
-  const [Errormessage, setErrormessage] = useState(false)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
+        const validationErrors = validateUnit(formData);
+        setErrorMessage(validationErrors);
 
-    if(unitDescriptionError || unitSIError){
-      console.log("No inputs")
-      setErrormessage(true)
-      return
-    }
-    else 
-    {
-      //Making axios http request to insert values into db
-      axios.post('http://localhost:8081/unit/create', values)
-      .then((res) => {
-        console.log('Unit Description:', values.Description);
-        console.log('Unit SI:', values.SI);
-
-        //For the toast message
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Unit has been saved",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        
-        // Reset the form fields
-        setValues({
-        Description: '',
-        SI: '',
-        
-        });
-      })
-      .catch (err => {
-        console.log(err);
-      })
-      .finally(() => {
-        // Navigate to 'Unit-list' after the alert is closed
-        navigate('/home/unit-list');
-      });
-      
-    }
-
-    
-   
-  };
-
-  
-
-  return (
-    <div className="container mt-4">
-      {/* <h2>Unit Form</h2> */}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="unitDescription" className="form-label">
-            Unit Description
-          </label>
+        if (Object.values(validationErrors).some((error) => error !== '')) {
+            toast.error(`Check the inputs again`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+            return
+        }
           
-
-          <TextField className='form-control' type="text" name='Description' id="unitDescription" value={values.Description}  onchange={(e) => handleChanges(e)} label="Description" variant="outlined" required/>
-
-          {Errormessage && <span className='text-danger'>{unitDescriptionError} </span>}
-          
+          try {
+            const response = await unitServices.createUnit(formData );
+            
+            toast.success('Successfully Added', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              
+              });
+            console.log('Unit created:', response);
+            handleReset();
             
 
-        </div>
+            setTimeout(() => {
+              navigate('/home/unit-list');
+            }, 2000);
 
-            
-        <div className="mb-3">
-          <label htmlFor="unitSI" className="form-label">
-            Unit SI
-          </label>
-          <TextField className='form-control'  name='SI' id="unitSI" value={values.SI}  onchange={(e) => handleChanges(e)} label="SI" variant="outlined" />
+           
 
-          {Errormessage && <span className='text-danger'>{unitSIError} </span>}
-        </div>
-        <button type="submit" className="btn btn-success">
-          Save
-        </button>
-        
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        
-        <button type="reset" className="btn btn-success">
-          Reset
-        </button>
-      </form>
-    </div>
-  );
+          } catch(error){
+            console.error('Error creating unit:', error.message);
+            if (error.response && error.response.data && error.response.data.error) {
+              toast.error(`Error Occured`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+            } else {
+              toast.error('Error Occured', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+              });
+          }
+          }
+        };
+
+        const handleReset = () =>{
+            setFormData((prevdata) => ({
+                Description:'',
+                SI: ''
+            }));
+            setErrorMessage({
+                Description:'',
+                SI: ''
+            });
+        };
+
+        return(
+            <div>
+                <ToastContainer />
+                <div className='master-content' style={{height: '92vh'}}>
+                    <form className='form-container' style={{marginTop:'22vh'}}>
+                        <h3>Unit Details</h3>
+                            <TextField className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
+                            <label className='error-text'>{errorMessage.Description}</label>
+                            <TextField className='text-line-type1' name='SI' value={formData.SI} onChange={(e) => handleChanges(e)} label="SI" variant='outlined' />
+                            <label className='error-text'>{errorMessage.SI}</label>
+                            <div className='button-container'>
+                                 <button type='submit' class='submit-button' onClick={handleSubmit}>Submit</button>
+                                 <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+                            </div>
+                    </form>
+                    
+                </div>
+            </div>
+        )
+
+
+
+
+
+
+
+
+
+
+
+    
 }
 
 export default UnitMaster;
