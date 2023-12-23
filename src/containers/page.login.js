@@ -94,7 +94,6 @@ function Login({ updateAuthentication }) {
     } catch (error) {
       console.error('Error:', error);
       if (error.response && error.response.status === 401) {
-        console.error('Error:', error);
         toast.error(`Invalid Credentials`, {
           position: "top-center",
           autoClose: 2000,
@@ -106,7 +105,6 @@ function Login({ updateAuthentication }) {
           theme: "dark",
         });
       } else {
-        console.error('Error:', error);
         toast.error(`Internal Server Error`, {
           position: "top-center",
           autoClose: 2000,

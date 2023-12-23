@@ -1,7 +1,7 @@
 const validateCustomer = (formData) => {
   const errors = {
-    firstname: '',
-    lastname: '',
+    title: '',
+    fullname: '',
     email: '',
     nic: '',
     contactno: '',
@@ -12,9 +12,13 @@ const validateCustomer = (formData) => {
     vatno: '',
   };
 
-  if (!formData.firstname) {
-      errors.firstname = 'First Name is required *';
+  if (!formData.title) {
+      errors.title = 'Title is required *';
   }
+
+  if (!formData.fullname) {
+    errors.fullname = 'Fullname is required *';
+}
 
   if (!formData.email) {
       errors.email = 'Email is required *';

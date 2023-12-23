@@ -45,34 +45,24 @@ function CategoryMaster(){
           
           try {
             const response = await categoryServices.createCategory({ Description: formData.Description });
-            
             toast.success('Successfully Added', {
               position: "top-right",
-              autoClose: 2000,
+              autoClose: 3000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
               theme: "dark",
-              
               });
             console.log('Category created:', response);
             handleReset();
-            
-
-            setTimeout(() => {
-              navigate('/home/category-list');
-            }, 2000);
-
-           
-
           } catch(error){
             console.error('Error creating category:', error.message);
             if (error.response && error.response.data && error.response.data.error) {
               toast.error(`Error Occured`, {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -83,7 +73,7 @@ function CategoryMaster(){
             } else {
               toast.error('Error Occured', {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
