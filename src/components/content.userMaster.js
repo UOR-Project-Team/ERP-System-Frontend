@@ -154,7 +154,7 @@ function UserMaster() {
                   >
                     <option value=""></option>
                     <option value="admin">Admin</option>
-                    <option value="user">Staff</option>
+                    <option value="staff">Staff</option>
                   </TextField>
                    <label className='error-text'>{errorMessage.jobrole}</label>
               </div>
