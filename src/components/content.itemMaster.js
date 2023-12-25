@@ -91,6 +91,12 @@ function ItemMaster() {
     
   };
 
+  const handleAutocompleteChange = (_, newValue) => {
+    setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
+  };
+  
+  
+
   //handle input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -249,26 +255,22 @@ function ItemMaster() {
 
           <h3>Category Details</h3>
           <Autocomplete
-            disablePortal
-            className='text-line-type2'
-            options={categoryOptions}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Category"
-                name='categoryId' 
-                value={values.categoryId}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
-              />
-            )}
-            onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
-            }}
-            value={values.categoryId}
-          />
-          <label className='error-text'>{errorMessage.categoryId}</label>
+    disablePortal
+    className='text-line-type2'
+    options={categoryOptions}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label="Category"
+        name='categoryId' 
+        value={values.categoryId}
+        onChange={handleInputChange}
+      />
+    )}
+    onChange={handleAutocompleteChange}
+    value={categoryOptions.find((option) => option.label === values.categoryId) || null}
+  />
+          {/* <label className='error-text'>{errorMessage.categoryId}</label> */}
 
           <h3>Unit Details</h3>
           <Autocomplete

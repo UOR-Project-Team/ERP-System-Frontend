@@ -4,6 +4,7 @@ import axios from 'axios'
 import validateUser from '../services/validate.userLoginForms';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {Usertoken} from '../services/UserToken'
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
 import img3 from '../assets/images/login-background-3.jpg'
@@ -26,6 +27,10 @@ function Login({ updateAuthentication }) {
     username: '',
     password: '',
   })
+
+  const userinfo = Usertoken();
+
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,6 +83,12 @@ function Login({ updateAuthentication }) {
         const { token } = response.data;
         localStorage.setItem('token', token);
         updateAuthentication(true)
+
+        if(userinfo){
+          const {username, fullname, jobrole, loginflag} = userinfo;
+          console.log(username);
+        }
+        
         navigate('/home');
       } else {
         toast.error(`Please try again later`, {

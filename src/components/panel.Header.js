@@ -43,6 +43,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         username: decodedToken.username,
         fullname: decodedToken.fullname,
         jobrole: decodedToken.jobrole,
+        loginflag: decodedToken.loginflag,
       })
       console.log('test');
       console.log(decodedToken);
