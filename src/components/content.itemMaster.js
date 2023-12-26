@@ -5,14 +5,16 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import itemServices from '../services/services.item';
+import validateItem from '../services/validate.item';
 
 function ItemMaster() {
 
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  //const [selectedCategory, setSelectedCategory] = useState(null);
   const [units, setUnit] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState(null);
+  //const [selectedUnit, setSelectedUnit] = useState(null);
   const[values,setValues]=useState({
     code:'',
     itemName:'',
@@ -26,6 +28,7 @@ function ItemMaster() {
     unitDescription: '',
   })
 
+  // Fetch categories from the server
   useEffect(() => {
     axios.get('http://localhost:8081/category/') 
       .then(response => {
@@ -82,12 +85,12 @@ function ItemMaster() {
     return category ? category.ID : null;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const unitId = getUnitIdFromDescription(values.unitDescription);
     const categoryId = getCategoryIdFromDescription(values.categoryDescription);
-
+    
     const submitItemData = {
       code: values.code,
       itemName: values.itemName,
@@ -134,18 +137,56 @@ function ItemMaster() {
     //   return;
     // }
 
-    
-    axios.post('http://localhost:8081/item/create', submitItemData)
-      .then((res) => {
-        console.log('Item Code:', values.code);
-        console.log('Item Name:', values.itemName);
-        console.log('Category ID:', categoryId);
-        console.log('Unit ID:', unitId);
+    const validationErrors = validateItem(values);
+    setErrorMessage(validationErrors);
 
-        //For the toast message
+    if (Object.values(validationErrors).some((error) => error !== '')) {
+      toast.error(`Check the inputs again`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return
+    }
+    
+    
+    //axios.post('http://localhost:8081/item/create', submitItemData)
+      // .then((res) => {
+      //   console.log('Item Code:', values.code);
+      //   console.log('Item Name:', values.itemName);
+      //   console.log('Category ID:', categoryId);
+      //   console.log('Unit ID:', unitId);
+
+      //   //For the toast message
+      //   toast.success('Successfully Added', {
+      //     position: "top-right",
+      //     autoClose: 2000,
+      //     hideProgressBar: false,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //     theme: "dark",
+      //     });
+
+      //     handleReset()
+
+      //     setTimeout(()=>{
+      //       navigate('/home/item-list');
+      //     },2000); 
+
+      // })
+
+      try {
+        const response = await itemServices.createItem(submitItemData)
         toast.success('Successfully Added', {
           position: "top-right",
-          autoClose: 2000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -153,30 +194,44 @@ function ItemMaster() {
           progress: undefined,
           theme: "dark",
           });
+        console.log('item created:', response);
+        handleReset();
+      }
 
-          handleReset()
-
-          setTimeout(()=>{
-            navigate('/home/item-list');
-          },2000); 
-
-      })
+      catch (error) {
+        //const {message} = error.response.data;
+  
+        toast.error(`Error Occured`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+  
+        //console.error('Error:', message);
+        console.error('Error:');
+  
+      }
       
-      .catch(err => {
-        console.error(err);
-        if (err) {
-          toast.error(`Error Occured`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
-        }
-      })
+      // .catch(err => {
+      //   console.error(err);
+      //   if (err) {
+      //     toast.error(`Error Occured`, {
+      //       position: "top-right",
+      //       autoClose: 5000,
+      //       hideProgressBar: false,
+      //       closeOnClick: true,
+      //       pauseOnHover: true,
+      //       draggable: true,
+      //       progress: undefined,
+      //       theme: "dark",
+      //     });
+      //   }
+      // })
   };
 
   //Handle Reset
@@ -187,6 +242,11 @@ function ItemMaster() {
       categoryDescription:'',
       unitDescription:''
     }));
+    
+    setTimeout(()=>{
+      navigate('/home/item-list');
+    },2000);
+
     setErrorMessage({
       code: '',
       itemName: '',

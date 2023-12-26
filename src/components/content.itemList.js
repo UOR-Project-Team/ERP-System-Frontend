@@ -30,6 +30,7 @@ import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
 import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
+import itemServices from '../services/services.item';
 
 function ItemList() {
 
@@ -37,21 +38,41 @@ function ItemList() {
   const [isBlur , setIsBlur] = useState(false);
 
   const navigate = useNavigate();
-  
-  //fetch all items
-  useEffect(() => {
 
-    axios.get('http://localhost:8081/item/show')
-      .then(response => {
-        setItems(response.data.Item);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+
+  useEffect(()=>{
+    fetchItems();
   }, []); // Empty dependency array ensures useEffect runs once on mount
 
 
   
+  //fetch all items function
+  const fetchItems = async ()=>{
+    try{
+      const itemData= await itemServices.getAllItems();
+      console.log(itemData)
+      //setItems(itemData);
+      setItems([...itemData]);
+    }
+    catch(error)
+    {
+      console.error('Error fetching items',error.message);
+    }
+  }
+
+  //delete item function
+  const deleteItem = async (ItemId)=>{
+    try{
+      await itemServices.deleteItem(ItemId);
+
+    }
+    catch(error)
+    {
+      console.error('Error Deleting item',error.message);
+    }
+
+  }
+
 
 
   const toggleBlur = (shouldBlur) => {
@@ -75,13 +96,18 @@ function ItemList() {
   };
 
 
-  //Handle delete 
-  const handleDelete = (itemId) => {
-    toggleBlur(true);
-    Alert().then((result) => {
-      toggleBlur(false);
-      if (result.isConfirmed) {
 
+  //handle delete button click
+  const handleDelete = async (itemId) => {
+    toggleBlur(true);
+  
+    try {
+      const result = await Alert();
+      toggleBlur(false);
+  
+      if (result.isConfirmed) {
+        await itemServices.deleteItem(itemId);
+  
         Swal.fire({
           position: "center",
           icon: "success",
@@ -89,20 +115,16 @@ function ItemList() {
           showConfirmButton: false,
           timer: 1500
         });
-
-        axios
-          .delete(`http://localhost:8081/item/delete/${itemId}`)
-          .then((res) => {
-            console.log(res.data);
-            axios
-              .get("http://localhost:8081/item/show")
-              .then((res) => setItems(res.data.Item))
-              .catch((err) => console.log(err));
-          })
-          .catch((err) => console.error("Error deleting item:", err));
+  
+        // Wait for the deletion to complete before fetching items
+        await fetchItems();
       }
-    });
+    } catch (error) {
+      console.error('Error deleting item', error.message);
+      toggleBlur(false);
+    }
   };
+  
 
    //Handle Update 
    const handleUpdate = (itemId,itemCode,itemName, categoryId, unitId) => {
@@ -118,57 +140,8 @@ function ItemList() {
 
   return (
     <div>
-      {/* <h2>Item Information</h2>
-      <table className="table table-striped table-bordered">
-        <thead className="thead-dark">
-          <tr>
-            <th>ID</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Category ID</th>
-            <th>Unit ID</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-        
-        {Array.isArray(Item) && Item.length > 0 ? (
-          Item.map((item,index) => (
-            <tr key={index}>
-              <td>{item.ID}</td>
-              <td>{item.Code}</td>
-              <td>{item.Name }</td>
-              <td>{item.Category_ID }</td>
-              <td>{item.Unit_ID }</td>
-              
-              <td>
-                <button 
-                  type='button' 
-                  className='btn btn-success' 
-                  style={{ marginRight: '20px' }}
-                  onClick={()=> handleUpdate(item.ID, item.Code, item.Name, item.Category_ID, item.Unit_ID)}>update   
-                </button>
-
-                <button type='button' className='btn btn-danger' onClick={()=> handleDelete(item.ID)}>Delete</button>
-              </td>
-              
-            </tr>
-          ))
-        ):(
-          <tr>
-            <td colSpan="11">No Item data available</td>
-          </tr>
-        )}
-        
-        </tbody>
-      </table> */}
-
-
-
-
-
-
-<ToastContainer />
+      
+      <ToastContainer />
       {/* <div className='master-content'>
           <div className='search-container'>
             <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
@@ -231,6 +204,10 @@ function ItemList() {
           </table>
         </div>
       </div>
+
+                      
+
+
     </div>
   )
 }
