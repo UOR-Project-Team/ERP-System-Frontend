@@ -37,12 +37,33 @@ function ItemList() {
   const [Item, setItems] = useState([]);
   const [isBlur , setIsBlur] = useState(false);
 
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [removeClick, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [dialogDescription, setDialogDescription] = useState('');
+
+  const [searchInput, setSearchInput] = useState('');
+    const [modelContent, setModelContent] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentItem, setCurrentItem] = useState(0);
+
   const navigate = useNavigate();
 
 
   useEffect(()=>{
     fetchItems();
   }, []); // Empty dependency array ensures useEffect runs once on mount
+
+
+
+  const [formData, setFormData] = useState({
+    ID:'',
+    Code:'',
+    Name: '',
+    CategoryName:'',
+    UnitName:''
+  });
 
 
   
@@ -72,6 +93,131 @@ function ItemList() {
     }
 
   }
+
+
+
+  const handleDialogAction = async () => {
+    if(dialogTitle === 'PDF Exporter') {
+      exportPDF();
+    } else if(dialogTitle === 'CSV Exporter') {
+      exportCSV();
+    } else if(dialogTitle === 'Delete Item') {
+      try {
+        await itemServices.deleteItem(currentItem);
+        fetchItems();
+        setDialogOpen(false);
+        toast.success('Successfully Deleted', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+
+        } catch (error) {
+            console.error('Error deleting category:', error.message);
+            toast.error('Error Occured', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+          }
+        }
+      };
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+      };
+
+    const handleRequest = (type) => {
+        setAnchorEl(null);
+        setModelContent(type);
+        setIsModalOpen(true);
+      };
+
+    const exportPDF = () => {
+        const unit = "pt";
+        const size = "A4";
+        const orientation = "landscape";
+        const doc = new jsPDF(orientation, unit, size);
+
+      const header = function(data) {
+            doc.setFontSize(8);
+            doc.setTextColor(40);
+            doc.text("Innova ERP Solution - Category Report", data.settings.margin.left, 30);
+      };
+
+      const footer = function(data) {
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
+    };
+
+    const headers = [["ID", "Description"]];
+
+   
+    const data = Item.map(elt=> [elt.ID, elt.Description]);
+
+    
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    doc.autoTable({
+        ...content,
+        theme: 'striped',
+        headerStyles: { fillColor: [38, 2, 97], textColor: [255, 255, 255] },
+        addPageContent: function(data) {
+            header(data);
+            footer(data);
+        }
+      });
+  
+      setDialogOpen(false);
+      doc.save("ERP-category-report.pdf");
+    };
+  
+  const exportCSV = () => {
+      const headers = ["ID", "Description"];
+    
+      const data = Item.map(elt => [
+        elt.ID,
+        elt.Code,
+        elt.Name ,
+        elt.CategoryName, 
+        elt.UnitName,
+      ]);
+    
+      const csvData = [headers, ...data];
+    
+      const csv = Papa.unparse(csvData);
+    
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.setAttribute('download', 'ERP-customer-report.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setDialogOpen(false);
+    };
+
+
 
 
 
@@ -135,6 +281,32 @@ function ItemList() {
     //navigate(`/home/item-update`);
   };
 
+  const fetchItem = () => {
+    const foundItem = Item.find((item) => item.ID === currentItem);
+    
+
+    if (foundItem) {
+      setFormData({
+        code: foundItem.Code || '',
+        itemName: foundItem.Name || '',
+        categoryId: foundItem.CategoryName || '',
+        unitId: foundItem.UnitName || '',
+        
+      });
+    } else {
+      console.log("Item not found");
+      toast.error('Item not found', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }
 
 
 
@@ -181,10 +353,7 @@ function ItemList() {
                     <td>{item.CategoryName }</td>
                     <td>{item.UnitName }</td>
 
-                    <td>
-                      {/* <button onClick={(event) => { handleClick(event); setCurrentCustomer(customer.ID); }}>
-                        <img src={ActionLogo} alt='Action Logo' />
-                      </button> */}
+                    {/* <td>
                       <div style={{ display: 'flex', gap: '10px' }}>
                         <button 
                         onClick={()=> handleUpdate(item.ID, item.Code, item.Name, item.Category_ID, item.Unit_ID)}>
@@ -196,7 +365,14 @@ function ItemList() {
                           <img src={DeleteLogo} alt='Delete Logo' />
                         </button>
                       </div>
+                    </td> */}
+
+                    <td>
+                      <button onClick={(event) => { handleClick(event); setCurrentItem(item.ID); }}>
+                        <img src={ActionLogo} alt='Action Logo' />
+                      </button>
                     </td>
+
                   </tr>
                 ))
               )}
@@ -205,6 +381,42 @@ function ItemList() {
         </div>
       </div>
 
+
+
+      <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
+                <MenuItem>
+                            <button onClick={() => {fetchItem(); handleRequest('edit');}}>
+                            <img src={EditLogo} alt='Edit Logo' />
+                            <span>Edit Item</span>
+                            
+
+                        </button>
+                        
+                </MenuItem>
+                <MenuItem onClick={() => {setDialogTitle('Delete Item'); setDialogDescription('Do you want to delete this Item record?'); setDialogOpen(true); setAnchorEl(null);}}>
+                <button>
+                <img src={DeleteLogo} alt="Delete Logo"/>
+                <span>Delete Item</span>
+               </button>
+                </MenuItem>
+      </Menu>
+        
+      <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+              <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+              <DialogContent>
+              <DialogContentText id="alert-dialog-description" style={{width: '250px'}}>
+              {dialogDescription}
+              </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+              <Button color="primary" onClick={handleDialogAction}>
+              Yes
+              </Button>
+              <Button color="primary" autoFocus onClick={() => setDialogOpen(false)}>
+              No
+              </Button>
+              </DialogActions>
+      </Dialog>
                       
 
 
