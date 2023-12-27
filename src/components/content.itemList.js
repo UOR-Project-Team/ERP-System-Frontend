@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
@@ -31,6 +31,9 @@ import EditLogo from './../assets/icons/edit.png';
 import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import itemServices from '../services/services.item';
+import validateItem from '../services/validate.item';
+import categoryServices from '../services/services.category';
+import unitServices from '../services/services.unit';
 
 function ItemList() {
 
@@ -44,9 +47,16 @@ function ItemList() {
   const [dialogDescription, setDialogDescription] = useState('');
 
   const [searchInput, setSearchInput] = useState('');
-    const [modelContent, setModelContent] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentItem, setCurrentItem] = useState(0);
+  const [modelContent, setModelContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState(0);
+
+  const [categories, setCategories] = useState([]);
+  //const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const [units, setUnits] = useState([]);
+  //const [selectedUnit, setSelectedUnit] = useState({});
+
 
   const navigate = useNavigate();
 
@@ -58,11 +68,10 @@ function ItemList() {
 
 
   const [formData, setFormData] = useState({
-    ID:'',
-    Code:'',
-    Name: '',
-    CategoryName:'',
-    UnitName:''
+    code:'',
+    itemName: '',
+    categoryDescription:'',
+    unitDescription:''
   });
 
 
@@ -80,6 +89,48 @@ function ItemList() {
       console.error('Error fetching items',error.message);
     }
   }
+
+  //fetch categories for the update form's category options
+  const fetchCategoryOptions = async () => {
+    try {
+      const Categories = await categoryServices.getAllCategories();
+      // Set categoryOptions state with fetched data
+      setCategories(Categories);
+    } catch (error) {
+      console.error('Error fetching categories:', error.message);
+    }
+  };
+
+
+  //fetch units for the update form's unit options
+  const fetchUnitOptions = async () => {
+    try {
+      const Units = await unitServices.getAllUnits();
+      // Set unitOptions state with fetched data
+      setUnits(Units);
+    } catch (error) {
+      console.error('Error fetching units:', error.message);
+    }
+  };
+
+
+  // Memoize categoryOptions and unitOptions
+  const categoryOptions = useMemo(() => (
+    categories.map(category => ({
+      value: category.ID,
+      label: category.Description,
+    }))
+  ), [categories]);
+
+  const unitOptions = useMemo(() => (
+    units.map(unit => ({
+      value: unit.ID,
+      label: unit.Description,
+    }))
+  ), [units]);
+
+
+
 
   //delete item function
   const deleteItem = async (ItemId)=>{
@@ -101,7 +152,7 @@ function ItemList() {
       exportPDF();
     } else if(dialogTitle === 'CSV Exporter') {
       exportCSV();
-    } else if(dialogTitle === 'Delete Item') {
+    } else if(dialogTitle === 'Delete Itemp') {
       try {
         await itemServices.deleteItem(currentItem);
         fetchItems();
@@ -145,6 +196,21 @@ function ItemList() {
         setAnchorEl(null);
         setModelContent(type);
         setIsModalOpen(true);
+
+        // useEffect(() => {
+        //   if (isModalOpen && currentItem) {
+        //     fetchItem(currentItem);
+        //     fetchCategoryOptions();
+        //     fetchUnitOptions();
+        //   }
+        // }, [isModalOpen, currentItem]);
+        fetchItem(currentItem);
+        fetchCategoryOptions();
+        fetchUnitOptions();
+        
+
+
+
       };
 
     const exportPDF = () => {
@@ -289,10 +355,19 @@ function ItemList() {
       setFormData({
         code: foundItem.Code || '',
         itemName: foundItem.Name || '',
-        categoryId: foundItem.CategoryName || '',
-        unitId: foundItem.UnitName || '',
+        categoryId: foundItem.Category_ID || '',
+        unitId: foundItem.Unit_ID || '',
         
       });
+
+      
+      const selectedCategoryOption = categoryOptions.find(option => option.value == foundItem.Category_ID) || { value: '', label: '' };
+      const selectedUnitOption = unitOptions.find(option => option.value == foundItem.Unit_ID ) || { value: '', label: '' };
+
+      //setSelectedCategory(selectedCategoryOption);
+      //setSelectedUnit(selectedUnitOption);
+      
+
     } else {
       console.log("Item not found");
       toast.error('Item not found', {
@@ -308,6 +383,120 @@ function ItemList() {
     }
   }
 
+
+  //handle input change
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevValues)=>({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  //For validation error messages
+  const [errorMessage, setErrorMessage] = useState({
+    code: '',
+    itemName: '',
+    categoryDescription: '',
+    unitDescription: '',
+  })
+
+
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validateItem(formData);
+    setErrorMessage(validationErrors);
+
+    if (Object.values(validationErrors).some((error) => error !== '')) {
+      toast.error(`Check the inputs again`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return
+    }
+
+    try {
+      const unitId = getUnitIdFromDescription(formData.unitDescription);
+      const categoryId = getCategoryIdFromDescription(formData.categoryDescription);
+    
+      const submitItemData = {
+        code: formData.code,
+        itemName: formData.itemName,
+        categoryId: categoryId,
+        unitId: unitId,
+      }
+
+      const response = await itemServices.updateItem(currentItem, submitItemData)
+      await fetchItems();
+      setIsModalOpen(false);
+      toast.success('Successfully Updated', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+      console.log('Item updated:', response);
+      handleReset();
+
+    } catch(error) {
+      console.error('Error Updating item:', error.message);
+      toast.error('Error Updating item', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+
+  };
+
+
+
+  const handleReset = () => {
+    setFormData((prevValues) => ({
+      code:'',
+      itemName:'',
+      categoryDescription:'',
+      unitDescription:''
+    }));
+
+    setErrorMessage({
+      code: '',
+      itemName: '',
+      categoryDescription: '',
+      unitDescription: '',
+    });
+  };
+
+
+  const getUnitIdFromDescription = (description) => {
+    const unit = units.find((unit) => unit.Description === description);
+    return unit ? unit.ID : null;
+  }
+
+  const getCategoryIdFromDescription = (description) => {
+    const category = categories.find((category) => category.Description === description);
+    return category ? category.ID : null;
+  };
+
+
+  
 
 
   return (
@@ -381,6 +570,13 @@ function ItemList() {
         </div>
       </div>
 
+      <div className='categorylist-addbutton-container'>
+            <Link to = "/home/item-master">
+                <button className='categorylist-addbutton'>Add Item</button>
+
+            </Link>
+      </div>
+
 
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
@@ -400,6 +596,88 @@ function ItemList() {
                </button>
                 </MenuItem>
       </Menu>
+
+
+      <Modal
+                 isOpen={isModalOpen}
+                 onRequestClose={() => {setIsModalOpen(false)}}
+                 contentLabel="Header-Model"
+                 className="modal-contents"
+                 overlayClassName="modal-overlays"
+            >
+                {modelContent === "edit" ? (
+                    
+                    <div className='edit-model'>
+                      <h3>Update Item</h3>
+                     
+                      <form className='form-container'>
+                      <h3>Item Details</h3>
+          <TextField className='text-line-type1' name='code' value={formData.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
+          <label className='error-text'>{errorMessage.code}</label>       
+          <TextField className='text-line-type1' name='itemName' value={formData.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
+          <label className='error-text'>{errorMessage.itemName}</label>
+
+          <h3>Category Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={categoryOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Category"
+                name='categoryDescription' 
+                value={formData.categoryDescription}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setFormData((prevData) => ({ ...prevData, categoryDescription: newValue?.label || '' }));
+            }}
+            value={formData.categoryDescription}
+          />
+          <label className='error-text'>{errorMessage.categoryDescription}</label>
+
+          <h3>Unit Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={unitOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Unit"
+                name='unitDescription' 
+                value={formData.unitDescription}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setFormData((prevData) => ({ ...prevData, unitDescription: newValue?.label || '' }));
+            }}
+            value={formData.unitDescription}
+          />
+          <label className='error-text'>{errorMessage.unitDescription}</label>
+
+          <div className='button-container'>
+          <button type='submit' class='submit-button' onClick={handleUpdateSubmit}>Update</button>
+            <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+          </div>
+                    </form>
+                    </div>
+                    
+                    
+                ) : (
+                    <p>Error Occured while loading the component</p>
+                )
+                
+            }
+               
+      </Modal>
         
       <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
               <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
