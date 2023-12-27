@@ -351,7 +351,7 @@ function ItemList() {
       }
 
       const response = await itemServices.updateItem(currentItem, submitItemData)
-      await fetchItems();
+      fetchItems();
       setIsModalOpen(false);
       toast.success('Successfully Updated', {
         position: "top-right",
@@ -363,6 +363,7 @@ function ItemList() {
         progress: undefined,
         theme: "dark",
         });
+      
       console.log('Item updated:', response);
       handleReset();
 
