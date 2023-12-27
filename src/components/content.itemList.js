@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -63,7 +62,7 @@ function ItemList() {
 
   useEffect(()=>{
     fetchItems();
-  }, []); // Empty dependency array ensures useEffect runs once on mount
+  }, []);
 
 
 
@@ -131,22 +130,6 @@ function ItemList() {
 
 
 
-
-  //delete item function
-  const deleteItem = async (ItemId)=>{
-    try{
-      await itemServices.deleteItem(ItemId);
-
-    }
-    catch(error)
-    {
-      console.error('Error Deleting item',error.message);
-    }
-
-  }
-
-
-
   const handleDialogAction = async () => {
     if(dialogTitle === 'PDF Exporter') {
       exportPDF();
@@ -154,7 +137,7 @@ function ItemList() {
       exportCSV();
     } else if(dialogTitle === 'Delete Itemp') {
       try {
-        await itemServices.deleteItem(currentItem);
+        itemServices.deleteItem(currentItem);
         fetchItems();
         setDialogOpen(false);
         toast.success('Successfully Deleted', {
@@ -197,20 +180,10 @@ function ItemList() {
         setModelContent(type);
         setIsModalOpen(true);
 
-        // useEffect(() => {
-        //   if (isModalOpen && currentItem) {
-        //     fetchItem(currentItem);
-        //     fetchCategoryOptions();
-        //     fetchUnitOptions();
-        //   }
-        // }, [isModalOpen, currentItem]);
         fetchItem(currentItem);
         fetchCategoryOptions();
         fetchUnitOptions();
         
-
-
-
       };
 
     const exportPDF = () => {
@@ -222,7 +195,7 @@ function ItemList() {
       const header = function(data) {
             doc.setFontSize(8);
             doc.setTextColor(40);
-            doc.text("Innova ERP Solution - Category Report", data.settings.margin.left, 30);
+            doc.text("Innova ERP Solution - Item Report", data.settings.margin.left, 30);
       };
 
       const footer = function(data) {
@@ -230,10 +203,10 @@ function ItemList() {
         doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
     };
 
-    const headers = [["ID", "Description"]];
+    const headers = [["ID", "Code","Item Name","Category","Unit"]];
 
    
-    const data = Item.map(elt=> [elt.ID, elt.Description]);
+    const data = Item.map(elt=> [elt.ID, elt.Code, elt.Name , elt.CategoryName, elt.UnitName,]);
 
     
     let content = {
@@ -253,11 +226,11 @@ function ItemList() {
       });
   
       setDialogOpen(false);
-      doc.save("ERP-category-report.pdf");
+      doc.save("ERP-item-report.pdf");
     };
   
   const exportCSV = () => {
-      const headers = ["ID", "Description"];
+      const headers = ["ID", "Code","Item Name","Category","Unit"];
     
       const data = Item.map(elt => [
         elt.ID,
@@ -276,7 +249,7 @@ function ItemList() {
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.href = url;
-      link.setAttribute('download', 'ERP-customer-report.csv');
+      link.setAttribute('download', 'ERP-Item-report.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -284,68 +257,10 @@ function ItemList() {
     };
 
 
-
-
-
   const toggleBlur = (shouldBlur) => {
     setIsBlur(shouldBlur);
   }
 
-  const Alert = () => {
-    return new Promise((resolve) => {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#4AEF3C",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      }).then((result) => {
-        resolve(result); // Resolve the result from Swal
-      });
-    });
-  };
-
-
-
-  //handle delete button click
-  const handleDelete = async (itemId) => {
-    toggleBlur(true);
-  
-    try {
-      const result = await Alert();
-      toggleBlur(false);
-  
-      if (result.isConfirmed) {
-        await itemServices.deleteItem(itemId);
-  
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Item is Succesfully Deleted",
-          showConfirmButton: false,
-          timer: 1500
-        });
-  
-        // Wait for the deletion to complete before fetching items
-        await fetchItems();
-      }
-    } catch (error) {
-      console.error('Error deleting item', error.message);
-      toggleBlur(false);
-    }
-  };
-  
-
-   //Handle Update 
-   const handleUpdate = (itemId,itemCode,itemName, categoryId, unitId) => {
-    
-    console.log('Updating item:', itemId, itemCode, itemName, categoryId, unitId);
-    navigate(`/home/item-update/${itemId}/${itemCode}/${itemName}/${categoryId}/${unitId}`);
-    //navigate(`/home/item-update/${itemId,itemCode,itemName,categoryId,unitId}`);
-    //navigate(`/home/item-update`);
-  };
 
   const fetchItem = () => {
     const foundItem = Item.find((item) => item.ID === currentItem);
@@ -496,6 +411,41 @@ function ItemList() {
   };
 
 
+
+
+  const filterContent = (items, searchTerm) => {
+    const result = items.filter((item) => {
+      const values = Object.values(item).join(' ').toLowerCase();
+      const regex = new RegExp(`\\b${searchTerm.toLowerCase()}`);
+  
+      return regex.test(values);
+    });
+
+    setItems(result);
+  };
+
+
+  const handleSearchInputChange = async (e) => {
+    e.preventDefault();
+  
+    try {
+  
+      if (searchInput === '') {
+        
+        await fetchItems();
+  
+      } else {
+        const res = await itemServices.getAllItems();
+        if(res) {
+          filterContent(res , searchInput);
+        }
+         
+       
+      }
+    }catch(error){
+      console.error('Error handling search input',error.message)
+    }
+    };
   
 
 
@@ -503,18 +453,18 @@ function ItemList() {
     <div>
       
       <ToastContainer />
-      {/* <div className='master-content'>
+      <div className='master-content'>
           <div className='search-container'>
             <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
             <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
           </div>
-      </div> */}
+      </div> 
       <div className='master-content'>
-        {/* <div className='features-panel'>
+        <div className='features-panel'>
           <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
           <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
           <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
-        </div> */}
+        </div>
         <div className='table-container'>
           <table>
             <thead>
@@ -541,20 +491,6 @@ function ItemList() {
                     <td>{item.Name }</td>
                     <td>{item.CategoryName }</td>
                     <td>{item.UnitName }</td>
-
-                    {/* <td>
-                      <div style={{ display: 'flex', gap: '10px' }}>
-                        <button 
-                        onClick={()=> handleUpdate(item.ID, item.Code, item.Name, item.Category_ID, item.Unit_ID)}>
-                          <img src={EditLogo} alt='Edit Logo' />
-                        </button>
-
-                        <button 
-                          onClick={()=> handleDelete(item.ID)}>
-                          <img src={DeleteLogo} alt='Delete Logo' />
-                        </button>
-                      </div>
-                    </td> */}
 
                     <td>
                       <button onClick={(event) => { handleClick(event); setCurrentItem(item.ID); }}>
