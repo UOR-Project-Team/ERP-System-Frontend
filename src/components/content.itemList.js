@@ -135,9 +135,10 @@ function ItemList() {
       exportPDF();
     } else if(dialogTitle === 'CSV Exporter') {
       exportCSV();
-    } else if(dialogTitle === 'Delete Itemp') {
+    } else if(dialogTitle === 'Delete Item') {
+      
       try {
-        itemServices.deleteItem(currentItem);
+        await itemServices.deleteItem(currentItem);
         fetchItems();
         setDialogOpen(false);
         toast.success('Successfully Deleted', {
