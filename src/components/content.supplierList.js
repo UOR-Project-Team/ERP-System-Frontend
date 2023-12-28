@@ -556,8 +556,6 @@ function SupplierList() {
         </MenuItem>
       </Menu>
 
-      {currentSupplier}
-
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => {setIsModalOpen(false)}}
