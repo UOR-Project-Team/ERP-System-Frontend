@@ -55,29 +55,61 @@ function GRN() {
     setQuantity(newValue);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleDiscountChange = (event) => {
+    const newValue = event.target.value;
+    setDiscount(newValue);
+    calcTotal(subTotal, newValue);
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const newItem = {
       itemId: selectedItemId,
       purchasePrice: purchasePrice,
       quantity: quantity
     }
-
+    const total = calcSubtotal() + (purchasePrice * quantity);
+    setSubTotal(total);
+    calcTotal(total, discount);
     setSelectedItems((prevItems) => [...prevItems, newItem]);
-
   }
 
-  const handleRemoveItem = (itemId) => {
-    setSelectedItems((prevItems) =>
-      prevItems.filter((item) => item.itemId !== itemId)
-    );
+  const handleRemoveItem = (index, purchasePrice, quantity) => {
+    setSelectedItems((prevItems) => {
+      const updatedItems = [...prevItems];
+      updatedItems.splice(index, 1);
+      return updatedItems;
+    });
+    const total = calcSubtotal() - (purchasePrice * quantity);
+    setSubTotal(total);
+    calcTotal(total, discount);
   };
-
-  const generateRandomNumber = () => {
+  
+  function generateRandomNumber() {
     const randomNumber = Math.floor(1000000 + Math.random() * 9000000);
     setgrnNumber('G' + randomNumber.toString());
-  }  
+  }
+
+  function calcSubtotal() {
+    setSubTotal(0);
+    let total = 0;
+    SelectedItems.forEach((selectedItem) => {
+      total += selectedItem.quantity * selectedItem.purchasePrice;
+    });
+    return total
+  };
+
+  function calcTotal(total, discount) {
+    if(discount<=0) {
+      setTotalAmount(total)
+    } else if(discount>0 && discount<=100) {
+      setTotalAmount(total * ((100 - discount)/100))
+    } else if(discount>100) {
+      setTotalAmount(total * (0))
+    }
+
+
+  }
 
   return (
     <div className='grn-container'>
@@ -267,13 +299,12 @@ function GRN() {
                     <td>{selectedItem.quantity}</td>
                     <td className='price'>{'Rs ' + selectedItem.quantity * selectedItem.purchasePrice}</td>
                     <td>
-                      <button onClick={() => handleRemoveItem(selectedItem.itemId)}>
+                      <button onClick={() => handleRemoveItem(index, selectedItem.purchasePrice, selectedItem.quantity)}>
                         <img src={DeleteLogo} alt='Action Logo' />
                       </button>
                     </td>
                   </tr>
                 ))
-                
               )}
             </tbody>
         </table>
@@ -286,7 +317,7 @@ function GRN() {
           </div>
           <div className='value-content'>
             <span>Discount: </span>
-            <input type='text' name='dscount' value={discount} />
+            <input type='text' name='dscount' value={discount} onChange={handleDiscountChange} />
           </div>
           <div className='value-content'>
             <span>Total Amount: </span>
