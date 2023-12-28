@@ -57,10 +57,15 @@ function CategoryMaster(){
               });
             console.log('Category created:', response);
             handleReset();
+
+            setTimeout(() => {
+              navigate('/home/category-list');
+            }, 2000);
+
           } catch(error){
             console.error('Error creating category:', error.message);
             if (error.response && error.response.data && error.response.data.error) {
-              toast.error(`Error Occured`, {
+              toast.error(`Error  Creating Category`, {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
