@@ -51,10 +51,10 @@ function ItemList() {
   const [currentItem, setCurrentItem] = useState(0);
 
   const [categories, setCategories] = useState([]);
-  //const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState({});//to set default value in category dropdown
 
   const [units, setUnits] = useState([]);
-  //const [selectedUnit, setSelectedUnit] = useState({});
+  const [selectedUnit, setSelectedUnit] = useState({});//to set default value in unit dropdown
 
 
   const navigate = useNavigate();
@@ -184,6 +184,8 @@ function ItemList() {
         fetchItem(currentItem);
         fetchCategoryOptions();
         fetchUnitOptions();
+        console.log(formData.Description);
+        console.log(getCategoryIdFromDescription(formData.categoryDescription));
         
       };
 
@@ -271,17 +273,18 @@ function ItemList() {
       setFormData({
         code: foundItem.Code || '',
         itemName: foundItem.Name || '',
-        categoryId: foundItem.Category_ID || '',
-        unitId: foundItem.Unit_ID || '',
+        categoryDescription: foundItem.Description || '',
+        unitDescription: foundItem.Description || '',
         
       });
-
       
-      const selectedCategoryOption = categoryOptions.find(option => option.value == foundItem.Category_ID) || { value: '', label: '' };
-      const selectedUnitOption = unitOptions.find(option => option.value == foundItem.Unit_ID ) || { value: '', label: '' };
+      //for setting the default selected category and unit for update form Autocomplete dropdown menu
+      const selectedCategoryOption = categoryOptions.find(option => option.label === foundItem.categoryDescription) || { value: '', label: '' };
+      const selectedUnitOption = unitOptions.find(option => option.label === foundItem.unitDescription ) || { value: '', label: '' };
+      console.log('Selected Category: ',selectedCategoryOption);
 
-      //setSelectedCategory(selectedCategoryOption);
-      //setSelectedUnit(selectedUnitOption);
+      setSelectedCategory(selectedCategoryOption);
+      setSelectedUnit(selectedUnitOption);
       
 
     } else {
@@ -560,6 +563,10 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={categoryOptions}
+            //defaultValue={{value: getCategoryIdFromDescription(formData.categoryDescription), label: formData.categoryDescription}}
+            defaultValue={selectedCategory}
+            
+            //defaultValue={itemInfo}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -583,6 +590,7 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={unitOptions}
+            defaultValue={selectedUnit}
             renderInput={(params) => (
               <TextField
                 {...params}
