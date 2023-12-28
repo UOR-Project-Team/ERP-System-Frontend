@@ -12,7 +12,7 @@ const supplierServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
+      throw new Error('Error creating supplier');
     }
   },
 
@@ -44,7 +44,7 @@ const supplierServices = {
       });
       return response.data;
     } catch (error) {
-      throw error;
+      throw new Error(`Error updating supplier: ${error.message}`);
     }
   },
 

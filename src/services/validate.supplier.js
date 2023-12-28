@@ -1,61 +1,66 @@
 const validateSupplier = (formData) => {
     const errors = {
-      Title: '',
-      Fullname:'',
-      Description: '',
+      Fullname: '',
       RegistrationNo: '',
-      VatNo: '',
       Email: '',
       ContactNo: '',
       Fax: '',
-      Street1: '',
-      Street2: '',
+      Address: '',
       City: '',
-      Country: '',
+      Description: '',
+      VatNo: '',
+      
     };
-
-    if (!formData.Title) {
-      errors.Title = 'Title is required *';
-    }
   
     if (!formData.Fullname) {
-        errors.Fullname = 'Fullname is required *';
+        errors.Fullname = 'Full name is required *';
     }
-
     if (!formData.RegistrationNo) {
-      errors.RegistrationNo = 'Registration number is required *';
+        errors.RegistrationNo = 'Registration number is required *';
     }
   
     if (!formData.Email) {
-        errors.Email = 'Email address is required *';
+        errors.Email = 'Email is required *';
     } else if (!/\S+@\S+\.\S+/.test(formData.Email)) {
         errors.Email = 'Invalid email address';
     }
   
+
+  
     if (!formData.ContactNo) {
         errors.ContactNo = 'Contact number is required *';
-    } else if (!/^\+?\d+$/.test(formData.ContactNo)) {
+      } else if (!/^\+?\d+$/.test(formData.ContactNo)) {
         errors.ContactNo = 'Contact No must contain only numbers';
-    } else if (formData.ContactNo.length < 10) {
+      } else if (formData.ContactNo.length < 10) {
         errors.ContactNo = 'Contact No must be at least 10 digits';
-    } 
+      } 
 
-    if (!/^\+?\d+$/.test(formData.Fax)) {
+
+    if (!formData.Fax) {
+        errors.Fax = 'Fax number is required *';
+      } else if (!/^\+?\d+$/.test(formData.Fax)) {
         errors.Fax = 'FAX No must contain only numbers';
-    } else if (formData.Fax.length < 10) {
+      } else if (formData.Fax.length < 10) {
         errors.Fax = 'FAX No must be at least 10 digits';
-    }
-
-    if (!formData.City) {
-      errors.City = 'City is required *';
+      } 
+  
+    if (!formData.Address) {
+        errors.Address = 'Address is required *';
     }
   
-    if (!formData.Country) {
-        errors.Country = 'Country is required *';
+    if (!formData.City) {
+        errors.City = 'City is required *';
     }
 
-    return errors;
+    if (!formData.Description) {
+        errors.Description = 'Description is required *';
+    }
 
+    if (!formData.VatNo) {
+        errors.VatNo = 'VAT number is required *';
+    }
+  
+    return errors;
   };
   
   export default validateSupplier;
