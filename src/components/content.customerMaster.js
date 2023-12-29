@@ -3,11 +3,13 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer  } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+import { useNavigate } from "react-router-dom";
 
 function CustomerMaster() {
 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     fullname: '',
@@ -46,46 +48,21 @@ function CustomerMaster() {
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
-      toast.error(`Check the inputs again`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return
+        showErrorToast('Check the inputs again');
+        return
     }
     
     try {
       const response = await customerServices.createCustomer(formData)
-      toast.success('Successfully Added', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
+      showSuccessToast('Customer successfully added');
       console.log('Customer created:', response);
       handleReset();
+      setTimeout(() => {
+        navigate('/home/customer-list');
+      }, 2000);
     } catch (error) {
       const { message, attributeName } = error.response.data;
-
-      toast.error(`${message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast(`${message}`);
     
       if (attributeName) {
         if(attributeName==='Email') {

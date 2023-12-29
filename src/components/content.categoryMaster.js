@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer} from 'react-toastify';
 import validateCategory from '../services/validate.category';
 import categoryServices from '../services/services.category';
 import TextField from '@mui/material/TextField';
+import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
 
 function CategoryMaster(){
 
@@ -30,31 +30,14 @@ function CategoryMaster(){
         setErrorMessage(validationErrors);
 
         if (Object.values(validationErrors).some((error) => error !== '')) {
-            toast.error(`Check the inputs again`, {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            showErrorToast('Check the inputs again');
             return
         }
           
           try {
             const response = await categoryServices.createCategory({ Description: formData.Description });
-            toast.success('Successfully Added', {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-              });
+            showSuccessToast('Category successfully added');
+            
             console.log('Category created:', response);
             handleReset();
 
@@ -65,27 +48,10 @@ function CategoryMaster(){
           } catch(error){
             console.error('Error creating category:', error.message);
             if (error.response && error.response.data && error.response.data.error) {
-              toast.error(`Error  Creating Category`, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+              showErrorToast('Failed to create Category. Please try again.');
             } else {
-              toast.error('Error Occured', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+              
+              showErrorToast('Error Occured');
           }
           }
         };
@@ -116,17 +82,6 @@ function CategoryMaster(){
                 </div>
             </div>
         )
-
-
-
-
-
-
-
-
-
-
-
     
 }
 

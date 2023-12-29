@@ -914,11 +914,11 @@ body, html {
 
 /*-------------------- Category List -----------------------*/
 
-.categorylist-addbutton-container{
+.list-addbutton-container{
     display: flex;
     justify-content: right;
 }
-.categorylist-addbutton{
+.list-addbutton{
     width: 150px;
     font-size: medium;
     background-color: #4AEF3C;
@@ -928,7 +928,7 @@ body, html {
     margin: 30px;
     cursor: pointer;
 }
-.categorylist-addbutton:hover{
+.list-addbutton:hover{
     opacity: 80%;
 }
 
@@ -1040,7 +1040,7 @@ body, html {
     display: flex;
 }
 
-.supplierlist-Statusbutton-container{
+.Statusbutton-container{
     display: flex;
     justify-content: center;
 }
