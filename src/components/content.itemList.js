@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
-
 import {
   Dialog,
   DialogTitle,
@@ -19,9 +16,8 @@ import Modal from 'react-modal';
 import "jspdf-autotable";
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import FilterLogo from './../assets/icons/filter.png';
@@ -37,27 +33,18 @@ import unitServices from '../services/services.unit';
 function ItemList() {
 
   const [Item, setItems] = useState([]);
-  const [isBlur , setIsBlur] = useState(false);
-
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [removeClick, setDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogDescription, setDialogDescription] = useState('');
-
   const [searchInput, setSearchInput] = useState('');
   const [modelContent, setModelContent] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(0);
-
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});//to set default value in category dropdown
-
   const [units, setUnits] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState({});//to set default value in unit dropdown
-
-
-  const navigate = useNavigate();
 
 
   useEffect(()=>{
@@ -141,29 +128,11 @@ function ItemList() {
         await itemServices.deleteItem(currentItem);
         fetchItems();
         setDialogOpen(false);
-        toast.success('Successfully Deleted', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
+        showSuccessToast('Item successfully deleted');
 
         } catch (error) {
-            console.error('Error deleting category:', error.message);
-            toast.error('Error Occured', {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            console.error('Error deleting item:', error.message);
+            showErrorToast('Error deleting item')
           }
         }
       };
@@ -259,12 +228,6 @@ function ItemList() {
       setDialogOpen(false);
     };
 
-
-  const toggleBlur = (shouldBlur) => {
-    setIsBlur(shouldBlur);
-  }
-
-
   const fetchItem = () => {
     const foundItem = Item.find((item) => item.ID === currentItem);
     
@@ -289,20 +252,9 @@ function ItemList() {
 
     } else {
       console.log("Item not found");
-      toast.error('Item not found', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Item not found');
     }
   }
-
-
   //handle input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -320,8 +272,6 @@ function ItemList() {
     unitDescription: '',
   })
 
-
-
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
 
@@ -329,16 +279,7 @@ function ItemList() {
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
-      toast.error(`Check the inputs again`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Check the inputs again');
       return
     }
 
@@ -356,32 +297,14 @@ function ItemList() {
       const response = await itemServices.updateItem(currentItem, submitItemData)
       fetchItems();
       setIsModalOpen(false);
-      toast.success('Successfully Updated', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
+      showSuccessToast('Item successfully updated');
       
       console.log('Item updated:', response);
       handleReset();
 
     } catch(error) {
       console.error('Error Updating item:', error.message);
-      toast.error('Error Updating item', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Error updating item')
     }
 
   };
@@ -511,9 +434,9 @@ function ItemList() {
         </div>
       </div>
 
-      <div className='categorylist-addbutton-container'>
+      <div className='list-addbutton-container'>
             <Link to = "/home/item-master">
-                <button className='categorylist-addbutton'>Add Item</button>
+             <button className='list-addbutton'>Add Item</button>
 
             </Link>
       </div>
