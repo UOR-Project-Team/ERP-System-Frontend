@@ -285,7 +285,7 @@ function GRN() {
                   <tr key={selectedItem.itemId}>
                     <td>{index + 1}</td>
                     {items.map((item) => {
-                      if (item.ID == selectedItem.itemId) {
+                      if (item.ID === selectedItem.itemId) {
                         return (
                           <React.Fragment key={item.ID}>
                             <td>{item.Code}</td>
@@ -296,7 +296,7 @@ function GRN() {
                       return null;
                     })}
                     <td className='price'>{'Rs ' + selectedItem.purchasePrice}</td>
-                    <td>{selectedItem.quantity}</td>
+                    <td className='quantity'>{selectedItem.quantity}</td>
                     <td className='price'>{'Rs ' + selectedItem.quantity * selectedItem.purchasePrice}</td>
                     <td>
                       <button onClick={() => handleRemoveItem(index, selectedItem.purchasePrice, selectedItem.quantity)}>

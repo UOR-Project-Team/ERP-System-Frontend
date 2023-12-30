@@ -5,7 +5,7 @@ import supplierServices from '../services/services.supplier';
 import validateSupplier from '../services/validate.supplier';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 
 function SupplierMaster() {

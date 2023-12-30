@@ -25,7 +25,7 @@ import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
-import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import { Link } from "react-router-dom";
 
 function CustomerList() {
