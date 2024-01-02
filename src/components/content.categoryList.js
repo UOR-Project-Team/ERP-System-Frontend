@@ -13,8 +13,7 @@ import Modal from 'react-modal';
 import "jspdf-autotable";
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import SearchLogo from './../assets/icons/search.png';
@@ -25,6 +24,7 @@ import categoryServices from '../services/services.category';
 import TextField from '@mui/material/TextField';
 import validateCategory from '../services/validate.category';
 import { Link } from "react-router-dom";
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function CategoryList() {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -117,30 +117,12 @@ const handleSearchInputChange = async (e) => {
       try {
         await categoryServices.deleteCategory(currentCategory);
         fetchCategories();
-        setDialogOpen(false);
-        toast.success('Successfully Deleted', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
+        setDialogOpen(false);  
+        showSuccessToast('Category successfully deleted');
 
         } catch (error) {
             console.error('Error deleting category:', error.message);
-            toast.error('Error Occured', {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            showErrorToast('Error deleting category');
           }
         }
       };
@@ -172,16 +154,7 @@ const handleSearchInputChange = async (e) => {
         setErrorMessage(validationErrors);
     
         if (Object.values(validationErrors).some((error) => error !== '')) {
-          toast.error(`Check the inputs again`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          showErrorToast('Check the inputs again');
           return
         }
 
@@ -189,31 +162,13 @@ const handleSearchInputChange = async (e) => {
           const response = await categoryServices.updateCategory(currentCategory, formData)
           fetchCategories();
           setIsModalOpen(false);
-          toast.success('Successfully Updated', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
+          showSuccessToast('Category successfully updted')
           console.log('Category updated:', response);
           handleUpdateReset();
 
         } catch(error) {
           console.error('Error Updating category:', error.message);
-          toast.error('Error Updating category', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          showErrorToast('Error updating category');
         }
     
       };
@@ -229,16 +184,7 @@ const handleSearchInputChange = async (e) => {
           });
         } else {
           console.log("Category not found");
-          toast.error('Category not found', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          showErrorToast('Category not found')
         }
       }
 
@@ -353,8 +299,6 @@ const handleSearchInputChange = async (e) => {
                                 <td colSpan="11" style={{padding: '12px 4px'}}>No data to show</td>
                               </tr>
                             ) : (
-                              
-                              
                                 categories.map((category)  =>(
                                     <tr key={category.id}>
                                         <td style={{ display: fields.ID ? 'table-cell' : 'none' }}>{category.ID}</td>
@@ -367,20 +311,14 @@ const handleSearchInputChange = async (e) => {
                                     </tr>
                                 ))
                                 
-                               ) }
-                              
-                                 
-                            
-                            
+                               ) }      
                         </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-            <div className='categorylist-addbutton-container'>
+                     </table>
+                 </div>
+               </div>
+            <div className='list-addbutton-container'>
             <Link to = "/home/category-master">
-                <button className='categorylist-addbutton'>Add Category</button>
+                <button className='list-addbutton'>Add Category</button>
 
             </Link>
             </div>
@@ -390,10 +328,7 @@ const handleSearchInputChange = async (e) => {
                             <button onClick={() => {fetchCategory(); handleRequest('edit');}}>
                             <img src={EditLogo} alt='Edit Logo' />
                             <span>Edit Category</span>
-                            
-
-                        </button>
-                        
+                            </button>         
                 </MenuItem>
                 <MenuItem onClick={() => {setDialogTitle('Delete Category'); setDialogDescription('Do you want to delete this category record?'); setDialogOpen(true); setAnchorEl(null);}}>
                 <button>
@@ -423,10 +358,9 @@ const handleSearchInputChange = async (e) => {
                                  <button type='submit' class='submit-button' onClick={handleUpdateSubmit}>Submit</button>
                                  <button type='reset' class='reset-button' onClick={handleUpdateReset}>Reset</button>
                             </div>
-                    </form>
+                       </form>
                     </div>
-                    
-                    
+                             
                 ) : (
                     <p>Error Occured while loading the component</p>
                 )
@@ -453,16 +387,6 @@ const handleSearchInputChange = async (e) => {
              </Dialog>
         </div>
       )
-
-
-
-
-
-
-
-
-
-
 }
 
 export default CategoryList;

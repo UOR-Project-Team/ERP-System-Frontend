@@ -3,18 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import itemServices from '../services/services.item';
 import validateItem from '../services/validate.item';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function ItemMaster() {
 
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  //const [selectedCategory, setSelectedCategory] = useState(null);
   const [units, setUnit] = useState([]);
-  //const [selectedUnit, setSelectedUnit] = useState(null);
   const[values,setValues]=useState({
     code:'',
     itemName:'',
@@ -97,141 +95,31 @@ function ItemMaster() {
       categoryId: categoryId,
       unitId: unitId,
     }
-
-    // Validation
-    // let isValid = true;
-    // const newErrors = {};
-
-    // if (!values.code.trim()) {
-    //   isValid = false;
-    //   newErrors.code = 'Item Code is required *';
-    // }
-
-    // if (!values.itemName.trim()) {
-    //   isValid = false;
-    //   newErrors.itemName = 'Item Name is required *';
-    // }
-
-    // if (!selectedCategory) {
-    //   isValid = false;
-    //   newErrors.categoryId = 'Category is required *';
-    // }
-
-    // if (!selectedUnit) {
-    //   isValid = false;
-    //   newErrors.unitId = 'Unit is required *';
-    // }
-
-    // if (!isValid) {
-    //   setErrorMessage(newErrors);
-    //   toast.error(`Check the inputs again`, {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "dark",
-    //   });
-    //   return;
-    // }
-
     const validationErrors = validateItem(values);
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
-      toast.error(`Check the inputs again`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Check the inputs again')
       return
     }
     
-    
-    //axios.post('http://localhost:8081/item/create', submitItemData)
-      // .then((res) => {
-      //   console.log('Item Code:', values.code);
-      //   console.log('Item Name:', values.itemName);
-      //   console.log('Category ID:', categoryId);
-      //   console.log('Unit ID:', unitId);
-
-      //   //For the toast message
-      //   toast.success('Successfully Added', {
-      //     position: "top-right",
-      //     autoClose: 2000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //     theme: "dark",
-      //     });
-
-      //     handleReset()
-
-      //     setTimeout(()=>{
-      //       navigate('/home/item-list');
-      //     },2000); 
-
-      // })
-
-      try {
+    try {
         const response = await itemServices.createItem(submitItemData)
-        toast.success('Successfully Added', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
+        showSuccessToast('Item successfully added');
         console.log('item created:', response);
         handleReset();
       }
 
       catch (error) {
         //const {message} = error.response.data;
-  
-        toast.error(`Error Occured`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
+        showErrorToast('Error Occured');
   
         //console.error('Error:', message);
         console.error('Error:');
   
       }
       
-      // .catch(err => {
-      //   console.error(err);
-      //   if (err) {
-      //     toast.error(`Error Occured`, {
-      //       position: "top-right",
-      //       autoClose: 5000,
-      //       hideProgressBar: false,
-      //       closeOnClick: true,
-      //       pauseOnHover: true,
-      //       draggable: true,
-      //       progress: undefined,
-      //       theme: "dark",
-      //     });
-      //   }
-      // })
+      
   };
 
   //Handle Reset
