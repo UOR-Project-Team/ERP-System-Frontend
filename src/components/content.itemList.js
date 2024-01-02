@@ -230,24 +230,24 @@ function ItemList() {
 
   const fetchItem = () => {
     const foundItem = Item.find((item) => item.ID === currentItem);
-    
+    console.log(foundItem);
 
     if (foundItem) {
       setFormData({
         code: foundItem.Code || '',
         itemName: foundItem.Name || '',
-        categoryDescription: foundItem.Description || '',
-        unitDescription: foundItem.Description || '',
+        categoryDescription: foundItem.CategoryName || '',
+        unitDescription: foundItem.UnitName || '',
         
       });
       
       //for setting the default selected category and unit for update form Autocomplete dropdown menu
-      const selectedCategoryOption = categoryOptions.find(option => option.label === foundItem.categoryDescription) || { value: '', label: '' };
-      const selectedUnitOption = unitOptions.find(option => option.label === foundItem.unitDescription ) || { value: '', label: '' };
-      console.log('Selected Category: ',selectedCategoryOption);
+      //const selectedCategoryOption = categoryOptions.find(option => option.label === foundItem.CategoryName) || { value: '', label: '' };
+      //const selectedUnitOption = unitOptions.find(option => option.label === foundItem.UnitName ) || { value: '', label: '' };
+      //console.log('Selected Category: ',selectedCategoryOption);
 
-      setSelectedCategory(selectedCategoryOption);
-      setSelectedUnit(selectedUnitOption);
+      //setSelectedCategory(selectedCategoryOption);
+      //setSelectedUnit(selectedUnitOption);
       
 
     } else {
@@ -487,7 +487,7 @@ function ItemList() {
             className='text-line-type2'
             options={categoryOptions}
             //defaultValue={{value: getCategoryIdFromDescription(formData.categoryDescription), label: formData.categoryDescription}}
-            defaultValue={selectedCategory}
+            //defaultValue={selectedCategory}
             
             //defaultValue={itemInfo}
             renderInput={(params) => (
@@ -513,7 +513,7 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={unitOptions}
-            defaultValue={selectedUnit}
+            //defaultValue={selectedUnit}
             renderInput={(params) => (
               <TextField
                 {...params}
