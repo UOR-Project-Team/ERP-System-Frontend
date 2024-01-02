@@ -24,7 +24,7 @@ import categoryServices from '../services/services.category';
 import TextField from '@mui/material/TextField';
 import validateCategory from '../services/validate.category';
 import { Link } from "react-router-dom";
-import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function CategoryList() {
     const [anchorEl, setAnchorEl] = useState(null);
