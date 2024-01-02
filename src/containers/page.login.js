@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from "react-router-dom"
 import axios from 'axios'
 import validateUser from '../services/validate.userLoginForms';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {Usertoken} from '../services/UserToken'
+import { validateUsername, validatePassword, validateConfirmPassword } from '../services/validate.Password'
+
+
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
 import img3 from '../assets/images/login-background-3.jpg'
+
+import Modal from 'react-modal';
+import TextField from '@mui/material/TextField';
+import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+
 
 const images = [
   img1,
@@ -15,22 +22,58 @@ const images = [
   img3
 ];
 
+
+
 function Login({ updateAuthentication }) {
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   
-  const navigate = useNavigate()
   const [image, setImage] = useState(0)
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   })
+
+  const [resetformData, setresetFormData] = useState({
+    username: '',
+    password: '',
+    cnfPassword: '',
+  })
+
+  
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setresetFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    setErrorMessages({
+      username: '',
+      password: '',
+      cnfPassword: '',
+    });
+  };
+
+  //for model - reset Password
+  const [errorMessages, setErrorMessages] = useState({
+    username: '',
+    password: '',
+    cnfPassword: '',
+  });
+
+  //for login form
   const [errorMessage, setErrorMessage] = useState({
     username: '',
     password: '',
   })
-
-  const userinfo = Usertoken();
-
-  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -82,14 +125,35 @@ function Login({ updateAuthentication }) {
         console.log('Successfully logged in');
         const { token } = response.data;
         localStorage.setItem('token', token);
-        updateAuthentication(true)
+
+        const userinfo = await Usertoken();
 
         if(userinfo){
-          const {username, fullname, jobrole, loginflag} = userinfo;
-          console.log(username);
+            const {username, fullname, jobrole, loginflag} = userinfo;
+            console.log('test3');
+            console.log(loginflag)
+            setresetFormData(prevData => ({
+              ...prevData,
+              username: userinfo.username
+            }));
+            
+
+            if(loginflag >0 && loginflag <100){
+              updateAuthentication(true);
+              //navigate('/home')
+            }else{
+              console.log('need to reset password')
+              openModal();
+              
+
+            }
+
+        } else {
+          console.log('Token not found');
         }
+
+    
         
-        navigate('/home');
       } else {
         toast.error(`Please try again later`, {
           position: "top-center",
@@ -130,7 +194,55 @@ function Login({ updateAuthentication }) {
     }
   }
 
+
+
+  const handleReset = ()=>{
+
+    closeModal()
+    updateAuthentication(true);
+  }
+
+  const handlepasswordUpdate =async(event)=>{
+    event.preventDefault();
+
+    const usernameError = validateUsername(resetformData.username);
+    const passwordError = validatePassword(resetformData.password);
+    const confirmPasswordError = validateConfirmPassword(resetformData.password, resetformData.cnfPassword);
+
+    setErrorMessages({
+      username: usernameError,
+      password: passwordError,
+      cnfPassword: confirmPasswordError,
+    });
+
+    if(!usernameError && !passwordError && !confirmPasswordError){
+
+    try {
+      
+      const response = await axios.post(`http://localhost:8081/reset/${resetformData.username}`, resetformData);
+      
+      if(response.status ===200){
+          console.log("Suucesfully Updated")
+          showSuccessToast('Password successfully Changed!');
+  
+          setTimeout(() => {
+            closeModal();
+            updateAuthentication(true);
+          }, 2000);
+          
+      }else{
+        showErrorToast('Failed to Update password. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating Password', error);
+    }
+
+  }
+  }
+
+
   return (
+    <div>
     <div className='login-container' style={{ backgroundImage: `url(${images[image]})` }}>
       <ToastContainer />
       <div className='login-overlay'>
@@ -150,6 +262,33 @@ function Login({ updateAuthentication }) {
           </form>
         </div>
       </div>
+    </div>
+
+    <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Question Modal"
+      >
+        <div className='edit-model'>
+              <h3>Update User</h3>
+              <form className='form-container'>
+          <h3>User Details</h3>
+            <TextField className='text-line-type1' name='username' value={resetformData.username} onChange={handleInputChange} label="User Name" variant="outlined" />
+            <label className='error-text'>{errorMessages.username}</label>
+            <TextField className='text-line-type1' name='password' value={resetformData.password} onChange={handleInputChange} label=" Password" variant="outlined" />
+            <label className='error-text'>{errorMessages.password}</label>
+            <TextField className='text-line-type1' name='cnfPassword' value={resetformData.cnfPassword} onChange={handleInputChange} label="Confirm Password" variant="outlined" />
+            <label className='error-text'>{errorMessages.cnfPassword}</label>
+
+            <div className='button-container'>
+                <button type='submit' class='submit-button' onClick={handlepasswordUpdate}>Submit</button>
+                <button type='reset' class='reset-button' onClick={handleReset}>Skip</button>
+            </div>
+
+            </form>
+            </div>
+      </Modal>
+      
     </div>
   )
 }

@@ -73,6 +73,53 @@ function UserList() {
   })
   }
 
+  const [fields, setFields] = useState({
+      Fullname: true,
+      email: true,
+      username: true,
+      password: false,
+      NIC: false,
+      jobrole: true,
+      contactno: true,
+      address: false,
+      city: true,
+  });
+
+  const [tempFields, setTempFields] = useState({
+    Fullname: true,
+      email: true,
+      username: true,
+      password: false,
+      NIC: false,
+      jobrole: true,
+      contactno: true,
+      address: false,
+      city: true,
+  });
+
+  const handleCheckboxChange = (e) => {
+    const { name } = e.target;
+    setTempFields((prevFields) => ({
+      ...prevFields,
+      [name]: !prevFields[name],
+    }));
+  };
+
+  const handleFilterSubmit = (e) => {
+    e.preventDefault();
+    setIsModalOpen(false);
+    setFields({
+      Fullname: tempFields.Fullname,
+      email: tempFields.email,
+      username: tempFields.username,
+      password: tempFields.password,
+      NIC: tempFields.NIC,
+      jobrole: tempFields.jobrole,
+      contactno: tempFields.contactno,
+      address: tempFields.address,
+      city: tempFields.city,
+    });
+  }
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -267,15 +314,15 @@ function UserList() {
         <thead>
             <tr>
                 {/* <th>ID</th> */}
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Username</th>
-                <th>NIC</th>
-                <th>Job Role</th>
-                <th>Contact No</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Status</th>
+                <th style={{ display: fields.Fullname ? 'table-cell' : 'none' }}>Full Name</th>
+                <th style={{ display: fields.email ? 'table-cell' : 'none' }}>Email</th>
+                <th style={{ display: fields.username ? 'table-cell' : 'none' }}>Username</th>
+                <th style={{ display: fields.NIC ? 'table-cell' : 'none' }}>NIC</th>
+                <th style={{ display: fields.jobrole ? 'table-cell' : 'none' }}>Job Role</th>
+                <th style={{ display: fields.contactno ? 'table-cell' : 'none' }}>Contact No</th>
+                <th style={{ display: fields.address ? 'table-cell' : 'none' }}>Address</th>
+                <th style={{ display: fields.city ? 'table-cell' : 'none' }}>City</th>
+                <th style={{ display: fields.status ? 'table-cell' : 'none' }}>Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -285,15 +332,15 @@ function UserList() {
           users.map(user => (
             <tr key={user.ID}>
               {/* <td>{user.ID}</td> */}
-              <td>{user.Fullname}</td>
-              <td>{user.Email}</td>
-              <td>{user.Username}</td>
-              <td>{user.NIC}</td>
-              <td>{user.JobRole}</td>
-              <td>{user.ContactNo}</td>
-              <td>{user.Address}</td>
-              <td>{user.City}</td>
-              <td>
+              <td style={{ display: fields.Fullname ? 'table-cell' : 'none' }}>{user.Fullname}</td>
+              <td style={{ display: fields.email ? 'table-cell' : 'none' }}>{user.Email}</td>
+              <td style={{ display: fields.username ? 'table-cell' : 'none' }}>{user.Username}</td>
+              <td style={{ display: fields.NIC ? 'table-cell' : 'none' }}>{user.NIC}</td>
+              <td style={{ display: fields.jobrole ? 'table-cell' : 'none' }}>{user.JobRole}</td>
+              <td style={{ display: fields.contactno ? 'table-cell' : 'none' }}>{user.ContactNo}</td>
+              <td style={{ display: fields.address ? 'table-cell' : 'none' }}>{user.Address}</td>
+              <td style={{ display: fields.city ? 'table-cell' : 'none' }}>{user.City}</td>
+              <td style={{ display: fields.status ? 'table-cell' : 'none' }}>
               {user.Status === 0 ? (
                     <button type='button'><img src={GreyCircle} alt='Inactive'/></button>
                   ) : (
@@ -326,14 +373,14 @@ function UserList() {
         </tbody>
         </table>
 
-        <div className='categorylist-addbutton-container'>
+        
+      </div>
+      </div>
+      <div className='categorylist-addbutton-container'>
             <Link to = "/home/user-master">
                 <button className='categorylist-addbutton'>Add User</button>
-
             </Link>
-            </div>
-      </div>
-      </div>
+       </div>
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => {fetchUser(); handleRequest('edit');}}>
@@ -362,38 +409,38 @@ function UserList() {
           {modelContent === "filter" ? (
             <div className='feature-modal'>
               <h3>Table Filter</h3>
-              <form >
+              <form onSubmit={handleFilterSubmit}>
                 <div className='checkbox-container'>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='Fullname'   />
+                    <input type='checkbox' name='Fullname'  checked={tempFields.Fullname} onChange={handleCheckboxChange} />
                     <label>Fullname</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='username'  />
+                    <input type='checkbox' name='username' checked={tempFields.username} onChange={handleCheckboxChange} />
                     <label>Username</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='email' />
+                    <input type='checkbox' name='email' checked={tempFields.email} onChange={handleCheckboxChange}/>
                     <label>Email</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='NIC' />
+                    <input type='checkbox' name='NIC' checked={tempFields.NIC} onChange={handleCheckboxChange}/>
                     <label>National Id</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='contactno'  />
+                    <input type='checkbox' name='contactno'  checked={tempFields.contactno} onChange={handleCheckboxChange}/>
                     <label>Contact Number</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='address'  />
+                    <input type='checkbox' name='address' checked={tempFields.address} onChange={handleCheckboxChange} />
                     <label>Address</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='jobrole'  />
+                    <input type='checkbox' name='jobrole'  checked={tempFields.jobrole} onChange={handleCheckboxChange}/>
                     <label>Job Role</label>
                   </div>
                   <div className='checkbox-content'>
-                    <input type='checkbox' name='city'  />
+                    <input type='checkbox' name='city' checked={tempFields.city} onChange={handleCheckboxChange} />
                     <label>City</label>
                   </div>
                 </div>

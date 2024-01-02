@@ -20,7 +20,7 @@ function UserMaster() {
     password: 'a22',
     NIC: '123',
     jobrole: 'admin',
-    contactno: '89765421',
+    contactno: '0989765421',
     address: '10,Galle',
     city: 'matara',
   });
@@ -66,21 +66,44 @@ function UserMaster() {
         }
 
     }catch(error){
+      const { message, attributeName } = error.response.data;
+      showErrorToast(`${message}`);
+
+      if (attributeName) {
+        if(attributeName==='Fullname') {
+          setErrorMessage({
+            Fullname: 'Name Alredy Taken',
+          });
+        }else if(attributeName==='Username') {
+          setErrorMessage({
+            username: 'Username already Exists',
+          });
+        } else if(attributeName==='NIC') {
+          setErrorMessage({
+            NIC: 'This National ID/Passport already Exists',
+          });
+        } else if(attributeName==='ContactNo') {
+          setErrorMessage({
+            contactno: 'This Contact Number already Exists',
+          });
+        }
+      }
+
         console.error('Error:', error);
     }
     //reset the form
-    setFormData({
-      Fullname:'',
-      email: '',
-      username: '',
-      password: '',
-      NIC: '',
-      jobrole: '',
-      contactno: '',
-      address: '',
-      city: '',
+  //   setFormData({
+  //     Fullname:'',
+  //     email: '',
+  //     username: '',
+  //     password: '',
+  //     NIC: '',
+  //     jobrole: '',
+  //     contactno: '',
+  //     address: '',
+  //     city: '',
         
-  })
+  // })
   };
 
   
