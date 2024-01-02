@@ -3,14 +3,14 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import supplierServices from '../services/services.supplier';
 import validateSupplier from '../services/validate.supplier';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+
 
 function SupplierMaster() {
 
-  const navigate = useNavigate();
-
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     Title: '',
     Fullname:'',
@@ -53,31 +53,13 @@ function SupplierMaster() {
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
-      toast.error(`Check the inputs again`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Check the inputs again');
       return
     }
     
     try {
       const response = await supplierServices.createSupplier(formData)
-      toast.success('Successfully Added', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
+      showSuccessToast('Supplier successfully added');
       console.log('Supplier created:', response);
       handleReset();
       setTimeout(() => {
@@ -86,17 +68,7 @@ function SupplierMaster() {
 
     } catch (error) {
       const { message, attributeName } = error.response.data;
-
-      toast.error(`${message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast(`${message}`);
     
       if (attributeName) {
         if(attributeName==='UC_Email') {

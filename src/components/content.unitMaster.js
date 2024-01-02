@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import validateUnit from '../services/validate.unit';
 import unitServices from '../services/services.unit';
 import TextField from '@mui/material/TextField';
@@ -32,33 +32,13 @@ function UnitMaster(){
         setErrorMessage(validationErrors);
 
         if (Object.values(validationErrors).some((error) => error !== '')) {
-            toast.error(`Check the inputs again`, {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            showErrorToast('Check the inputs again');
             return
         }
           
           try {
             const response = await unitServices.createUnit(formData );
-            
-            toast.success('Successfully Added', {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-              
-              });
+            showSuccessToast('Unit successfully added');
             console.log('Unit created:', response);
             handleReset();
             
@@ -72,27 +52,9 @@ function UnitMaster(){
           } catch(error){
             console.error('Error creating unit:', error.message);
             if (error.response && error.response.data && error.response.data.error) {
-              toast.error(`Error Occured`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+              showErrorToast('Error creating unit');
             } else {
-              toast.error('Error Occured', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-              });
+              showErrorToast('Error Occured');
           }
           }
         };
@@ -127,17 +89,6 @@ function UnitMaster(){
                 </div>
             </div>
         )
-
-
-
-
-
-
-
-
-
-
-
     
 }
 

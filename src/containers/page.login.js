@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
-import axios from 'axios'
-import validateUser from '../services/validate.userLoginForms';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios'
+import validateUser from '../services/validate.userLoginForms';
 import {Usertoken} from '../services/UserToken'
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
@@ -16,7 +16,6 @@ const images = [
 ];
 
 function Login({ updateAuthentication }) {
-  
   const navigate = useNavigate()
   const [image, setImage] = useState(0)
   const [formData, setFormData] = useState({
@@ -40,8 +39,6 @@ function Login({ updateAuthentication }) {
         setImage((prevImage) => (prevImage + 1) % images.length)
       }
     }, 20000)
-
-
     return () => {
       clearInterval(interval)
     };
@@ -54,7 +51,6 @@ function Login({ updateAuthentication }) {
 
   const handleSubmit= async(event)=>{
     event.preventDefault();
-    
     const validationErrors = validateUser(formData);
     setErrorMessage(validationErrors);
 

@@ -107,7 +107,6 @@ body, html {
 
 /*-------------------- Home Container -----------------------*/
 
-
 .master-container {
     width: 100%;
     height: 100%;
@@ -914,11 +913,11 @@ body, html {
 
 /*-------------------- Category List -----------------------*/
 
-.categorylist-addbutton-container{
+.list-addbutton-container{
     display: flex;
     justify-content: right;
 }
-.categorylist-addbutton{
+.list-addbutton{
     width: 150px;
     font-size: medium;
     background-color: #4AEF3C;
@@ -928,7 +927,7 @@ body, html {
     margin: 30px;
     cursor: pointer;
 }
-.categorylist-addbutton:hover{
+.list-addbutton:hover{
     opacity: 80%;
 }
 
@@ -1040,9 +1039,190 @@ body, html {
     display: flex;
 }
 
-.supplierlist-Statusbutton-container{
+.Statusbutton-container{
     display: flex;
     justify-content: center;
+}
+
+/*-------------------- Good Recieved Note -----------------------*/
+
+.grn-container {
+    width: 100%;
+    padding: 10px;
+}
+
+.grn-container .grn-content {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px 5px;
+    background-color: whitesmoke;
+    display: flex;
+    justify-content: space-between;
+}
+
+.grn-container .grn-content .content1-left, .grn-container .grn-content .content1-right {
+    width: 50%;
+}
+
+.grn-container .grn-content .content1-container {
+    width: 100%;
+    display: flex;
+}
+
+.grn-container .grn-content .content1-container .content-left {
+    width: 200px;
+    height: 40px;
+    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+    font-family: 'Merriweather', serif;
+    font-size: 14px;
+}
+
+.grn-container .grn-content .content1-container .content-right {
+    flex: 1;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.grn-container .grn-content .content1-container .content-left input, .grn-container .grn-content .content1-container .content-right input {
+    outline: 0;
+    width: 300px;
+    height: 32px;
+    font-family: 'Ubuntu', sans-serif;
+    padding: 0px 5px;
+    border: 1px solid darkgray;
+    font-size: 14px;
+}
+
+.grn-container .grn-content .content1-container .content-right .select-box {
+    width: 300px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    border: 1px solid darkgray;
+}
+
+.grn-container .grn-content .content1-container button {
+    width: 40px;
+    height: 32px;
+    border: 0;
+    background-color: #260261;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.grn-container .grn-content .content1-container button:hover {
+    background-color: #db143c;
+}
+
+.grn-container .grn-content table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    cursor: default;
+}
+  
+.grn-container .grn-content table th {
+    border: 1px solid #045F5F;
+    padding: 12px 4px;
+    font-size: 11px;
+    text-align: center;
+    background-color: #045F5F;
+    color: white;
+    text-transform: uppercase;
+}
+  
+.grn-container .grn-content table td {
+    border: 1px solid lightgrey;
+    padding: 6px 4px;
+    font-size: 11px;
+    text-align: center;
+}
+  
+.grn-container .grn-content table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+  
+.grn-container .grn-content table tr:nth-child(odd){
+    background-color: gainsboro;
+}
+
+.grn-container .grn-content table .id {
+    width: 60px;
+}
+
+.grn-container .grn-content table .action {
+    width: 32px;
+}
+
+.grn-container .grn-content table .price {
+    width: 200px;
+    text-align: left;
+    padding-left: 20px;
+}
+
+
+.grn-container .grn-content table button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.grn-container .grn-content table img {
+    width: 20px;
+    height: 20px;
+}
+
+.grn-container .grn-content .button-container button {
+    width: 150px;
+    height: 28px;
+    margin-left: 10px;
+    border: 0;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.grn-container .grn-content .button-container button:hover {
+    opacity: 0.8;
+}
+
+.grn-container .grn-content .value-container {
+    margin-right: 32px;
+}
+
+.grn-container .grn-content .value-content {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.grn-container .grn-content .value-container span {
+    font-family: 'Merriweather', serif;
+    font-size: 14px;
+    margin-right: 32px;
+}
+
+.grn-container .grn-content .value-container input {
+    width: 200px;
+    height: 28px;
+    font-size: 14px;
 }
 
 @media only screen and (max-width: 940px) {
@@ -1262,6 +1442,99 @@ body, html {
         padding: 5px 3px;
         font-size: 10px;
     }
+    
+    .grn-container {
+        padding: 5px;
+    }
+
+    .grn-container .grn-content {
+        margin-bottom: 5px;
+        padding: 6px 4px;
+    }
+
+    .grn-container .grn-content .content1-container .content-left {
+        width: 120px;
+        height: 32px;
+        padding: 0px 6px;
+        font-size: 12px;
+    }
+
+    .grn-container .grn-content .content1-container .content-right {
+        height: 32px;
+    }
+
+    .grn-container .grn-content .content1-container .content-left input, .grn-container .grn-content .content1-container .content-right input {
+        width: 220px;
+        height: 26px;
+        padding: 0px 2px;
+        font-size: 12px;
+    }
+
+    .grn-container .grn-content .content1-container .content-right .select-box {
+        width: 220px;
+        font-size: 12px;
+    }
+
+    .grn-container .grn-content .content1-container button {
+        width: 40px;
+        height: 26px;
+        border: 0;
+        font-size: 10px;
+    }
+
+    .grn-container .grn-content table th {
+        padding: 8px 4px;
+        font-size: 10px;
+    }
+    
+    .grn-container .grn-content table td {
+        padding: 4px 4px;
+        font-size: 10px;
+    }
+
+    .grn-container .grn-content table .id {
+        width: 40px;
+    }
+
+    .grn-container .grn-content table .price {
+        width: 120px;
+        padding-left: 15px;
+        background: #14A44D;
+    }
+
+    .grn-container .grn-content table .quantity {
+        width: 60px;
+        padding-right: 15px;
+        text-align: right;
+    }
+
+    .grn-container .grn-content table button {
+        width: 25px;
+        height: 25px;
+    }
+
+    .grn-container .grn-content table img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .grn-container .grn-content .button-container button {
+        width: 120px;
+        height: 24px;
+        margin-left: 8px;
+        font-size: 10px;
+    }
+
+    .grn-container .grn-content .value-container span {
+        font-size: 12px;
+    }
+
+    .grn-container .grn-content .value-container input {
+        width: 180px;
+        height: 26px;
+        font-size: 12px;
+    }
+
 
 }
 
@@ -1275,33 +1548,33 @@ body, html {
 
 @media only screen and (max-height: 400px), (max-width: 500px) {
 
-.login-container .form-container {
-    width: 100%;
-    background-color: rgb(38, 2, 97, 0.5);
-}
+    .login-container .form-container {
+        width: 100%;
+        background-color: rgb(38, 2, 97, 0.5);
+    }
 
-.login-container .form-container form {
-    width: 250px;
-}
+    .login-container .form-container form {
+        width: 250px;
+    }
 
-.login-container .form-container h3 {
-    margin-bottom: 24px;
-}
+    .login-container .form-container h3 {
+        margin-bottom: 24px;
+    }
 
-.login-container .form-container form label {
-    font-size: 10px;
-}
+    .login-container .form-container form label {
+        font-size: 10px;
+    }
 
-.login-container .form-container form input {
-    height: 28px;
-    margin-top: 6px;
-    margin-bottom: 10px;
-}
+    .login-container .form-container form input {
+        height: 28px;
+        margin-top: 6px;
+        margin-bottom: 10px;
+    }
 
-.login-container .form-container form button {
-    width: 100%;
-    height: 28px;
-    margin-top: 24px;
-}
+    .login-container .form-container form button {
+        width: 100%;
+        height: 28px;
+        margin-top: 24px;
+    }
 
 }

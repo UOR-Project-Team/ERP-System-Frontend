@@ -3,7 +3,7 @@ import axios from 'axios';
 import {Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Dialogbox from '../services/Dialogbox'
-import { showSuccessToast, showErrorToast } from '../services/ToasterMessage';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import validateUser from '../services/validate.user';
@@ -294,11 +294,13 @@ function UserList() {
               <td>{user.Address}</td>
               <td>{user.City}</td>
               <td>
-              {user.Status === 0 ? (
-                    <button type='button'><img src={GreyCircle} alt='Inactive'/></button>
-                  ) : (
-                    <button type='button' ><img src ={GreenCircle} alt='Active'/></button>
-                  )}
+              <div className='Statusbutton-container'>
+                      {user.Status === 0 ? (
+                        <button type='button'><img src={GreyCircle} alt='Inactive'/></button>
+                      ) : (
+                        <button type='button' ><img src ={GreenCircle} alt='Active'/></button>
+                     )}
+                      </div>
                 </td>
                 <td>
                       <button onClick={(event) => { handleClick(event); setUserId(user.ID); }}>
@@ -325,15 +327,14 @@ function UserList() {
         
         </tbody>
         </table>
-
-        <div className='categorylist-addbutton-container'>
+      </div>
+      </div>
+      <div className='list-addbutton-container'>
             <Link to = "/home/user-master">
-                <button className='categorylist-addbutton'>Add User</button>
+                <button className='list-addbutton'>Add User</button>
 
             </Link>
-            </div>
-      </div>
-      </div>
+       </div>
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => {fetchUser(); handleRequest('edit');}}>
