@@ -9,36 +9,32 @@ import validateItem from '../services/validate.item';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import categoryServices from '../services/services.category';
 import unitServices from '../services/services.unit';
+import supplierServices from '../services/services.supplier';
 
 function ItemMaster() {
 
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [units, setUnit] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const[values,setValues]=useState({
     code:'',
     itemName:'',
     categoryDescription:'',
-    unitDescription:''
+    unitDescription:'',
+    supplierName:'' 
+    
   })
   const [errorMessage, setErrorMessage] = useState({
     code: '',
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
+    supplierName:''
   })
 
   // Fetch categories from the server
-  // useEffect(() => {
-  //   axios.get('http://localhost:8081/category/') 
-  //     .then(response => {
-  //       setCategories(response.data.categories);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching category data:', error);
-  //     });
-  // }, []);
-  //fetch categories for the update form's category options
+
   const fetchCategoryOptions = async () => {
     try {
       const Categories = await categoryServices.getAllCategories();
@@ -60,7 +56,6 @@ function ItemMaster() {
   //     });
   // }, []);
 
-
   const fetchUnitOptions = async () => {
     try {
       const Units = await unitServices.getAllUnits();
@@ -72,8 +67,22 @@ function ItemMaster() {
   };
 
 
+  // Fetch suppliers from the server
+
+  const fetchSupplierOptions = async () => {
+    try {
+      const Suppliers = await supplierServices.getAllSuppliers();
+      // Set supplierOptions state with fetched data
+      setSuppliers(Suppliers);
+    } catch (error) {
+      console.error('Error fetching suppliers:', error.message);
+    }
+  };
+
+  
   fetchCategoryOptions();
   fetchUnitOptions();
+  fetchSupplierOptions();
 
 
   const categoryOptions = categories.map(category => ({
@@ -86,6 +95,10 @@ function ItemMaster() {
     label: unit.Description,
   }));
 
+  const supplierOptions = suppliers.map(supplier => ({
+    value: supplier.ID,
+    label: supplier.Name,
+  }));
 
   //handle input change
   const handleInputChange = (event) => {
@@ -111,17 +124,26 @@ function ItemMaster() {
     return category ? category.ID : null;
   };
 
+  const getSupplierIdFromName = (name) => {
+    const supplier = suppliers.find((supplier) => supplier.Name === name);
+    return supplier ? supplier.ID : null;
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const unitId = getUnitIdFromDescription(values.unitDescription);
     const categoryId = getCategoryIdFromDescription(values.categoryDescription);
+    const supplierId = getSupplierIdFromName(values.supplierName)
     
     const submitItemData = {
       code: values.code,
       itemName: values.itemName,
       categoryId: categoryId,
       unitId: unitId,
+      supplierId: supplierId
     }
     const validationErrors = validateItem(values);
     setErrorMessage(validationErrors);
@@ -168,6 +190,7 @@ function ItemMaster() {
       itemName: '',
       categoryDescription: '',
       unitDescription: '',
+      supplierName:''
     });
   };
 
@@ -229,6 +252,31 @@ function ItemMaster() {
             value={values.unitDescription}
           />
           <label className='error-text'>{errorMessage.unitDescription}</label>
+
+          <h3>Supplier Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={supplierOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Supplier"
+                name='supplierName' 
+                value={values.supplierName}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, supplierName: newValue?.label || '' }));
+            }}
+            value={values.supplierName}
+          />
+          <label className='error-text'>{errorMessage.supplierName}</label>
+          
+
 
           <div className='button-container'>
             <button type="submit" class='submit-button'>Save</button>
