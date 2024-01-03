@@ -15,8 +15,7 @@ import Modal from 'react-modal';
 import "jspdf-autotable";
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import FilterLogo from './../assets/icons/filter.png';
@@ -26,6 +25,8 @@ import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import { Link } from "react-router-dom";
 
 function CustomerList() {
 
@@ -163,30 +164,11 @@ function CustomerList() {
         await customerServices.deleteCustomer(currentCustomer);
         setDialogOpen(false);
         fetchCustomers();
-
-        toast.success('Successfully Added', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
+        showSuccessToast('Customer successfully deleted');
 
       } catch (error) {
-        console.error('Error deleting customer:', error.message);
-        toast.error('Error Occured', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
+        console.error('Error deleting customer:', error.message);  
+        showErrorToast('Error deleting customer');
       }
     }
   };
@@ -219,16 +201,7 @@ function CustomerList() {
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
-      toast.error(`Check the inputs again`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Check the inputs again');
       return
     }
     
@@ -236,30 +209,12 @@ function CustomerList() {
       const response = await customerServices.updateCustomer(currentCustomer, formData)
       fetchCustomers();
       setIsModalOpen(false);
-      toast.success('Successfully Updated', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showSuccessToast('Customer successfully updated')
       handleUpdateReset();
       console.log('Customer updated:', response);
     } catch(error) {
       const { message, attributeName } = error.response.data;
-      toast.error(`${message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast(`${message}`);
     
       if (attributeName) {
         if(attributeName==='Email') {
@@ -305,16 +260,7 @@ function CustomerList() {
       });
     } else {
       console.log("Customer not found");
-      toast.error('Error Occured', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast('Customer not found');
     }
   }
 
@@ -484,6 +430,11 @@ function CustomerList() {
           </table>
         </div>
       </div>
+      <div className='list-addbutton-container'>
+            <Link to = "/home/customer-master">
+                <button className='list-addbutton'>Add Customer</button>
+            </Link>
+       </div>
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem>

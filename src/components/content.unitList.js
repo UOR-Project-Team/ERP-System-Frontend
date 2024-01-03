@@ -13,8 +13,8 @@ import Modal from 'react-modal';
 import "jspdf-autotable";
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import SearchLogo from './../assets/icons/search.png';
@@ -125,35 +125,11 @@ const handleSearchInputChange = async (e) => {
         await unitServices.deleteUnit(currentUnit);
         setDialogOpen(false);
         fetchUnits();
-        
-
-
-
-        toast.success('Successfully Deleted', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
+        showSuccessToast('Unit successfully deleted');
 
         } catch (error) {
             console.error('Error deleting unit:', error.message);
-         
-
-            toast.error('Error Occured', {
-              position: "top-right",
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-            });
+            showErrorToast('Error deleting unit');
           } 
         }
       };
@@ -185,16 +161,7 @@ const handleSearchInputChange = async (e) => {
         setErrorMessage(validationErrors);
     
         if (Object.values(validationErrors).some((error) => error !== '')) {
-          toast.error(`Check the inputs again`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          showSuccessToast('Check the inputs again');
           return
         }
 
@@ -202,31 +169,13 @@ const handleSearchInputChange = async (e) => {
           const response = await unitServices.updateUnit(currentUnit, formData)
           fetchUnits();
           setIsModalOpen(false);
-          toast.success('Successfully Updated', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
+          showSuccessToast('Unit successfully updated');
           console.log('Unit updated:', response);
           handleUpdateReset();
 
         } catch(error) {
           console.error('Error Updating unit:', error.message);
-          toast.error('Error Updating unit', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          showErrorToast('Error updating unit');
         }
     
       };
@@ -243,16 +192,7 @@ const handleSearchInputChange = async (e) => {
           });
         } else {
           console.log("Unit not found");
-          toast.error('Unit not found', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
+          showErrorToast('Unit not found');
         }
       }
 
@@ -372,36 +312,28 @@ const handleSearchInputChange = async (e) => {
                                  No data to show
                                 </td>
                           </tr>
-                            ) : (
-                              
-                              
-                                units.map((unit)  =>(
-                                    <tr key={unit.id}>
-                                        <td style={{ display: fields.ID ? 'table-cell' : 'none' }}>{unit.ID}</td>
-                                        <td style={{ display: fields.Description ? 'table-cell' : 'none' }}>{unit.Description}</td>
-                                        <td style={{ display: fields.SI ? 'table-cell' : 'none' }}>{unit.SI}</td>
-                                        <td>
-                                        <button onClick={(event) => { handleClick(event); setCurrentUnit(unit.ID); }}>
+                            ) : (      
+                        units.map((unit)  =>(
+                          <tr key={unit.id}>
+                                  <td style={{ display: fields.ID ? 'table-cell' : 'none' }}>{unit.ID}</td>
+                                  <td style={{ display: fields.Description ? 'table-cell' : 'none' }}>{unit.Description}</td>
+                                   <td style={{ display: fields.SI ? 'table-cell' : 'none' }}>{unit.SI}</td>
+                                   <td>
+                                      <button onClick={(event) => { handleClick(event); setCurrentUnit(unit.ID); }}>
                                         <img src={ActionLogo} alt='Action Logo' />
-                                        </button>
-                                        </td>
-                                    </tr>
+                                      </button>
+                                    </td>
+                            </tr>
                                 ))
                                 
-                               ) }
-                              
-                                 
-                            
-                            
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-            <div className='categorylist-addbutton-container'>
+                                ) }     
+                         </tbody>
+                     </table>
+                   </div>
+                 </div>
+            <div className='list-addbutton-container'>
             <Link to = "/home/unit-master">
-                <button className='categorylist-addbutton'>Add Unit</button>
+                <button className='list-addbutton'>Add Unit</button>
 
             </Link>
             </div>
@@ -411,9 +343,7 @@ const handleSearchInputChange = async (e) => {
                             <button onClick={() => {fetchUnit(); handleRequest('edit');}}>
                             <img src={EditLogo} alt='Edit Logo' />
                             <span>Edit Unit</span>
-                            
-
-                        </button>
+                            </button>
                         
                 </MenuItem>
                 <MenuItem onClick={() => {setDialogTitle('Delete Unit'); setDialogDescription('Do you want to delete this unit record?'); setDialogOpen(true); setAnchorEl(null);}}>
@@ -476,15 +406,6 @@ const handleSearchInputChange = async (e) => {
              </Dialog>
         </div>
       )
-
-
-
-
-
-
-
-
-
 
 }
 

@@ -30,7 +30,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   const [currentUser, setCurrentUser] = useState({
     username: '',
     fullname: '',
-    jobrole: '',
+    status: false
   })
 
   const navigate = useNavigate();
@@ -45,7 +45,6 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         jobrole: decodedToken.jobrole,
         loginflag: decodedToken.loginflag,
       })
-      console.log('test');
       console.log(decodedToken);
     } else {
       console.log('Token not found');
@@ -85,7 +84,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <button onClick={() => handleRequest('profile')}>
                 <span className='text-container'>
                   <div className='uname-text'>{currentUser.fullname}</div>
-                  <div className='type-text'>{currentUser.jobrole =='admin' ? ('Administrator') : ('System User')}</div>
+                  <div className='type-text'>{currentUser.status ? ('Administrator') : ('System User')}</div>
                 </span>
                 <span><img src={DownLogo} alt="Down Logo"/></span>
               </button>

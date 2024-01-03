@@ -15,7 +15,7 @@ function Dashboard() {
           </div>
           <div className='r2'>
             <span className='c1'>
-              <img src={PurchaseLogo}/>
+              <img src={PurchaseLogo} alt='Purchases logo' />
             </span>
             <span className='c2'>
               435
@@ -36,7 +36,7 @@ function Dashboard() {
           </div>
           <div className='r2'>
             <span className='c1'>
-              <img src={SaleLogo}/>
+              <img src={SaleLogo} alt='Sales logo' />
             </span>
             <span className='c2'>
               1432
@@ -57,7 +57,7 @@ function Dashboard() {
           </div>
           <div className='r2'>
             <span className='c1'>
-              <img src={RevenueLogo}/>
+              <img src={RevenueLogo} alt='Revenue logo' />
             </span>
             <span className='c2'>
               435
@@ -78,7 +78,7 @@ function Dashboard() {
           </div>
           <div className='r2'>
             <span className='c1'>
-              <img src={ProfitLogo}/>
+              <img src={ProfitLogo} alt='Profit logo' />
             </span>
             <span className='c2'>
               435

@@ -3,41 +3,34 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import itemServices from '../services/services.item';
+import validateItem from '../services/validate.item';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function ItemMaster() {
 
-  const[values,setValues]=useState({
-    code:'p01',
-    itemName:'Lux Soap 100g',
-    categoryId:'1',
-    unitId:'1'
-
-  })
-
   const navigate = useNavigate();
-
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-
   const [units, setUnit] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState(null);
-  
+  const[values,setValues]=useState({
+    code:'',
+    itemName:'',
+    categoryDescription:'',
+    unitDescription:''
+  })
   const [errorMessage, setErrorMessage] = useState({
     code: '',
     itemName: '',
-    categoryId: '',
-    unitId: '',
+    categoryDescription: '',
+    unitDescription: '',
   })
 
   // Fetch categories from the server
   useEffect(() => {
-    
     axios.get('http://localhost:8081/category/') 
       .then(response => {
         setCategories(response.data.categories);
-
       })
       .catch(error => {
         console.error('Error fetching category data:', error);
@@ -46,7 +39,6 @@ function ItemMaster() {
 
   // Fetch units from the server
   useEffect(() => {
-    
     axios.get('http://localhost:8081/unit') 
       .then(response => {
         setUnit(response.data.units);
@@ -56,46 +48,16 @@ function ItemMaster() {
       });
   }, []);
 
-  // Handle category change
-  const handleCategoryChange = selectedOption => {
-    setSelectedCategory(selectedOption);
+  const categoryOptions = categories.map(category => ({
+    value: category.ID,
+    label: category.Description,
+  }));
 
-    
-    setValues(prevValues => ({
-      ...prevValues,
-      categoryId: selectedOption?.value||''
-    }));
+  const unitOptions = units.map(unit => ({
+    value: unit.ID,
+    label: unit.Description,
+  }));
 
-    setErrorMessage((prevErrors) => ({
-      ...prevErrors,
-      categoryId: '',
-    }));
-  };
-
-  //Handle unit change
-  const handleUnitChange = selectedOption => {
-    setSelectedUnit(selectedOption);
-    //const selectedValue = selectedOption ? selectedOption.value : ''; // Handle null case
-    console.log(selectedOption.value);
-    
-    
-    setValues(prevValues => ({
-      ...prevValues,
-      unitId: selectedOption.value || ''
-    }));
-
-    setErrorMessage((prevErrors) => ({
-      ...prevErrors,
-      unitId: '',
-    }));
-    
-  };
-
-  const handleAutocompleteChange = (_, newValue) => {
-    setValues((prevData) => ({ ...prevData, categoryId: newValue?.label || '' }));
-  };
-  
-  
 
   //handle input change
   const handleInputChange = (event) => {
@@ -111,132 +73,73 @@ function ItemMaster() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const getUnitIdFromDescription = (description) => {
+    const unit = units.find((unit) => unit.Description === description);
+    return unit ? unit.ID : null;
+  }
 
-    // Validation
-    let isValid = true;
-    const newErrors = {};
-
-    if (!values.code.trim()) {
-      isValid = false;
-      newErrors.code = 'Item Code is required *';
-    }
-
-    if (!values.itemName.trim()) {
-      isValid = false;
-      newErrors.itemName = 'Item Name is required *';
-    }
-
-    if (!selectedCategory) {
-      isValid = false;
-      newErrors.categoryId = 'Category is required *';
-    }
-
-    if (!selectedUnit) {
-      isValid = false;
-      newErrors.unitId = 'Unit is required *';
-    }
-
-    if (!isValid) {
-      setErrorMessage(newErrors);
-      toast.error(`Check the inputs again`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return;
-    }
-
-    
-    axios.post('http://localhost:8081/item/create', values)
-      .then((res) => {
-        console.log('Item Code:', values.code);
-        console.log('Item Name:', values.itemName);
-        console.log('Category ID:',{selectedCategory});
-        console.log('Unit ID:', {selectedUnit});
-
-        //For the toast message
-        toast.success('Successfully Added', {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });  
-
-
-        // Reset the form fields
-        setSelectedCategory('');
-        setSelectedUnit('');
-        setValues({
-          code: '',
-          itemName: '',
-          categoryId: '',
-          unitId: ''
-          
-        });
-      })
-      
-      .catch(err => {
-        console.error(err);
-        if (err) {
-          toast.error(`Error Occured`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-          });
-        }
-      })
-      .finally(() => {
-        // Navigate to 'Item-list' after two seconds
-        setTimeout(()=>{
-          navigate('/home/item-list');
-        },2000); 
-      });
-      
+  const getCategoryIdFromDescription = (description) => {
+    const category = categories.find((category) => category.Description === description);
+    return category ? category.ID : null;
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const unitId = getUnitIdFromDescription(values.unitDescription);
+    const categoryId = getCategoryIdFromDescription(values.categoryDescription);
+    
+    const submitItemData = {
+      code: values.code,
+      itemName: values.itemName,
+      categoryId: categoryId,
+      unitId: unitId,
+    }
+    const validationErrors = validateItem(values);
+    setErrorMessage(validationErrors);
+
+    if (Object.values(validationErrors).some((error) => error !== '')) {
+      showErrorToast('Check the inputs again')
+      return
+    }
+    
+    try {
+        const response = await itemServices.createItem(submitItemData)
+        showSuccessToast('Item successfully added');
+        console.log('item created:', response);
+        handleReset();
+      }
+
+      catch (error) {
+        //const {message} = error.response.data;
+        showErrorToast('Error Occured');
   
-
-
-  const categoryOptions = categories.map(category => ({
-    value: category.ID,
-    label: category.Description,
-  }));
-
-  const unitOptions = units.map(unit => ({
-    value: unit.ID,
-    label: unit.Description,
-  }));
-
+        //console.error('Error:', message);
+        console.error('Error:');
+  
+      }
+      
+      
+  };
 
   //Handle Reset
   const handleReset = () => {
     setValues((prevValues) => ({
       code:'',
       itemName:'',
-      categoryId:'',
-      unitId:''
+      categoryDescription:'',
+      unitDescription:''
     }));
+    
+    setTimeout(()=>{
+      navigate('/home/item-list');
+    },2000);
+
     setErrorMessage({
       code: '',
       itemName: '',
-      categoryId: '',
-      unitId: '',
+      categoryDescription: '',
+      unitDescription: '',
     });
   };
 
@@ -255,22 +158,26 @@ function ItemMaster() {
 
           <h3>Category Details</h3>
           <Autocomplete
-    disablePortal
-    className='text-line-type2'
-    options={categoryOptions}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        label="Category"
-        name='categoryId' 
-        value={values.categoryId}
-        onChange={handleInputChange}
-      />
-    )}
-    onChange={handleAutocompleteChange}
-    value={categoryOptions.find((option) => option.label === values.categoryId) || null}
-  />
-          {/* <label className='error-text'>{errorMessage.categoryId}</label> */}
+            disablePortal
+            className='text-line-type2'
+            options={categoryOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Category"
+                name='categoryDescription' 
+                value={values.categoryDescription}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, categoryDescription: newValue?.label || '' }));
+            }}
+            value={values.categoryDescription}
+          />
+          <label className='error-text'>{errorMessage.categoryDescription}</label>
 
           <h3>Unit Details</h3>
           <Autocomplete
@@ -281,25 +188,24 @@ function ItemMaster() {
               <TextField
                 {...params}
                 label="Unit"
-                name='unitId' 
-                value={values.unitId}
+                name='unitDescription' 
+                value={values.unitDescription}
                 onChange={(e) => {
                   handleInputChange(e);
                 }}
               />
             )}
             onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, unitId: newValue?.label || '' }));
+              setValues((prevData) => ({ ...prevData, unitDescription: newValue?.label || '' }));
             }}
-            value={values.unitId}
+            value={values.unitDescription}
           />
-          <label className='error-text'>{errorMessage.unitId}</label>
+          <label className='error-text'>{errorMessage.unitDescription}</label>
 
           <div className='button-container'>
             <button type="submit" class='submit-button'>Save</button>
             <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
           </div>
-
         </form>
       </div>
     </div>
