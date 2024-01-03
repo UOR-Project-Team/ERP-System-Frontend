@@ -7,6 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import itemServices from '../services/services.item';
 import validateItem from '../services/validate.item';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import categoryServices from '../services/services.category';
+import unitServices from '../services/services.unit';
 
 function ItemMaster() {
 
@@ -27,26 +29,52 @@ function ItemMaster() {
   })
 
   // Fetch categories from the server
-  useEffect(() => {
-    axios.get('http://localhost:8081/category/') 
-      .then(response => {
-        setCategories(response.data.categories);
-      })
-      .catch(error => {
-        console.error('Error fetching category data:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('http://localhost:8081/category/') 
+  //     .then(response => {
+  //       setCategories(response.data.categories);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching category data:', error);
+  //     });
+  // }, []);
+  //fetch categories for the update form's category options
+  const fetchCategoryOptions = async () => {
+    try {
+      const Categories = await categoryServices.getAllCategories();
+      // Set categoryOptions state with fetched data
+      setCategories(Categories);
+    } catch (error) {
+      console.error('Error fetching categories:', error.message);
+    }
+  };
 
   // Fetch units from the server
-  useEffect(() => {
-    axios.get('http://localhost:8081/unit') 
-      .then(response => {
-        setUnit(response.data.units);
-      })
-      .catch(error => {
-        console.error('Error fetching units data:', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('http://localhost:8081/unit') 
+  //     .then(response => {
+  //       setUnit(response.data.units);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching units data:', error);
+  //     });
+  // }, []);
+
+
+  const fetchUnitOptions = async () => {
+    try {
+      const Units = await unitServices.getAllUnits();
+      // Set unitOptions state with fetched data
+      setUnit(Units);
+    } catch (error) {
+      console.error('Error fetching units:', error.message);
+    }
+  };
+
+
+  fetchCategoryOptions();
+  fetchUnitOptions();
+
 
   const categoryOptions = categories.map(category => ({
     value: category.ID,
