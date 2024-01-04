@@ -79,10 +79,23 @@ function ItemMaster() {
     }
   };
 
+  // let categoryOptions=[];
+  // let unitOptions=[];
+  // let supplierOptions=[];
+
+
   
-  fetchCategoryOptions();
-  fetchUnitOptions();
-  fetchSupplierOptions();
+  useEffect(() => {
+
+
+    fetchCategoryOptions();
+    fetchUnitOptions();
+    fetchSupplierOptions();
+
+
+  
+    
+  }, []);
 
 
   const categoryOptions = categories.map(category => ({
@@ -97,8 +110,13 @@ function ItemMaster() {
 
   const supplierOptions = suppliers.map(supplier => ({
     value: supplier.ID,
-    label: supplier.Name,
+    label: supplier.Fullname,
   }));
+
+  console.log(suppliers);
+
+
+  
 
   //handle input change
   const handleInputChange = (event) => {
@@ -125,7 +143,7 @@ function ItemMaster() {
   };
 
   const getSupplierIdFromName = (name) => {
-    const supplier = suppliers.find((supplier) => supplier.Name === name);
+    const supplier = suppliers.find((supplier) => supplier.Fullname === name);
     return supplier ? supplier.ID : null;
   };
 
@@ -178,7 +196,8 @@ function ItemMaster() {
       code:'',
       itemName:'',
       categoryDescription:'',
-      unitDescription:''
+      unitDescription:'',
+      supplierName:''
     }));
     
     setTimeout(()=>{
@@ -198,8 +217,8 @@ function ItemMaster() {
   return (
     <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
       <ToastContainer />
-      <div className='master-content'  >
-        <form onSubmit={handleSubmit} className='form-container'  >
+      <div className='master-content'>
+        <form onSubmit={handleSubmit} className='form-container' >
 
           <h3>Item Details</h3>
           <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
@@ -261,7 +280,7 @@ function ItemMaster() {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Supplier"
+                label="Supplier Name"
                 name='supplierName' 
                 value={values.supplierName}
                 onChange={(e) => {
