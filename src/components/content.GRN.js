@@ -327,9 +327,9 @@ function GRN() {
       </div>
       <div className='grn-content' style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div className='button-container' >
-          <button style={{ backgroundColor: 'green' }}>Save</button>
-          <button style={{ backgroundColor: '#2a6592' }}>Save & Print</button>
           <button style={{ backgroundColor: 'crimson' }}>Cancel</button>
+          <button style={{ backgroundColor: '#2a6592' }}>Save & Print</button>
+          <button style={{ backgroundColor: 'green' }}>Save</button>
         </div>
       </div>
     </div>
