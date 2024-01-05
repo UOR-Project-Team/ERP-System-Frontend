@@ -104,22 +104,20 @@ function ItemMaster() {
     }
     
     try {
-        const response = await itemServices.createItem(submitItemData)
-        showSuccessToast('Item successfully added');
-        console.log('item created:', response);
-        handleReset();
-      }
+      const response = await itemServices.createItem(submitItemData)
+      showSuccessToast('Item successfully added');
+      console.log('item created:', response);
+      handleReset();
+      setTimeout(() => {
+        navigate('/home/item-list');
+      }, 2000);
+    }
 
-      catch (error) {
-        //const {message} = error.response.data;
-        showErrorToast('Error Occured');
+    catch (error) {
+      showErrorToast('Error Occured');
+      console.error('Error:');
+    }
   
-        //console.error('Error:', message);
-        console.error('Error:');
-  
-      }
-      
-      
   };
 
   //Handle Reset

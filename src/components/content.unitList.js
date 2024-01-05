@@ -8,6 +8,7 @@ import {
   DialogContentText,
 } from '@mui/material';
 import Menu from '@mui/material/Menu';
+import { useNavigate } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import Modal from 'react-modal';
 import "jspdf-autotable";
@@ -17,6 +18,7 @@ import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
+import AddLogo from './../assets/icons/add.png';
 import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
 import ActionLogo from './../assets/icons/action.png';
@@ -37,7 +39,7 @@ function UnitList() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUnit, setCurrentUnit] = useState(0);
   
-
+    const navigateTo = useNavigate();
    
 
 
@@ -281,16 +283,18 @@ const handleSearchInputChange = async (e) => {
 
       return(
         <div>
-            <ToastContainer />
-            <div className='master-content'>
-                <div className='search-container'>
-                <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
-                <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
-
-                </div>
-
+          <div className='list-container'>
+          <ToastContainer />
+          <div className='list-content-top'>
+            <div className='button-container'>
+              <button onClick={() => {navigateTo(`/home/unit-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Unit</span></button>
             </div>
-            <div className='master-content'>
+            <div className='search-container'>
+              <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
+              <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+            </div>
+          </div>
+            <div className='list-content'>
                 <div className='features-panel'>
                 <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
                 <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
@@ -337,6 +341,8 @@ const handleSearchInputChange = async (e) => {
 
             </Link>
             </div>
+          </div>
+            
 
             <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
                 <MenuItem>
