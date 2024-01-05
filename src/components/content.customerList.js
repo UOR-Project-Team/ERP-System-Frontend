@@ -7,6 +7,7 @@ import {
   Button,
   DialogContentText,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Menu from '@mui/material/Menu';
@@ -19,6 +20,7 @@ import { ToastContainer } from 'react-toastify';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import FilterLogo from './../assets/icons/filter.png';
+import AddLogo from './../assets/icons/add.png';
 import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
 import ActionLogo from './../assets/icons/action.png';
@@ -26,7 +28,6 @@ import DeleteLogo from './../assets/icons/delete.png';
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
-import { Link } from "react-router-dom";
 
 function CustomerList() {
 
@@ -39,6 +40,8 @@ function CustomerList() {
   const [modelContent, setModelContent] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(0);
+
+  const navigateTo = useNavigate();
 
   const [fields, setFields] = useState({
     title: true,
@@ -370,71 +373,71 @@ function CustomerList() {
 
   return (
     <div>
-      <ToastContainer />
-      <div className='master-content'>
-          <div className='search-container'>
-            <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
-            <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+      <div className='list-container'>
+        <ToastContainer />
+        <div className='list-content-top'>
+          <div className='button-container'>
+            <button onClick={() => {navigateTo(`/home/customer-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Customer</span></button>
           </div>
-      </div>
-      <div className='master-content'>
-        <div className='features-panel'>
-          <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
-          <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
-          <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
+          <div className='search-container'>
+          <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
+          <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+          </div>
         </div>
-        <div className='table-container'>
-          <table>
-            <thead>
-              <tr>
-                <th style={{ display: fields.title ? 'table-cell' : 'none' }}>Title</th>
-                <th style={{ display: fields.fullname ? 'table-cell' : 'none' }}>Fullname</th>
-                <th style={{ display: fields.email ? 'table-cell' : 'none' }}>Email</th>
-                <th style={{ display: fields.nic ? 'table-cell' : 'none' }}>NIC</th>
-                <th style={{ display: fields.contactno ? 'table-cell' : 'none' }}>Contact No</th>
-                <th style={{ display: fields.street1 ? 'table-cell' : 'none' }}>Street 1</th>
-                <th style={{ display: fields.street2 ? 'table-cell' : 'none' }}>Street2</th>
-                <th style={{ display: fields.city ? 'table-cell' : 'none' }}>City</th>
-                <th style={{ display: fields.country ? 'table-cell' : 'none' }}>Country</th>
-                <th style={{ display: fields.vatno ? 'table-cell' : 'none' }}>VAT  No</th>
-                <th className='action-column'></th>
-              </tr>
-            </thead>
-            <tbody>
-              {customers.length === 0 ? (
+        <div className='list-content'>
+          <div className='features-panel'>
+            <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
+            <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
+            <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
+          </div>
+          <div className='table-container'>
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan="11" style={{padding: '12px 4px'}}>No data to show</td>
+                  <th style={{ display: fields.title ? 'table-cell' : 'none' }}>Title</th>
+                  <th style={{ display: fields.fullname ? 'table-cell' : 'none' }}>Fullname</th>
+                  <th style={{ display: fields.email ? 'table-cell' : 'none' }}>Email</th>
+                  <th style={{ display: fields.nic ? 'table-cell' : 'none' }}>NIC</th>
+                  <th style={{ display: fields.contactno ? 'table-cell' : 'none' }}>Contact No</th>
+                  <th style={{ display: fields.street1 ? 'table-cell' : 'none' }}>Street 1</th>
+                  <th style={{ display: fields.street2 ? 'table-cell' : 'none' }}>Street2</th>
+                  <th style={{ display: fields.city ? 'table-cell' : 'none' }}>City</th>
+                  <th style={{ display: fields.country ? 'table-cell' : 'none' }}>Country</th>
+                  <th style={{ display: fields.vatno ? 'table-cell' : 'none' }}>VAT  No</th>
+                  <th className='action-column'></th>
                 </tr>
-              ) : (
-                customers.map((customer) => (
-                  <tr key={customer.id}>
-                    <td style={{ display: fields.title ? 'table-cell' : 'none' }}>{customer.Title}</td>
-                    <td style={{ display: fields.fullname ? 'table-cell' : 'none' }}>{customer.Fullname}</td>
-                    <td style={{ display: fields.email ? 'table-cell' : 'none' }}>{customer.Email}</td>
-                    <td style={{ display: fields.nic ? 'table-cell' : 'none' }}>{customer.NIC}</td>
-                    <td style={{ display: fields.contactno ? 'table-cell' : 'none' }}>{customer.ContactNo}</td>
-                    <td style={{ display: fields.street1 ? 'table-cell' : 'none' }}>{customer.Street1}</td>
-                    <td style={{ display: fields.street2 ? 'table-cell' : 'none' }}>{customer.Street2}</td>
-                    <td style={{ display: fields.city ? 'table-cell' : 'none' }}>{customer.City}</td>
-                    <td style={{ display: fields.country ? 'table-cell' : 'none' }}>{customer.Country}</td>
-                    <td style={{ display: fields.vatno ? 'table-cell' : 'none' }}>{customer.VatNo}</td>
-                    <td>
-                      <button onClick={(event) => { handleClick(event); setCurrentCustomer(customer.ID); }}>
-                        <img src={ActionLogo} alt='Action Logo' />
-                      </button>
-                    </td>
+              </thead>
+              <tbody>
+                {customers.length === 0 ? (
+                  <tr>
+                    <td colSpan="11" style={{padding: '12px 4px'}}>No data to show</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  customers.map((customer) => (
+                    <tr key={customer.id}>
+                      <td style={{ display: fields.title ? 'table-cell' : 'none' }}>{customer.Title}</td>
+                      <td style={{ display: fields.fullname ? 'table-cell' : 'none' }}>{customer.Fullname}</td>
+                      <td style={{ display: fields.email ? 'table-cell' : 'none' }}>{customer.Email}</td>
+                      <td style={{ display: fields.nic ? 'table-cell' : 'none' }}>{customer.NIC}</td>
+                      <td style={{ display: fields.contactno ? 'table-cell' : 'none' }}>{customer.ContactNo}</td>
+                      <td style={{ display: fields.street1 ? 'table-cell' : 'none' }}>{customer.Street1}</td>
+                      <td style={{ display: fields.street2 ? 'table-cell' : 'none' }}>{customer.Street2}</td>
+                      <td style={{ display: fields.city ? 'table-cell' : 'none' }}>{customer.City}</td>
+                      <td style={{ display: fields.country ? 'table-cell' : 'none' }}>{customer.Country}</td>
+                      <td style={{ display: fields.vatno ? 'table-cell' : 'none' }}>{customer.VatNo}</td>
+                      <td>
+                        <button onClick={(event) => { handleClick(event); setCurrentCustomer(customer.ID); }}>
+                          <img src={ActionLogo} alt='Action Logo' />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div className='list-addbutton-container'>
-            <Link to = "/home/customer-master">
-                <button className='list-addbutton'>Add Customer</button>
-            </Link>
-       </div>
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem>
@@ -629,6 +632,7 @@ function CustomerList() {
           </Button>
         </DialogActions>
       </Dialog>
+
     </div>
   );
 }

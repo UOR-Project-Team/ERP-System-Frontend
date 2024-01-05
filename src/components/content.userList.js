@@ -10,8 +10,8 @@ import validateUser from '../services/validate.user';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Modal from 'react-modal';
-
-
+import { useNavigate } from 'react-router-dom';
+import AddLogo from './../assets/icons/add.png';
 import SearchLogo from './../assets/icons/search.png';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
@@ -33,6 +33,8 @@ function UserList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [openDialog, setOpenDialog] = useState(false)  //Dialog box
+
+  const navigateTo = useNavigate();
 
   const [formData, setFormData] = useState({
     Fullname:'',
@@ -243,16 +245,20 @@ function UserList() {
   };
 
   return (
-    <div className='body-container'>
-      <div className='master-content'>
-          <div className='search-container'>
-            <input type="text" placeholder='Explore the possibilities...' value={search} onChange={handleSearch} />
-            <button ><img src={SearchLogo} alt="Search Logo"/></button>
-          </div>
+    <div className='list-container'>
+
+      <div className='list-content-top'>
+        <div className='button-container'>
+          <button onClick={() => {navigateTo(`/home/user-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add User</span></button>
+        </div>
+        <div className='search-container'>
+          <input type="text" placeholder='Explore the possibilities...' value={search} onChange={(e) =>  setSearch(e.target.value)} />
+          <button onClick={handleSearch}><img src={SearchLogo} alt="Search Logo"/></button>
+        </div>
       </div>
      
 
-      <div className='master-content'>
+      <div className='list-content'>
 
       <div className='features-panel'>
           <button ><img src={PdfLogo} alt="Pdf Logo" /></button>
