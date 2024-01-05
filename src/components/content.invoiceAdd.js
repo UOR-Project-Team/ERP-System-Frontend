@@ -4,6 +4,7 @@ import invoiceServices from "../services/services.invoice";
 import DeleteLogo from './../assets/icons/delete.png';
 
 
+
 function Invoice(){
 
   
@@ -23,6 +24,9 @@ function Invoice(){
     const [totalAmount, setTotalAmount] = useState(0);
     const [cash , setCash] = useState('');
     const [balance , setBalance] = useState(0); 
+    
+    
+    
  
 
   useEffect(() => {
@@ -55,7 +59,11 @@ function Invoice(){
   const handleSelectChange = (selectedOption) => {
       const selectedItemId = selectedOption ? selectedOption.value : null;
       setSelectedItemId(selectedItemId);
-      console.log('selected item id' , selectedItemId);
+
+      const selectedCustomerName = selectedOption ? selectedOption.Fullname : null;
+      const selectedCustomerTitle = selectedOption ? selectedOption.title : null;   
+       setSelectedCustomerName(selectedCustomerTitle+selectedCustomerName);
+      //console.log('selected item id' , selectedItemId);
    };
 
   function generateRandomNumber() {
@@ -212,6 +220,24 @@ function Invoice(){
         console.error('Invalid cash amount');
      }
     };
+    const handleCancelbutton = () => {
+     
+      
+        
+       setSelectedItems([]);
+       setSelectedItemId(null);
+       setPrice('');
+       setSubTotal(0);
+       setDiscount('');
+       setTotalAmount(0);
+       setCash('');
+       setBalance(0);
+       setQuantity('');
+    
+    
+      
+      
+    };
 
 return(
     <div className="grn-container">
@@ -221,6 +247,7 @@ return(
             <span className="content-left">Customer:</span>
             <span className="content-right">
             <Select className='select-box'
+               
                   styles={{
                     control: (provided) => ({
                       ...provided,
@@ -256,23 +283,20 @@ return(
                       primary: 'grey',
                     },
                   })}
+                  
                 
                   options={customers.map((customer) => ({
                     id: `${customer.ID}`,
                     title: `${customer.Title}`,
                     contactNo: `${customer.ContactNo}`,
                     Fullname: `${customer.Fullname}`,                  
-                    value: `${customer.ContactNo}${customer.Title}${customer.Fullname} `,
+                     value: `${customer.ContactNo}${customer.Title}${customer.Fullname} `,
+                   
                     label: `${customer.Title}${customer.Fullname},${customer.ContactNo}`,
                   }))}
                   placeholder="Insert customer contact number"
-                  onChange={(selectedOption) => {
-                    const selectedCustomerName = selectedOption ? selectedOption.Fullname : null;
-                    const selectedCustomerTitle = selectedOption ? selectedOption.title : null;                  
-                    setSelectedCustomerName(selectedCustomerTitle+selectedCustomerName);
-                  }}
-                  onKeyDown={handleKeyPress}
-
+                  onChange={handleSelectChange}
+                  onKeyDown={handleKeyPress}         
               />
             </span>
           </div>          
@@ -427,7 +451,11 @@ return(
       </div>
       <div className='grn-content' style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div className='button-container' >
-        <button style={{ backgroundColor: 'crimson' }}>Cancel</button>
+        <button style={{ backgroundColor: 'crimson' }} onClick={handleCancelbutton}>
+            Cancel
+          </button>
+          
+        
           <button style={{ backgroundColor: '#2a6592' }}>Save & Print</button>
           <button style={{ backgroundColor: 'green' }}>Save</button>
         </div>

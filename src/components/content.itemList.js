@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from "react-router-dom"
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +7,7 @@ import {
   Button,
   DialogContentText,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Menu from '@mui/material/Menu';
@@ -18,6 +18,7 @@ import jsPDF from 'jspdf';
 import Papa from 'papaparse';
 import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import AddLogo from './../assets/icons/add.png';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import FilterLogo from './../assets/icons/filter.png';
@@ -48,6 +49,7 @@ function ItemList() {
   //const [selectedUnit, setSelectedUnit] = useState({});//to set default value in unit dropdown
   const [suppliers, setSuppliers] = useState([]);
 
+  const navigateTo = useNavigate();
 
   useEffect(()=>{
     fetchItems();
@@ -421,15 +423,18 @@ function ItemList() {
 
   return (
     <div>
-      
+      <div className='list-container'>
       <ToastContainer />
-      <div className='master-content'>
-          <div className='search-container'>
-            <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
-            <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
-          </div>
-      </div> 
-      <div className='master-content'>
+      <div className='list-content-top'>
+        <div className='button-container'>
+          <button onClick={() => {navigateTo(`/home/item-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Item</span></button>
+        </div>
+        <div className='search-container'>
+        <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
+        <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+        </div>
+      </div>
+      <div className='list-content'>
         <div className='features-panel'>
           <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
           <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
@@ -477,13 +482,8 @@ function ItemList() {
           </table>
         </div>
       </div>
-
-      <div className='list-addbutton-container'>
-            <Link to = "/home/item-master">
-             <button className='list-addbutton'>Add Item</button>
-
-            </Link>
       </div>
+      
 
 
 
