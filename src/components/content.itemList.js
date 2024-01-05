@@ -576,9 +576,7 @@ function ItemList() {
           />
           <label className='error-text'>{errorMessage.unitDescription}</label>
 
-
-
-
+          <h3>Supplier Details</h3>
           <Autocomplete
             disablePortal
             className='text-line-type2'
