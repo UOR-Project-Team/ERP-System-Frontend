@@ -402,6 +402,7 @@ function ItemList() {
                 <th>Name</th>
                 <th>Category</th>
                 <th>Unit</th>
+                <th>Supplier</th>
                 
                 <th className='action-column'></th>
               </tr>
@@ -419,6 +420,7 @@ function ItemList() {
                     <td>{item.Name }</td>
                     <td>{item.CategoryName }</td>
                     <td>{item.UnitName }</td>
+                    <td>{item.SupplierName}</td>
 
                     <td>
                       <button onClick={(event) => { handleClick(event); setCurrentItem(item.ID); }}>
