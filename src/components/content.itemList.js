@@ -29,6 +29,7 @@ import itemServices from '../services/services.item';
 import validateItem from '../services/validate.item';
 import categoryServices from '../services/services.category';
 import unitServices from '../services/services.unit';
+import supplierServices from '../services/services.supplier';
 
 function ItemList() {
 
@@ -42,9 +43,10 @@ function ItemList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(0);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState({});//to set default value in category dropdown
+  //const [selectedCategory, setSelectedCategory] = useState({});//to set default value in category dropdown
   const [units, setUnits] = useState([]);
-  const [selectedUnit, setSelectedUnit] = useState({});//to set default value in unit dropdown
+  //const [selectedUnit, setSelectedUnit] = useState({});//to set default value in unit dropdown
+  const [suppliers, setSuppliers] = useState([]);
 
 
   useEffect(()=>{
@@ -57,7 +59,8 @@ function ItemList() {
     code:'',
     itemName: '',
     categoryDescription:'',
-    unitDescription:''
+    unitDescription:'',
+    supplierName:''
   });
 
 
@@ -100,7 +103,19 @@ function ItemList() {
   };
 
 
-  // Memoize categoryOptions and unitOptions
+  //fetch units for the update form's unit options
+  const fetchSupplierOptions = async () => {
+    try {
+      const Suppliers = await supplierServices.getAllSuppliers();
+      // Set unitOptions state with fetched data
+      setSuppliers(Suppliers);
+    } catch (error) {
+      console.error('Error fetching suppliers:', error.message);
+    }
+  };
+
+
+  // Memoize categoryOptions, unitOptions, supplierOptions
   const categoryOptions = useMemo(() => (
     categories.map(category => ({
       value: category.ID,
@@ -114,6 +129,13 @@ function ItemList() {
       label: unit.Description,
     }))
   ), [units]);
+
+  const supplierOptions = useMemo(() => (
+    suppliers.map(supplier => ({
+      value: supplier.ID,
+      label: supplier.Fullname,
+    }))
+  ), [suppliers]);
 
 
 
@@ -153,8 +175,11 @@ function ItemList() {
         fetchItem(currentItem);
         fetchCategoryOptions();
         fetchUnitOptions();
-        console.log(formData.Description);
+        fetchSupplierOptions();
+        
         console.log(getCategoryIdFromDescription(formData.categoryDescription));
+        //console.log(getSupplierIdFromName(formData.supplierName))
+        
         
       };
 
@@ -238,6 +263,8 @@ function ItemList() {
         itemName: foundItem.Name || '',
         categoryDescription: foundItem.CategoryName || '',
         unitDescription: foundItem.UnitName || '',
+        supplierName: foundItem.SupplierName||''
+
         
       });
       
@@ -270,29 +297,39 @@ function ItemList() {
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
+    supplierName:''
   })
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
 
+    const unitId = getUnitIdFromDescription(formData.unitDescription);
+    const categoryId = getCategoryIdFromDescription(formData.categoryDescription);
+    const supplierId = getSupplierIdFromName(formData.supplierName);
+
+    const submitItemData = {
+      code: formData.code,
+      itemName: formData.itemName,
+      categoryId: categoryId,
+      unitId: unitId,
+      supplierId: supplierId
+
+    }
+    console.log(submitItemData);
+
     const validationErrors = validateItem(formData);
     setErrorMessage(validationErrors);
+    //console.log(formData);
+    console.log(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
       showErrorToast('Check the inputs again');
       return
     }
+    
 
     try {
-      const unitId = getUnitIdFromDescription(formData.unitDescription);
-      const categoryId = getCategoryIdFromDescription(formData.categoryDescription);
-    
-      const submitItemData = {
-        code: formData.code,
-        itemName: formData.itemName,
-        categoryId: categoryId,
-        unitId: unitId,
-      }
+      
 
       const response = await itemServices.updateItem(currentItem, submitItemData)
       fetchItems();
@@ -336,6 +373,11 @@ function ItemList() {
   const getCategoryIdFromDescription = (description) => {
     const category = categories.find((category) => category.Description === description);
     return category ? category.ID : null;
+  };
+
+  const getSupplierIdFromName = (name) => {
+    const supplier = suppliers.find((supplier) => supplier.Fullname === name);
+    return supplier ? supplier.ID : null;
   };
 
 
@@ -402,6 +444,7 @@ function ItemList() {
                 <th>Name</th>
                 <th>Category</th>
                 <th>Unit</th>
+                <th>Supplier</th>
                 
                 <th className='action-column'></th>
               </tr>
@@ -419,6 +462,7 @@ function ItemList() {
                     <td>{item.Name }</td>
                     <td>{item.CategoryName }</td>
                     <td>{item.UnitName }</td>
+                    <td>{item.SupplierName}</td>
 
                     <td>
                       <button onClick={(event) => { handleClick(event); setCurrentItem(item.ID); }}>
@@ -531,6 +575,34 @@ function ItemList() {
             value={formData.unitDescription}
           />
           <label className='error-text'>{errorMessage.unitDescription}</label>
+
+          <h3>Supplier Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={supplierOptions}
+            //defaultValue={selectedUnit}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Supplier"
+                name='supplierName' 
+                value={formData.supplierName}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              />
+            )}
+            onChange={(_, newValue) => {
+              setFormData((prevData) => ({ ...prevData, supplierName: newValue?.label || '' }));
+            }}
+            value={formData.supplierName}
+          />
+          <label className='error-text'>{errorMessage.supplierName}</label>
+
+
+
+
 
           <div className='button-container'>
           <button type='submit' class='submit-button' onClick={handleUpdateSubmit}>Update</button>
