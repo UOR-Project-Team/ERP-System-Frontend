@@ -18,6 +18,7 @@ const validateUser = (formData) => {
     if (!formData.username ) {
       errors.username = 'Username is required *';
   }
+
   
     if (!formData.email) {
         errors.email = 'Email is required *';
