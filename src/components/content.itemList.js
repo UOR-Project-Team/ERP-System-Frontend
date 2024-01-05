@@ -60,7 +60,7 @@ function ItemList() {
     itemName: '',
     categoryDescription:'',
     unitDescription:'',
-    SupplierName:''
+    supplierName:''
   });
 
 
@@ -178,7 +178,7 @@ function ItemList() {
         fetchSupplierOptions();
         
         console.log(getCategoryIdFromDescription(formData.categoryDescription));
-        //console.log(getSupplierIdFromName(formData.SupplierName))
+        //console.log(getSupplierIdFromName(formData.supplierName))
         
         
       };
@@ -263,7 +263,7 @@ function ItemList() {
         itemName: foundItem.Name || '',
         categoryDescription: foundItem.CategoryName || '',
         unitDescription: foundItem.UnitName || '',
-        SupplierName: foundItem.SupplierName||''
+        supplierName: foundItem.SupplierName||''
 
         
       });
@@ -297,7 +297,7 @@ function ItemList() {
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
-    SupplierName:''
+    supplierName:''
   })
 
   const handleUpdateSubmit = async (e) => {
@@ -305,7 +305,7 @@ function ItemList() {
 
     const unitId = getUnitIdFromDescription(formData.unitDescription);
     const categoryId = getCategoryIdFromDescription(formData.categoryDescription);
-    const supplierId = getSupplierIdFromName(formData.SupplierName);
+    const supplierId = getSupplierIdFromName(formData.supplierName);
 
     const submitItemData = {
       code: formData.code,
@@ -320,6 +320,7 @@ function ItemList() {
     const validationErrors = validateItem(formData);
     setErrorMessage(validationErrors);
     //console.log(formData);
+    console.log(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
       showErrorToast('Check the inputs again');
@@ -587,19 +588,19 @@ function ItemList() {
               <TextField
                 {...params}
                 label="Supplier"
-                name='SupplierName' 
-                value={formData.SupplierName}
+                name='supplierName' 
+                value={formData.supplierName}
                 onChange={(e) => {
                   handleInputChange(e);
                 }}
               />
             )}
             onChange={(_, newValue) => {
-              setFormData((prevData) => ({ ...prevData, SupplierName: newValue?.label || '' }));
+              setFormData((prevData) => ({ ...prevData, supplierName: newValue?.label || '' }));
             }}
-            value={formData.SupplierName}
+            value={formData.supplierName}
           />
-          <label className='error-text'>{errorMessage.SupplierName}</label>
+          <label className='error-text'>{errorMessage.supplierName}</label>
 
 
 
