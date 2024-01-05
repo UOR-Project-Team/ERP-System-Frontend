@@ -540,9 +540,9 @@ function ItemList() {
                 label="Category"
                 name='categoryDescription' 
                 value={formData.categoryDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+                // onChange={(e) => {
+                //   handleInputChange(e);
+                // }}
               />
             )}
             onChange={(_, newValue) => {
@@ -564,9 +564,9 @@ function ItemList() {
                 label="Unit"
                 name='unitDescription' 
                 value={formData.unitDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+                // onChange={(e) => {
+                //   handleInputChange(e);
+                // }}
               />
             )}
             onChange={(_, newValue) => {
@@ -588,9 +588,9 @@ function ItemList() {
                 label="Supplier"
                 name='supplierName' 
                 value={formData.supplierName}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+                // onChange={(e) => {
+                //   handleInputChange(e);
+                // }}
               />
             )}
             onChange={(_, newValue) => {
