@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 function CustomerMaster() {
 
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     title: '',
     fullname: '',
