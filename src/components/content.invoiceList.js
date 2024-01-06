@@ -27,35 +27,6 @@ import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import invoiceServices from '../services/services.invoice';
 
-import React, { useState, useEffect} from 'react';
-
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  DialogContentText,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Modal from 'react-modal';
-import "jspdf-autotable";
-import jsPDF from 'jspdf';
-import Papa from 'papaparse';
-import { ToastContainer } from 'react-toastify';
-import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
-import AddLogo from './../assets/icons/add.png';
-import PdfLogo from './../assets/icons/pdf.png';
-import CsvLogo from './../assets/icons/csv.png';
-import FilterLogo from './../assets/icons/filter.png';
-import SearchLogo from './../assets/icons/search.png';
-import EditLogo from './../assets/icons/edit.png';
-import ActionLogo from './../assets/icons/action.png';
-import DeleteLogo from './../assets/icons/delete.png';
-import invoiceServices from '../services/services.invoice';
-
 
 function InvoiceList() {
 
@@ -160,10 +131,10 @@ function InvoiceList() {
         doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
     };
 
-    const headers = [["ID", "Code","Item Name","Category","Unit"]];
+    const headers = [["ID", "No","Date/Time","Total Amount","User","Customer"]];
 
    
-    const data = Invoices.map(elt=> [elt.ID, elt.Code, elt.Name , elt.CategoryName, elt.UnitName,]);
+    const data = Invoices.map(elt=> [elt.ID, elt.No, elt.Date_Time , elt.Total_Amount, elt.UserName,elt.CustomerName]);
 
     
     let content = {
@@ -188,14 +159,15 @@ function InvoiceList() {
 
 
     const exportCSV = () => {
-      const headers = ["ID", "Code","Item Name","Category","Unit"];
+      const headers = ["ID", "No","Date/Time","Total Amount","User","Customer"];
     
       const data = Invoices.map(elt => [
         elt.ID,
-        elt.Code,
-        elt.Name ,
-        elt.CategoryName, 
-        elt.UnitName,
+        elt.No,
+        elt.Date_Time ,
+        elt.Total_Amount, 
+        elt.UserName,
+        elt.CustomerName
       ]);
     
       const csvData = [headers, ...data];
@@ -275,11 +247,11 @@ function InvoiceList() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Unit</th>
-                <th>Supplier</th>
+                <th>No.</th>
+                <th>Date/Time</th>
+                <th>Total Amount</th>
+                <th>User</th>
+                <th>Customer</th>
                 
                 <th className='action-column'></th>
               </tr>
@@ -313,6 +285,41 @@ function InvoiceList() {
         </div>
       </div>
       </div>
+      <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
+                <MenuItem>
+                  <button onClick={() => {handleRequest('edit');}}>
+                    <img src={EditLogo} alt='Edit Logo' />
+                    <span>View Invoice</span>
+                  </button>               
+                        
+                </MenuItem>
+                <MenuItem onClick={() => {setDialogTitle('Delete Item'); setDialogDescription('Do you want to delete this Item record?'); setDialogOpen(true); setAnchorEl(null);}}>
+                  <button>
+                    <img src={DeleteLogo} alt="Delete Logo"/>
+                    <span>Delete Invoice</span>
+                  </button>
+                </MenuItem>
+      </Menu>
+
+
+      <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+              <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+              <DialogContent>
+              <DialogContentText id="alert-dialog-description" style={{width: '250px'}}>
+              {dialogDescription}
+              </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+              <Button color="primary" onClick={handleDialogAction}>
+              Yes
+              </Button>
+              <Button color="primary" autoFocus onClick={() => setDialogOpen(false)}>
+              No
+              </Button>
+              </DialogActions>
+      </Dialog>
+      
+
     </div>
   );
 }
