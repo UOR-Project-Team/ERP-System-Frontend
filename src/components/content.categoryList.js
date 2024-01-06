@@ -7,6 +7,7 @@ import {
   Button,
   DialogContentText,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Modal from 'react-modal';
@@ -16,38 +17,35 @@ import Papa from 'papaparse';
 import { ToastContainer } from 'react-toastify';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
+import AddLogo from './../assets/icons/add.png';
 import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
 import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
+import UnitLogo from './../assets/icons/units.png';
 import categoryServices from '../services/services.category';
 import TextField from '@mui/material/TextField';
 import validateCategory from '../services/validate.category';
-import { Link } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function CategoryList() {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [removeClick, setDialogOpen] = useState(false);
-    const [dialogTitle, setDialogTitle] = useState('');
-    const [dialogDescription, setDialogDescription] = useState('');
-    const [categories, setCategories] = useState([]);
-    const [searchInput, setSearchInput] = useState('');
-    const [modelContent, setModelContent] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentCategory, setCurrentCategory] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [removeClick, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [dialogDescription, setDialogDescription] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [modelContent, setModelContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState(0);
 
-   
+  const navigateTo = useNavigate();
 
-
-
-const [fields ] = useState({
+  const [fields ] = useState({
     ID: true,
     Description: true
   
   });
-
-  
 
   const [formData , setFormData] = useState({
     ID:'',
@@ -62,8 +60,6 @@ const [fields ] = useState({
   useEffect(() => {
     fetchCategories();
   }, []);
-
- 
 
   const fetchCategories = async () => {
     try {
@@ -84,28 +80,21 @@ const [fields ] = useState({
     });
 
     setCategories(result);
-};
+  };
 
-const handleSearchInputChange = async (e) => {
-  e.preventDefault();
-
-  try {
-
-    if (searchInput === '') {
-      
-      await fetchCategories();
-
-    } else {
-      const res = await categoryServices.getAllCategories();
-      if(res) {
-        filterContent(res , searchInput);
+  const handleSearchInputChange = async () => {
+    try {
+      if (searchInput === '') {
+        await fetchCategories();
+      } else {
+        const res = await categoryServices.getAllCategories();
+        if (res) {
+          filterContent(res, searchInput);
+        }
       }
-       
-     
+    } catch (error) {
+      console.error('Error handling search input', error.message);
     }
-  }catch(error){
-    console.error('Error handling search input',error.message)
-  }
   };
 
   const handleDialogAction = async () => {
@@ -199,8 +188,6 @@ const handleSearchInputChange = async (e) => {
         });
       };
 
-
-
       const exportPDF = () => {
         const unit = "pt";
         const size = "A4";
@@ -270,16 +257,31 @@ const handleSearchInputChange = async (e) => {
 
       return(
         <div>
-            <ToastContainer />
-            <div className='master-content'>
-                <div className='search-container'>
-                <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
-                <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
-
+          <div className='list-container'>
+          <ToastContainer />
+            <div className='list-content-top'>
+                <div className='button-container'>
+                  <button onClick={() => {navigateTo(`/home/category-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Category</span></button>
                 </div>
-
+                <div className='search-container'>
+                  <form>
+                    <input
+                      type="text"
+                      placeholder='Explore the possibilities...'
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleSearchInputChange(e);
+                        }
+                      }}
+                    />
+                    <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+                  </form>
+                </div>
             </div>
-            <div className='master-content'>
+            <div className='list-content'>
                 <div className='features-panel'>
                 <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
                 <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
@@ -316,26 +318,27 @@ const handleSearchInputChange = async (e) => {
                      </table>
                  </div>
                </div>
-            <div className='list-addbutton-container'>
-            <Link to = "/home/category-master">
-                <button className='list-addbutton'>Add Category</button>
-
-            </Link>
-            </div>
+          </div>
 
             <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
-                <MenuItem>
-                            <button onClick={() => {fetchCategory(); handleRequest('edit');}}>
-                            <img src={EditLogo} alt='Edit Logo' />
-                            <span>Edit Category</span>
-                            </button>         
-                </MenuItem>
-                <MenuItem onClick={() => {setDialogTitle('Delete Category'); setDialogDescription('Do you want to delete this category record?'); setDialogOpen(true); setAnchorEl(null);}}>
+              <MenuItem>
+                <button onClick={() => {fetchCategory(); handleRequest('edit');}}>
+                  <img src={UnitLogo} alt='Unit Logo' />
+                  <span>View Units</span>
+                </button>         
+              </MenuItem>
+              <MenuItem>
+                <button onClick={() => {fetchCategory(); handleRequest('edit');}}>
+                  <img src={EditLogo} alt='Edit Logo' />
+                  <span>Edit Category</span>
+                </button>         
+              </MenuItem>
+              <MenuItem onClick={() => {setDialogTitle('Delete Category'); setDialogDescription('Do you want to delete this category record?'); setDialogOpen(true); setAnchorEl(null);}}>
                 <button>
-                <img src={DeleteLogo} alt="Delete Logo"/>
-                <span>Delete Category</span>
-               </button>
-                </MenuItem>
+                  <img src={DeleteLogo} alt="Delete Logo"/>
+                  <span>Delete Category</span>
+                </button>
+              </MenuItem>
             </Menu>
             <Modal
                  isOpen={isModalOpen}

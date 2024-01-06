@@ -3,7 +3,8 @@ const validateItem = (formData) => {
         code:'',
         itemName:'',
         categoryDescription:'',
-        unitDescription:''
+        unitDescription:'',
+        supplierName:''
     };
   
     if (!formData.code) {
@@ -20,6 +21,10 @@ const validateItem = (formData) => {
 
     if (!formData.unitDescription) {
         errors.unitDescription = 'Unit is required *';
+    }
+
+    if (!formData.supplierName) {
+        errors.supplierName = 'Supplier is required *';
     }
   
 

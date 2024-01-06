@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
@@ -7,46 +6,77 @@ import { ToastContainer } from 'react-toastify';
 import itemServices from '../services/services.item';
 import validateItem from '../services/validate.item';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import categoryServices from '../services/services.category';
+import unitServices from '../services/services.unit';
+import supplierServices from '../services/services.supplier';
 
 function ItemMaster() {
 
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [units, setUnit] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const[values,setValues]=useState({
     code:'',
     itemName:'',
     categoryDescription:'',
-    unitDescription:''
+    unitDescription:'',
+    supplierName:'' 
+    
   })
   const [errorMessage, setErrorMessage] = useState({
     code: '',
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
+    supplierName:''
   })
 
   // Fetch categories from the server
+
+  const fetchCategoryOptions = async () => {
+    try {
+      const Categories = await categoryServices.getAllCategories();
+      // Set categoryOptions state with fetched data
+      setCategories(Categories);
+    } catch (error) {
+      console.error('Error fetching categories:', error.message);
+    }
+  };
+
+
+  const fetchUnitOptions = async () => {
+    try {
+      const Units = await unitServices.getAllUnits();
+      // Set unitOptions state with fetched data
+      setUnit(Units);
+    } catch (error) {
+      console.error('Error fetching units:', error.message);
+    }
+  };
+
+
+  // Fetch suppliers from the server
+
+  const fetchSupplierOptions = async () => {
+    try {
+      const Suppliers = await supplierServices.getAllSuppliers();
+      // Set supplierOptions state with fetched data
+      setSuppliers(Suppliers);
+    } catch (error) {
+      console.error('Error fetching suppliers:', error.message);
+    }
+  };
+
+  
   useEffect(() => {
-    axios.get('http://localhost:8081/category/') 
-      .then(response => {
-        setCategories(response.data.categories);
-      })
-      .catch(error => {
-        console.error('Error fetching category data:', error);
-      });
+
+    fetchCategoryOptions();
+    fetchUnitOptions();
+    fetchSupplierOptions();
+ 
   }, []);
 
-  // Fetch units from the server
-  useEffect(() => {
-    axios.get('http://localhost:8081/unit') 
-      .then(response => {
-        setUnit(response.data.units);
-      })
-      .catch(error => {
-        console.error('Error fetching units data:', error);
-      });
-  }, []);
 
   const categoryOptions = categories.map(category => ({
     value: category.ID,
@@ -58,6 +88,15 @@ function ItemMaster() {
     label: unit.Description,
   }));
 
+  const supplierOptions = suppliers.map(supplier => ({
+    value: supplier.ID,
+    label: supplier.Fullname,
+  }));
+
+  console.log(suppliers);
+
+
+  
 
   //handle input change
   const handleInputChange = (event) => {
@@ -83,17 +122,26 @@ function ItemMaster() {
     return category ? category.ID : null;
   };
 
+  const getSupplierIdFromName = (name) => {
+    const supplier = suppliers.find((supplier) => supplier.Fullname === name);
+    return supplier ? supplier.ID : null;
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const unitId = getUnitIdFromDescription(values.unitDescription);
     const categoryId = getCategoryIdFromDescription(values.categoryDescription);
+    const supplierId = getSupplierIdFromName(values.supplierName)
     
     const submitItemData = {
       code: values.code,
       itemName: values.itemName,
       categoryId: categoryId,
       unitId: unitId,
+      supplierId: supplierId
     }
     const validationErrors = validateItem(values);
     setErrorMessage(validationErrors);
@@ -104,22 +152,20 @@ function ItemMaster() {
     }
     
     try {
-        const response = await itemServices.createItem(submitItemData)
-        showSuccessToast('Item successfully added');
-        console.log('item created:', response);
-        handleReset();
-      }
+      const response = await itemServices.createItem(submitItemData)
+      showSuccessToast('Item successfully added');
+      console.log('item created:', response);
+      handleReset();
+      setTimeout(() => {
+        navigate('/home/item-list');
+      }, 2000);
+    }
 
-      catch (error) {
-        //const {message} = error.response.data;
-        showErrorToast('Error Occured');
+    catch (error) {
+      showErrorToast('Error Occured');
+      console.error('Error:');
+    }
   
-        //console.error('Error:', message);
-        console.error('Error:');
-  
-      }
-      
-      
   };
 
   //Handle Reset
@@ -128,7 +174,8 @@ function ItemMaster() {
       code:'',
       itemName:'',
       categoryDescription:'',
-      unitDescription:''
+      unitDescription:'',
+      supplierName:''
     }));
     
     setTimeout(()=>{
@@ -140,6 +187,7 @@ function ItemMaster() {
       itemName: '',
       categoryDescription: '',
       unitDescription: '',
+      supplierName:''
     });
   };
 
@@ -147,8 +195,8 @@ function ItemMaster() {
   return (
     <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
       <ToastContainer />
-      <div className='master-content'  >
-        <form onSubmit={handleSubmit} className='form-container'  >
+      <div className='master-content'>
+        <form onSubmit={handleSubmit} className='form-container' >
 
           <h3>Item Details</h3>
           <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
@@ -167,9 +215,7 @@ function ItemMaster() {
                 label="Category"
                 name='categoryDescription' 
                 value={values.categoryDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -190,9 +236,7 @@ function ItemMaster() {
                 label="Unit"
                 name='unitDescription' 
                 value={values.unitDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -201,6 +245,30 @@ function ItemMaster() {
             value={values.unitDescription}
           />
           <label className='error-text'>{errorMessage.unitDescription}</label>
+
+          <h3>Supplier Details</h3>
+          <Autocomplete
+            disablePortal
+            className='text-line-type2'
+            options={supplierOptions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Supplier Name"
+                name='supplierName' 
+                value={values.supplierName}
+
+              />
+            )}
+            onChange={(_, newValue) => {
+              setValues((prevData) => ({ ...prevData, supplierName: newValue?.label || '' }));
+            }}
+            value={values.supplierName}
+          />
+          
+          <label className='error-text'>{errorMessage.supplierName}</label>
+          
+
 
           <div className='button-container'>
             <button type="submit" class='submit-button'>Save</button>
