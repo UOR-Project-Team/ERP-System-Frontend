@@ -44,9 +44,7 @@ function ItemList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(0);
   const [categories, setCategories] = useState([]);
-  //const [selectedCategory, setSelectedCategory] = useState({});//to set default value in category dropdown
   const [units, setUnits] = useState([]);
-  //const [selectedUnit, setSelectedUnit] = useState({});//to set default value in unit dropdown
   const [suppliers, setSuppliers] = useState([]);
 
   const navigateTo = useNavigate();
@@ -72,7 +70,6 @@ function ItemList() {
     try{
       const itemData= await itemServices.getAllItems();
       console.log(itemData)
-      //setItems(itemData);
       setItems([...itemData]);
     }
     catch(error)
@@ -179,10 +176,6 @@ function ItemList() {
         fetchUnitOptions();
         fetchSupplierOptions();
         
-        console.log(getCategoryIdFromDescription(formData.categoryDescription));
-        //console.log(getSupplierIdFromName(formData.supplierName))
-        
-        
       };
 
     const exportPDF = () => {
@@ -269,15 +262,7 @@ function ItemList() {
 
         
       });
-      
-      //for setting the default selected category and unit for update form Autocomplete dropdown menu
-      //const selectedCategoryOption = categoryOptions.find(option => option.label === foundItem.CategoryName) || { value: '', label: '' };
-      //const selectedUnitOption = unitOptions.find(option => option.label === foundItem.UnitName ) || { value: '', label: '' };
-      //console.log('Selected Category: ',selectedCategoryOption);
-
-      //setSelectedCategory(selectedCategoryOption);
-      //setSelectedUnit(selectedUnitOption);
-      
+           
 
     } else {
       console.log("Item not found");
@@ -530,19 +515,13 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={categoryOptions}
-            //defaultValue={{value: getCategoryIdFromDescription(formData.categoryDescription), label: formData.categoryDescription}}
-            //defaultValue={selectedCategory}
-            
-            //defaultValue={itemInfo}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Category"
                 name='categoryDescription' 
                 value={formData.categoryDescription}
-                // onChange={(e) => {
-                //   handleInputChange(e);
-                // }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -557,16 +536,12 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={unitOptions}
-            //defaultValue={selectedUnit}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Unit"
                 name='unitDescription' 
                 value={formData.unitDescription}
-                // onChange={(e) => {
-                //   handleInputChange(e);
-                // }}
               />
             )}
             onChange={(_, newValue) => {
@@ -581,16 +556,13 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={supplierOptions}
-            //defaultValue={selectedUnit}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Supplier"
                 name='supplierName' 
                 value={formData.supplierName}
-                // onChange={(e) => {
-                //   handleInputChange(e);
-                // }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -599,9 +571,6 @@ function ItemList() {
             value={formData.supplierName}
           />
           <label className='error-text'>{errorMessage.supplierName}</label>
-
-
-
 
 
           <div className='button-container'>
