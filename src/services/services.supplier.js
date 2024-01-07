@@ -48,6 +48,23 @@ const supplierServices = {
     }
   },
 
+  activateSupplier: async (supplierId) => {
+    try {
+      const response = await axios.put(`${apiUrl}/activate/${supplierId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deactivateSupplier: async (supplierId) => {
+    try {
+      const response = await axios.put(`${apiUrl}/deactivate/${supplierId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   deleteSupplier: async (supplierId) => {
     try {

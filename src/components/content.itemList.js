@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -7,6 +7,7 @@ import {
   Button,
   DialogContentText,
 } from '@mui/material';
+import { Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -24,13 +25,15 @@ import CsvLogo from './../assets/icons/csv.png';
 import FilterLogo from './../assets/icons/filter.png';
 import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
-import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import itemServices from '../services/services.item';
 import validateItem from '../services/validate.item';
 import categoryServices from '../services/services.category';
 import unitServices from '../services/services.unit';
 import supplierServices from '../services/services.supplier';
+import AllItemList from './lists.allItems';
+import UnitItemList from './lists.itemsByUnitID';
+import CategoryItemList from './lists.itemsByCategoryID';
 
 function ItemList() {
 
@@ -46,16 +49,22 @@ function ItemList() {
   const [categories, setCategories] = useState([]);
   const [units, setUnits] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [fetchFlag, setFetchFlag] = useState({
+    flag: '',
+    id: 0
+  });
 
   const navigateTo = useNavigate();
 
-  useEffect(()=>{
-    fetchItems();
-  }, []);
-
-
-
   const [formData, setFormData] = useState({
+    code: '',
+    itemName: '',
+    categoryDescription: '',
+    unitDescription: '',
+    supplierName: ''
+  });
+
+  const [formResetData, setFormResetData] = useState({
     code:'',
     itemName: '',
     categoryDescription:'',
@@ -63,13 +72,48 @@ function ItemList() {
     supplierName:''
   });
 
-
+  const [errorMessage, setErrorMessage] = useState({
+    code: '',
+    itemName: '',
+    categoryDescription: '',
+    unitDescription: '',
+    supplierName:''
+  })
   
   //fetch all items function
-  const fetchItems = async ()=>{
+  const fetchItems = async (flag, id)=>{
+    let itemData = [];
+    setFetchFlag({
+      flag: flag,
+      id: id
+    })
     try{
+      if (flag === 'unit') {
+        itemData= await itemServices.getItemsByUnitFilter(id);
+      } else if(flag === 'category') {
+        itemData= await itemServices.getItemsByCategoryFilter(id);
+      } else {
+        itemData= await itemServices.getAllItems();
+      }
+      setItems([...itemData]);
+    }
+    catch(error)
+    {
+      console.error('Error fetching items',error.message);
+    }
+  }
+
+  const fetchUpdatedItems = async ()=>{
+    let itemData = [];
+    try{
+      if (fetchFlag.flag === 'unit') {
+        itemData= await itemServices.getItemsByUnitFilter(fetchFlag.id);
+      } else if(fetchFlag.flag === 'category') {
+        itemData= await itemServices.getItemsByCategoryFilter(fetchFlag.id);
+      } else {
+        itemData= await itemServices.getAllItems();
+      }
       const itemData= await itemServices.getAllItems();
-      console.log(itemData)
       setItems([...itemData]);
     }
     catch(error)
@@ -89,7 +133,6 @@ function ItemList() {
     }
   };
 
-
   //fetch units for the update form's unit options
   const fetchUnitOptions = async () => {
     try {
@@ -101,7 +144,6 @@ function ItemList() {
     }
   };
 
-
   //fetch units for the update form's unit options
   const fetchSupplierOptions = async () => {
     try {
@@ -112,7 +154,6 @@ function ItemList() {
       console.error('Error fetching suppliers:', error.message);
     }
   };
-
 
   // Memoize categoryOptions, unitOptions, supplierOptions
   const categoryOptions = useMemo(() => (
@@ -136,8 +177,6 @@ function ItemList() {
     }))
   ), [suppliers]);
 
-
-
   const handleDialogAction = async () => {
     if(dialogTitle === 'PDF Exporter') {
       exportPDF();
@@ -151,56 +190,57 @@ function ItemList() {
         setDialogOpen(false);
         showSuccessToast('Item successfully deleted');
 
-        } catch (error) {
-            console.error('Error deleting item:', error.message);
-            showErrorToast('Error deleting item')
-          }
-        }
-      };
+      } catch (error) {
+        console.error('Error deleting item:', error.message);
+        showErrorToast('Error deleting item')
+      }
+    }
+  };
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-      };
+  const handleActionClick = (event, item) => {
+    handleClick(event); 
+    setCurrentItem(item.ID);
+  };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-      };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleRequest = (type) => {
-        setAnchorEl(null);
-        setModelContent(type);
-        setIsModalOpen(true);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-        fetchItem(currentItem);
-        fetchCategoryOptions();
-        fetchUnitOptions();
-        fetchSupplierOptions();
-        
-      };
+  const handleRequest = (type) => {
+    setAnchorEl(null);
+    setModelContent(type);
+    setIsModalOpen(true);
+    fetchItem(currentItem);
+    fetchCategoryOptions();
+    fetchUnitOptions();
+    fetchSupplierOptions();
+    console.log(getCategoryIdFromDescription(formData.categoryDescription));
+  };
 
-    const exportPDF = () => {
-        const unit = "pt";
-        const size = "A4";
-        const orientation = "landscape";
-        const doc = new jsPDF(orientation, unit, size);
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4";
+    const orientation = "landscape";
+    const doc = new jsPDF(orientation, unit, size);
 
-      const header = function(data) {
-            doc.setFontSize(8);
-            doc.setTextColor(40);
-            doc.text("Innova ERP Solution - Item Report", data.settings.margin.left, 30);
-      };
+    const header = function(data) {
+      doc.setFontSize(8);
+      doc.setTextColor(40);
+      doc.text("Innova ERP Solution - Item Report", data.settings.margin.left, 30);
+    };
 
-      const footer = function(data) {
-        const pageCount = doc.internal.getNumberOfPages();
-        doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
+    const footer = function(data) {
+      const pageCount = doc.internal.getNumberOfPages();
+      doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
     };
 
     const headers = [["ID", "Code","Item Name","Category","Unit"]];
-
-   
     const data = Item.map(elt=> [elt.ID, elt.Code, elt.Name , elt.CategoryName, elt.UnitName,]);
 
-    
     let content = {
       startY: 50,
       head: headers,
@@ -208,49 +248,45 @@ function ItemList() {
     };
 
     doc.autoTable({
-        ...content,
-        theme: 'striped',
-        headerStyles: { fillColor: [38, 2, 97], textColor: [255, 255, 255] },
-        addPageContent: function(data) {
-            header(data);
-            footer(data);
-        }
-      });
-  
-      setDialogOpen(false);
-      doc.save("ERP-item-report.pdf");
-    };
+      ...content,
+      theme: 'striped',
+      headerStyles: { fillColor: [38, 2, 97], textColor: [255, 255, 255] },
+      addPageContent: function(data) {
+          header(data);
+          footer(data);
+      }
+    });
+    setDialogOpen(false);
+    doc.save("ERP-item-report.pdf");
+  };
   
   const exportCSV = () => {
-      const headers = ["ID", "Code","Item Name","Category","Unit"];
-    
-      const data = Item.map(elt => [
-        elt.ID,
-        elt.Code,
-        elt.Name ,
-        elt.CategoryName, 
-        elt.UnitName,
-      ]);
-    
-      const csvData = [headers, ...data];
-    
-      const csv = Papa.unparse(csvData);
-    
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.href = url;
-      link.setAttribute('download', 'ERP-Item-report.csv');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setDialogOpen(false);
-    };
+    const headers = ["ID", "Code","Item Name","Category","Unit"];
+  
+    const data = Item.map(elt => [
+      elt.ID,
+      elt.Code,
+      elt.Name ,
+      elt.CategoryName, 
+      elt.UnitName,
+    ]);
+  
+    const csvData = [headers, ...data];
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.href = url;
+    link.setAttribute('download', 'ERP-Item-report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setDialogOpen(false);
+  };
 
   const fetchItem = () => {
     const foundItem = Item.find((item) => item.ID === currentItem);
-    console.log(foundItem);
 
     if (foundItem) {
       setFormData({
@@ -259,16 +295,20 @@ function ItemList() {
         categoryDescription: foundItem.CategoryName || '',
         unitDescription: foundItem.UnitName || '',
         supplierName: foundItem.SupplierName||''
-
-        
       });
-           
-
+      setFormResetData({
+        code: foundItem.Code || '',
+        itemName: foundItem.Name || '',
+        categoryDescription: foundItem.CategoryName || '',
+        unitDescription: foundItem.UnitName || '',
+        supplierName: foundItem.SupplierName||''
+      });
     } else {
       console.log("Item not found");
       showErrorToast('Item not found');
     }
   }
+
   //handle input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -277,15 +317,6 @@ function ItemList() {
       [name]: value,
     }));
   };
-
-  //For validation error messages
-  const [errorMessage, setErrorMessage] = useState({
-    code: '',
-    itemName: '',
-    categoryDescription: '',
-    unitDescription: '',
-    supplierName:''
-  })
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
@@ -306,26 +337,20 @@ function ItemList() {
 
     const validationErrors = validateItem(formData);
     setErrorMessage(validationErrors);
-    //console.log(formData);
     console.log(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
       showErrorToast('Check the inputs again');
       return
     }
-    
 
     try {
-      
-
       const response = await itemServices.updateItem(currentItem, submitItemData)
-      fetchItems();
+      fetchUpdatedItems();
       setIsModalOpen(false);
       showSuccessToast('Item successfully updated');
-      
       console.log('Item updated:', response);
       handleReset();
-
     } catch(error) {
       console.error('Error Updating item:', error.message);
       showErrorToast('Error updating item')
@@ -333,21 +358,20 @@ function ItemList() {
 
   };
 
-
-
   const handleReset = () => {
     setFormData((prevValues) => ({
-      code:'',
-      itemName:'',
-      categoryDescription:'',
-      unitDescription:''
+      code: formResetData.code,
+      itemName: formResetData.itemName,
+      categoryDescription: formResetData.categoryDescription,
+      unitDescription: formResetData.unitDescription,
+      supplierName: formResetData.supplierName,
     }));
-
     setErrorMessage({
       code: '',
       itemName: '',
       categoryDescription: '',
       unitDescription: '',
+      supplierName: ''
     });
   };
 
@@ -367,44 +391,29 @@ function ItemList() {
     return supplier ? supplier.ID : null;
   };
 
-
-
-
   const filterContent = (items, searchTerm) => {
     const result = items.filter((item) => {
       const values = Object.values(item).join(' ').toLowerCase();
       const regex = new RegExp(`\\b${searchTerm.toLowerCase()}`);
-  
       return regex.test(values);
     });
-
     setItems(result);
   };
 
-
-  const handleSearchInputChange = async (e) => {
-    e.preventDefault();
-  
+  const handleSearchInputChange = async () => {
     try {
-  
       if (searchInput === '') {
-        
-        await fetchItems();
-  
+        await fetchUpdatedItems();
       } else {
         const res = await itemServices.getAllItems();
         if(res) {
           filterContent(res , searchInput);
         }
-         
-       
       }
     }catch(error){
       console.error('Error handling search input',error.message)
     }
-    };
-  
-
+  };
 
   return (
     <div>
@@ -415,62 +424,48 @@ function ItemList() {
           <button onClick={() => {navigateTo(`/home/item-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Item</span></button>
         </div>
         <div className='search-container'>
-        <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
-        <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
-        </div>
+            <form>
+              <input
+                type="text"
+                placeholder='Explore the possibilities...'
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearchInputChange(e);
+                  }
+                }}
+              />
+              <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+            </form>
+          </div>
       </div>
       <div className='list-content'>
-        <div className='features-panel'>
-          <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
-          <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
-          <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
+        <div className='features-panel-item'>
+          <div className='text-container'>
+          {fetchFlag.flag === 'unit' && (
+            <label>Items filtered by UnitId: {fetchFlag.id}</label>
+          )}
+          {fetchFlag.flag === 'category' && (
+            <label>Items filtered by categoryId: {fetchFlag.id}</label>
+          )}
+          </div>
+          <div className='button-container'>
+            <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
+            <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
+            <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
+          </div>
         </div>
         <div className='table-container'>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Unit</th>
-                <th>Supplier</th>
-                
-                <th className='action-column'></th>
-              </tr>
-            </thead>
-            <tbody>
-              {Item.length === 0 ? (
-                <tr>
-                  <td colSpan="11" style={{padding: '12px 4px'}}>No data to show</td>
-                </tr>
-              ) : (
-                Item.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.ID}</td>
-                    <td>{item.Code}</td>
-                    <td>{item.Name }</td>
-                    <td>{item.CategoryName }</td>
-                    <td>{item.UnitName }</td>
-                    <td>{item.SupplierName}</td>
-
-                    <td>
-                      <button onClick={(event) => { handleClick(event); setCurrentItem(item.ID); }}>
-                        <img src={ActionLogo} alt='Action Logo' />
-                      </button>
-                    </td>
-
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          <Routes>
+            <Route path="/" element={<AllItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
+            <Route path="/unit/:id" element={<UnitItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
+            <Route path="/category/:id" element={<CategoryItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
+          </Routes>   
         </div>
       </div>
       </div>
-      
-
-
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
                 <MenuItem>
@@ -605,9 +600,7 @@ function ItemList() {
               </Button>
               </DialogActions>
       </Dialog>
-                      
-
-
+                  
     </div>
   )
 }

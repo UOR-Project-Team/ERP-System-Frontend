@@ -25,9 +25,36 @@ const itemServices ={
         }
       },
 
+      getItemsByUnitFilter: async (unitId) => {
+        try {
+          const response = await axios.get(`${apiUrl}/unit/${unitId}`);
+          return response.data;
+        } catch (error) {
+          throw new Error('Error fetching items');
+        }
+      },
+
+      getItemsByCategoryFilter: async (categoryId) => {
+        try {
+          const response = await axios.get(`${apiUrl}/category/${categoryId}`);
+          return response.data;
+        } catch (error) {
+          throw new Error('Error fetching items');
+        }
+      },
+
       getItemById: async (itemId) => {
         try {
-          const response = await axios.get(`${apiUrl}/${itemId}`);
+          let response = []
+          const parts = itemId.split('-');
+          const beforeHyphen = parts[0];
+          const afterHyphen = parts[1];
+
+          if(beforeHyphen === 'unit') {
+            response = await axios.get(`${apiUrl}/unit/${afterHyphen}`);
+          } else if (beforeHyphen === 'category') {
+            response = await axios.get(`${apiUrl}/category/${afterHyphen}`);
+          }
           return response.data;
         } catch (error) {
           throw new Error('Error fetching item by ID');

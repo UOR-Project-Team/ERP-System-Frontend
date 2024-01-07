@@ -700,6 +700,11 @@ body, html {
     justify-content: flex-end;
 }
 
+.body-container .list-content-top .search-container form {
+    display: flex;
+    align-items: center;
+}
+
 .body-container .list-content-top .search-container input {
     height: 32px;
     width: 300px;
@@ -738,25 +743,42 @@ body, html {
     margin-bottom: 10px;
 }
 
-.body-container .list-content .features-panel button {
+.body-container .list-content .features-panel-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+  
+.body-container .list-content .features-panel-item .text-container {
+    flex: 1;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+}
+  
+.body-container .list-content .features-panel-item .button-container {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.body-container .list-content .features-panel button, .body-container .list-content .features-panel-item  button {
     background-color: transparent;
     border: 0px; 
 }
 
-.body-container .list-content .features-panel img {
+.body-container .list-content .features-panel img, .body-container .list-content .features-panel-item img {
     width: 24px;
     height: 24px;
     cursor: pointer;
 }
 
-.body-container .list-content .features-panel img:hover {
+.body-container .list-content .features-panel img:hover, .body-container .list-content .features-panel-item img:hover {
     transform: scale(1.2);
     transition: 0.3s ease;
 }
 
 .body-container .list-content .table-container {
     overflow-y: auto;
-    padding-right: 10px;
 }
 
 .body-container .list-content .table-container table {
@@ -795,6 +817,20 @@ body, html {
     color: white;
     text-transform: uppercase;
 }
+
+.body-container .list-content .table-container th .th-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.body-container .list-content .table-container th .th-container img {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    cursor: pointer;
+}
   
 .body-container .list-content .table-container td {
     border: 1px solid lightgrey;
@@ -809,6 +845,28 @@ body, html {
   
 .body-container .list-content .table-container tr:nth-child(odd){
     background-color: gainsboro;
+}
+
+.body-container .list-content .table-container .Statusbutton-container {
+    display: flex;
+    justify-content: center;
+}
+
+.body-container .list-content .table-container .title {
+    width: 100px;
+}
+
+.body-container .list-content .table-container .mobile {
+    width: 120px;
+}
+
+.body-container .list-content .table-container .status {
+    width: 60px;
+}
+
+.body-container .list-content .table-container .Statusbutton-container  img{
+    width: 15px;
+    height: 15px;
 }
 
 .feature-modal {
@@ -1066,37 +1124,6 @@ body, html {
     height: 50px;
     font-size: large;  
     text-align: center;
-}
-
-/*-------------------- Supplier list-----------------------*/
-
-.supplierlist-inActivebutton{
-    background-color: rgb(248, 55, 55);
-    color:red;
-    font-size: small;
-    font-weight: bold;
-    border:none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-    display: flex;
-}
-
-.supplierlist-Activebutton{
-    background-color: #194c14;
-    color:#14A44D;
-    font-size: small;
-    font-weight: bold;
-    border:none;
-    border-radius: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-    display: flex;
-}
-
-.Statusbutton-container{
-    display: flex;
-    justify-content: center;
 }
 
 /*-------------------- Good Recieved Note -----------------------*/

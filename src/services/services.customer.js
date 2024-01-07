@@ -47,6 +47,24 @@ const customerServices = {
     }
   },
 
+  activateCustomer: async (customerId) => {
+    try {
+      const response = await axios.put(`${apiUrl}/activate/${customerId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deactivateCustomer: async (customerId) => {
+    try {
+      const response = await axios.put(`${apiUrl}/deactivate/${customerId}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   deleteCustomer: async (customerId) => {
     try {
       const response = await axios.delete(`${apiUrl}/${customerId}`);

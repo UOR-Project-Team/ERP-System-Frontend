@@ -27,12 +27,12 @@ import DeleteLogo from './../assets/icons/delete.png';
 import supplierServices from '../services/services.supplier';
 import validateSupplier from '../services/validate.supplier';
 import TextField from '@mui/material/TextField';
-import { Link } from "react-router-dom";
 import Autocomplete from '@mui/material/Autocomplete';
 import GreenCircle from '../assets/icons/green-circle.png'
 import GreyCircle from '../assets/icons/Grey-circle.png'
-
-
+import ActivateLogo from './../assets/icons/activate.png';
+import DeactivateLogo from './../assets/icons/deactivate.png';
+import ItemLogo from './../assets/icons/item.png';
 
 function SupplierList() {
 
@@ -45,11 +45,11 @@ function SupplierList() {
   const [modelContent, setModelContent] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSupplier, setCurrentSupplier] = useState(0);
+  const [activeSupplier, setactiveSupplier] = useState(true);
 
   const navigateTo = useNavigate();
 
   const [fields, setFields] = useState({
-  
     Title: true,
     Fullname: true,
     RegistrationNo: true,
@@ -68,7 +68,6 @@ function SupplierList() {
   });
 
   const [tempFields, setTempFields] = useState({
-    
     Title: true,
     Fullname: true,
     RegistrationNo: true,
@@ -99,6 +98,7 @@ function SupplierList() {
     Description: '',
     VatNo: '',
   });
+
   const [errorMessage , setErrorMessage] = useState({
     Title: '',
     Fullname:'',
@@ -118,8 +118,6 @@ function SupplierList() {
     fetchSuppliers();
   }, []);
 
-
-
   const fetchSuppliers = async () => {
     try {
       const supplierData = await supplierServices.getAllSuppliers();
@@ -133,33 +131,24 @@ function SupplierList() {
     const result = suppliers.filter((supplier) => {
       const values = Object.values(supplier).join(' ').toLowerCase();
       const regex = new RegExp(`\\b${searchTerm.toLowerCase()}`);
-  
       return regex.test(values);
     });
-  
     setSuppliers(result);
   };
 
-  const handleSearchInputChange = async (e) => {
-    e.preventDefault();
-
+  const handleSearchInputChange = async () => {
     try {
-
-        if (searchInput === '') {
-          
-          await fetchSuppliers();
-    
-        } else {
-          const res = await supplierServices.getAllSuppliers();
-          if(res) {
-            filterContent(res , searchInput);
-          }
-           
-         
+      if (searchInput === '') {
+        await fetchSuppliers();
+      } else {
+        const res = await supplierServices.getAllSuppliers();
+        if(res) {
+          filterContent(res , searchInput);
         }
-      }catch(error){
-        console.error('Error handling search input',error.message)
       }
+    } catch(error) {
+      console.error('Error handling search input',error.message)
+    }
   };
 
   const handleCheckboxChange = (e) => {
@@ -211,6 +200,30 @@ function SupplierList() {
     }
   };
 
+  const handleActionClick = (event, supplier) => {
+    handleClick(event); 
+    setCurrentSupplier(supplier.ID);
+    setactiveSupplier(supplier.Status);
+  };
+
+  const handleActivationChanges = async (e) => {
+    try {
+      if(activeSupplier) {
+        const response = await supplierServices.deactivateSupplier(currentSupplier)
+        console.log('Supplier deactivate:', response);
+      } else {
+        const response = await supplierServices.activateSupplier(currentSupplier)
+        console.log('Supplier activate:', response);
+      }
+      fetchSuppliers();
+      handleClose();
+      showSuccessToast('Activation successfully changed')    
+    } catch(error) {
+      console.error('Error activation changes:', error.message);
+      showErrorToast(`Error Occured!`);
+    }
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -228,7 +241,7 @@ function SupplierList() {
   const handleChanges = (e) => {
     const { name , value } = e.target;
     setFormData((prevdata) => ({...prevdata , [name]: value}));
-   };
+  };
 
    const handleUpdateSubmit = async (e) => {
     e.preventDefault();
@@ -410,8 +423,21 @@ function SupplierList() {
           <button onClick={() => {navigateTo(`/home/supplier-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Supplier</span></button>
         </div>
         <div className='search-container'>
-          <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
-          <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+          <form>
+            <input
+              type="text"
+              placeholder='Explore the possibilities...'
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSearchInputChange(e);
+                }
+              }}
+            />
+            <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+          </form>
         </div>
       </div>
       <div className='list-content'>
@@ -450,7 +476,7 @@ function SupplierList() {
                 </tr>
               ) : (
                suppliers.map((supplier) => (
-                  <tr key={supplier.id}>
+                  <tr key={supplier.ID}>
                     <td style={{ display: fields.Title ? 'table-cell' : 'none' }}>{supplier.Title}</td>
                     <td style={{ display: fields.Fullname ? 'table-cell' : 'none' }}>{supplier.Fullname}</td>
                     <td style={{ display: fields.RegistrationNo ? 'table-cell' : 'none' }}>{supplier.RegistrationNo}</td>
@@ -477,7 +503,7 @@ function SupplierList() {
 
 
                     <td>
-                      <button onClick={(event) => { handleClick(event); setCurrentSupplier(supplier.ID); }}>
+                      <button onClick={(event) => {handleActionClick(event, supplier)}}>
                         <img src={ActionLogo} alt='Action Logo' />
                       </button>
                     </td>
@@ -488,16 +514,31 @@ function SupplierList() {
           </table>
         </div>
       </div>
-      <div className='list-addbutton-container'>
-            <Link to = "/home/supplier-master">
-                <button className='list-addbutton'>Add Supplier</button>
-
-            </Link>
-            </div>
       </div>
       
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+        <MenuItem>
+          <button>
+            <img src={ItemLogo} alt='Item Logo' />
+            <span>View Items</span>
+          </button>         
+        </MenuItem>
+        {activeSupplier ? (
+          <MenuItem>
+            <button onClick={handleActivationChanges}>
+              <img src={DeactivateLogo} alt='Deactivate Logo' />
+              <span>Deactivate Supplier</span>
+            </button>         
+          </MenuItem>
+          ) : (
+          <MenuItem>
+            <button onClick={handleActivationChanges}>
+              <img src={ActivateLogo} alt='Activate Logo' />
+              <span>Activate Supplier</span>
+            </button>         
+          </MenuItem>
+        )}
         <MenuItem>
           <button onClick={() => {fetchSupplier(); handleRequest('edit');}}>
             <img src={EditLogo} alt="Edit Logo"/>
