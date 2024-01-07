@@ -13,6 +13,7 @@ import supplierServices from '../services/services.supplier';
 function ItemMaster() {
 
   const navigate = useNavigate();
+
   const [categories, setCategories] = useState([]);
   const [units, setUnit] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
@@ -22,7 +23,6 @@ function ItemMaster() {
     categoryDescription:'',
     unitDescription:'',
     supplierName:'' 
-    
   })
   const [errorMessage, setErrorMessage] = useState({
     code: '',
@@ -33,7 +33,6 @@ function ItemMaster() {
   })
 
   // Fetch categories from the server
-
   const fetchCategoryOptions = async () => {
     try {
       const Categories = await categoryServices.getAllCategories();
@@ -43,17 +42,6 @@ function ItemMaster() {
       console.error('Error fetching categories:', error.message);
     }
   };
-
-  // Fetch units from the server
-  // useEffect(() => {
-  //   axios.get('http://localhost:8081/unit') 
-  //     .then(response => {
-  //       setUnit(response.data.units);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching units data:', error);
-  //     });
-  // }, []);
 
   const fetchUnitOptions = async () => {
     try {
@@ -65,9 +53,7 @@ function ItemMaster() {
     }
   };
 
-
   // Fetch suppliers from the server
-
   const fetchSupplierOptions = async () => {
     try {
       const Suppliers = await supplierServices.getAllSuppliers();
@@ -78,24 +64,11 @@ function ItemMaster() {
     }
   };
 
-  // let categoryOptions=[];
-  // let unitOptions=[];
-  // let supplierOptions=[];
-
-
-  
   useEffect(() => {
-
-
     fetchCategoryOptions();
     fetchUnitOptions();
     fetchSupplierOptions();
-
-
-  
-    
   }, []);
-
 
   const categoryOptions = categories.map(category => ({
     value: category.ID,
@@ -112,11 +85,6 @@ function ItemMaster() {
     label: supplier.Fullname,
   }));
 
-  console.log(suppliers);
-
-
-  
-
   //handle input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -124,7 +92,6 @@ function ItemMaster() {
       ...prevValues,
       [name]: value,
     }));
-
     setErrorMessage((prevErrors) => ({
       ...prevErrors,
       [name]: '',
@@ -146,15 +113,11 @@ function ItemMaster() {
     return supplier ? supplier.ID : null;
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const unitId = getUnitIdFromDescription(values.unitDescription);
     const categoryId = getCategoryIdFromDescription(values.categoryDescription);
     const supplierId = getSupplierIdFromName(values.supplierName)
-    
     const submitItemData = {
       code: values.code,
       itemName: values.itemName,
@@ -178,13 +141,10 @@ function ItemMaster() {
       setTimeout(() => {
         navigate('/home/item-list');
       }, 2000);
-    }
-
-    catch (error) {
+    } catch (error) {
       showErrorToast('Error Occured');
       console.error('Error:');
     }
-  
   };
 
   //Handle Reset
@@ -196,11 +156,9 @@ function ItemMaster() {
       unitDescription:'',
       supplierName:''
     }));
-    
     setTimeout(()=>{
       navigate('/home/item-list');
     },2000);
-
     setErrorMessage({
       code: '',
       itemName: '',
@@ -209,7 +167,6 @@ function ItemMaster() {
       supplierName:''
     });
   };
-
 
   return (
     <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
@@ -295,8 +252,8 @@ function ItemMaster() {
 
 
           <div className='button-container'>
-            <button type="submit" class='submit-button'>Save</button>
-            <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+            <button type="submit" className='submit-button'>Save</button>
+            <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
           </div>
         </form>
       </div>
