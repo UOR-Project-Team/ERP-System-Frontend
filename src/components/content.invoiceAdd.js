@@ -456,7 +456,7 @@ function Invoice(){
       pdf.text(`${formattedTime}`, 460, 85);
   };
 
-    const customerDetails = function(data , currentUser){  
+    const customerDetails = function(data ){  
       pdf.text(`Customer Name:`, 45, 150);
       pdf.text(`${selectedCustomerName}`, 140, 150);
       pdf.text(`Customer Mobile:`, 45, 165);
@@ -546,7 +546,7 @@ function Invoice(){
           headerLeft(data);
           headerRight(data);
           pdf.line(20, 120, 580, 120);
-          customerDetails(data , currentUser);
+          customerDetails(data);
           pdf.line(20, 190, 580, 190);
           const pageCount = pdf.internal.getNumberOfPages();
           pdf.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, pdf.internal.pageSize.height - 10);
@@ -694,7 +694,7 @@ function Invoice(){
           headerLeft(data);
           headerRight(data);
           pdf.line(20, 120, 580, 120);
-          customerDetails(data , currentUser);
+          customerDetails(data );
           pdf.line(20, 190, 580, 190);
           const pageCount = pdf.internal.getNumberOfPages();
           pdf.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, pdf.internal.pageSize.height - 10);
