@@ -13,12 +13,12 @@ import MenuItem from '@mui/material/MenuItem';
 const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   
   const navigateTo = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorE2, setAnchorE2] = useState(null);
   const [anchorE3, setAnchorE3] = useState(null);
   const [anchorE4, setAnchorE4] = useState(null);
   const [anchorE5, setAnchorE5] = useState(null);
-
 
   const handleClose = () => {
       setAnchorEl(null);
@@ -51,7 +51,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   return (
     <div>
       <div className='header'>
-        <button><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo" /></button>
+        <button title="Expand"><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo" /></button>
       </div>
       <div className='body'>
         <button title="Dashboard" onClick={() => {navigateTo('/home'); updateHeaderText('Dashboard');}}><img src={DashboardLogo} alt="Dashboard Logo" /></button>
@@ -135,12 +135,12 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </Menu>
 
       <Menu className='side-menu' anchorEl={anchorE5} keepMounted open={Boolean(anchorE5)} onClose={handleClose}>
-        <MenuItem onClick={() => {navigateTo(`/home/category-list`); setAnchorE5(null); updateHeaderText('Category List')}}>
+        <MenuItem onClick={() => {navigateTo(`/home/category-list`); setAnchorE5(null);}}>
         <button>
             <span>Category List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/unit-list`); setAnchorE5(null); updateHeaderText('Unit List')}}>
+        <MenuItem onClick={() => {navigateTo(`/home/unit-list`); setAnchorE5(null);}}>
         <button>
             <span>Unit List</span>
           </button>

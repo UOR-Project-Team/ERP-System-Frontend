@@ -81,8 +81,8 @@ function UnitMaster(){
                             <TextField className='text-line-type1' name='SI' value={formData.SI} onChange={(e) => handleChanges(e)} label="SI" variant='outlined' />
                             <label className='error-text'>{errorMessage.SI}</label>
                             <div className='button-container'>
-                                 <button type='submit' class='submit-button' onClick={handleSubmit}>Submit</button>
-                                 <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+                                 <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+                                 <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
                             </div>
                     </form>
                     

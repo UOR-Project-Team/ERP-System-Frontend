@@ -25,8 +25,14 @@ import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
 import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
+import SortLogo from './../assets/icons/sort.png';
+import ActivateLogo from './../assets/icons/activate.png';
+import DeactivateLogo from './../assets/icons/deactivate.png';
+import GreenCircle from '../assets/icons/green-circle.png'
+import GreyCircle from '../assets/icons/Grey-circle.png'
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
+import { arraySort } from '../services/array.sort';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function CustomerList() {
@@ -40,36 +46,60 @@ function CustomerList() {
   const [modelContent, setModelContent] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(0);
+  const [activeCustomer, setactiveCustomer] = useState(true);
 
   const navigateTo = useNavigate();
 
-  const [fields, setFields] = useState({
-    title: true,
-    fullname: true,
-    email: true,
-    nic: false,
-    contactno: true,
-    street1: false,
-    street2: false,
-    city: true,
-    country: true,
-    vatno: false,
+  const [fields, setFields] = useState(() => {
+    const storedFields = localStorage.getItem('fields');
+    return storedFields ? JSON.parse(storedFields) : {
+      title: true,
+      fullname: true,
+      email: true,
+      nic: false,
+      contactno: true,
+      street1: false,
+      street2: false,
+      city: true,
+      country: true,
+      vatno: false,
+      debit: false,
+      status: true
+    };
   });
 
-  const [tempFields, setTempFields] = useState({
-    title: true,
-    fullname: true,
-    email: true,
-    nic: false,
-    contactno: true,
-    street1: false,
-    street2: false,
-    city: true,
-    country: true,
-    vatno: false,
+  const [tempFields, setTempFields] = useState(() => {
+    const storedFields = localStorage.getItem('fields');
+    return storedFields ? JSON.parse(storedFields) : {
+      title: true,
+      fullname: true,
+      email: true,
+      nic: false,
+      contactno: true,
+      street1: false,
+      street2: false,
+      city: true,
+      country: true,
+      vatno: false,
+      debit: false,
+      status: true
+    };
   });
 
   const [formData, setFormData] = useState({
+    title: '',
+    fullname: '',
+    email: '',
+    nic: '',
+    contactno: '',
+    street1: '',
+    street2: '',
+    city: '',
+    country: '',
+    vatno: '',
+  });
+
+  const [formResetData, setFormResetData] = useState({
     title: '',
     fullname: '',
     email: '',
@@ -96,8 +126,9 @@ function CustomerList() {
   });
 
   useEffect(() => {
+    localStorage.setItem('fields', JSON.stringify(fields));
     fetchCustomers();
-  }, []);
+  }, [fields]);
 
   const fetchCustomers = async () => {
     try {
@@ -118,9 +149,7 @@ function CustomerList() {
     setCustomers(result);
   };
 
-  const handleSearchInputChange = (e) => {
-    e.preventDefault();
-
+  const handleSearchInputChange = () => {
     if (searchInput === '') {
       fetchCustomers();
     } else {
@@ -144,17 +173,19 @@ function CustomerList() {
     e.preventDefault();
     setIsModalOpen(false);
     setFields({
-      title: tempFields.title,
-      fullname: tempFields.fullname,
-      email: tempFields.email,
-      nic: tempFields.nic,
-      contactno: tempFields.contactno,
-      street1: tempFields.street1,
-      street2: tempFields.street2,
-      city: tempFields.city,
-      country: tempFields.country,
-      vatno: tempFields.vatno,
-    });
+      title: tempFields.title || false,
+      fullname: tempFields.fullname || false,
+      email: tempFields.email || false,
+      nic: tempFields.nic || false,
+      contactno: tempFields.contactno || false,
+      street1: tempFields.street1 || false,
+      street2: tempFields.street2 || false,
+      city: tempFields.city || false,
+      country: tempFields.country || false,
+      vatno: tempFields.vatno || false,
+      debit: tempFields.debit || false,
+      status: tempFields.status || false,
+    });    
   }
 
   const handleDialogAction = async () => {
@@ -176,6 +207,30 @@ function CustomerList() {
     }
   };
 
+  const handleActionClick = (event, customer) => {
+    handleClick(event); 
+    setCurrentCustomer(customer.ID);
+    setactiveCustomer(customer.Status);
+  };
+
+  const handleActivationChanges = async (e) => {
+    try {
+      if(activeCustomer) {
+        const response = await customerServices.deactivateCustomer(currentCustomer)
+        console.log('Customer deactivate:', response);
+      } else {
+        const response = await customerServices.activateCustomer(currentCustomer)
+        console.log('Customer activate:', response);
+      }
+      fetchCustomers();
+      handleClose();
+      showSuccessToast('Activation successfully changed')    
+    } catch(error) {
+      console.error('Error activation changes:', error.message);
+      showErrorToast(`Error Occured!`);
+    }
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -194,7 +249,7 @@ function CustomerList() {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-
+  
   // OnSubmit Update Form
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
@@ -210,10 +265,10 @@ function CustomerList() {
     
     try {
       const response = await customerServices.updateCustomer(currentCustomer, formData)
+      customers.find((customer) => customer.ID === currentCustomer)
       fetchCustomers();
       setIsModalOpen(false);
       showSuccessToast('Customer successfully updated')
-      handleUpdateReset();
       console.log('Customer updated:', response);
     } catch(error) {
       const { message, attributeName } = error.response.data;
@@ -238,11 +293,8 @@ function CustomerList() {
           });
         }
       }
-
       console.error('Error:', message);
-
     }
-
   };
 
   const fetchCustomer = () => {
@@ -250,6 +302,18 @@ function CustomerList() {
 
     if (foundCustomer) {
       setFormData({
+        title: foundCustomer.Title || '',
+        fullname: foundCustomer.Fullname || '',
+        email: foundCustomer.Email || '',
+        nic: foundCustomer.NIC || '',
+        contactno: foundCustomer.ContactNo || '',
+        street1: foundCustomer.Street1 || '',
+        street2: foundCustomer.Street2 || '',
+        city: foundCustomer.City || '',
+        country: foundCustomer.Country || '',
+        vatno: foundCustomer.VatNo || '',
+      });
+      setFormResetData({
         title: foundCustomer.Title || '',
         fullname: foundCustomer.Fullname || '',
         email: foundCustomer.Email || '',
@@ -269,16 +333,16 @@ function CustomerList() {
 
   const handleUpdateReset = () => {
     setFormData(() => ({
-      title: '',
-      fullname: '',
-      nic: '',
-      vatno: '',
-      email: '',
-      contactno: '',
-      street1: '',
-      street2: '',
-      city: '',
-      country: ''
+      title: formResetData.title,
+      fullname: formResetData.fullname,
+      nic: formResetData.nic,
+      vatno: formResetData.vatno,
+      email: formResetData.email,
+      contactno: formResetData.contactno,
+      street1: formResetData.street1,
+      street2: formResetData.street2,
+      city: formResetData.city,
+      country: formResetData.country
     }));
     setErrorMessage({
       title: '',
@@ -313,11 +377,77 @@ function CustomerList() {
         doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
     };
 
-    // Set table headers
-    const headers = [["Title", "Fullname", "Email", "Mobile", "Street1", "Street2", "City", "Country"]];
+    let headers = [];
+    let tempHeader = []
+    let data = [];
 
-    // Map customer data
-    const data = customers.map(elt=> [elt.Title, elt.Fullname, elt.Email, elt.ContactNo, elt.Street1, elt.Street2, elt.City, elt.Country]);
+    if(fields.title) {
+      tempHeader.push("Title");
+    }
+    if(fields.fullname) {
+      tempHeader.push("Fullname");
+    }
+    if(fields.email) {
+      tempHeader.push("Email");
+    }
+    if(fields.nic) {
+      tempHeader.push("National Id");
+    }
+    if(fields.contactno) {
+      tempHeader.push("Contact No");
+    }
+    if(fields.street1) {
+      tempHeader.push("Street1");
+    }
+    if(fields.street2) {
+      tempHeader.push("Street2");
+    }
+    if(fields.city) {
+      tempHeader.push("City");
+    }
+    if(fields.country) {
+      tempHeader.push("Country");
+    }
+    if(fields.vatno) {
+      tempHeader.push("VAT No");
+    }
+
+    headers.push(tempHeader);
+
+    customers.map(elt => {
+      let tempdata = []
+      if(fields.title) {
+        tempdata.push(elt.Title);
+      }
+      if(fields.fullname) {
+        tempdata.push(elt.Fullname);
+      }
+      if(fields.email) {
+        tempdata.push(elt.Email);
+      }
+      if(fields.nic) {
+        tempdata.push(elt.NIC);
+      }
+      if(fields.contactno) {
+        tempdata.push(elt.ContactNo);
+      }
+      if(fields.street1) {
+        tempdata.push(elt.Street1);
+      }
+      if(fields.street2) {
+        tempdata.push(elt.Street2);
+      }
+      if(fields.city) {
+        tempdata.push(elt.City);
+      }
+      if(fields.country) {
+        tempdata.push(elt.Country);
+      }
+      if(fields.vatno) {
+        tempdata.push(elt.VATNo);
+      }
+      data.push(tempdata);
+    });
 
     // Set table content
     let content = {
@@ -342,19 +472,76 @@ function CustomerList() {
   };
 
   const exportCSV = () => {
-    const headers = ["Title", "Fullname", "Email", "Mobile", "Street1", "Street2", "City", "Country"];
-  
-    const data = customers.map(elt => [
-      elt.Title,
-      elt.Fullname,
-      elt.Email,
-      elt.ContactNo,
-      elt.Street1,
-      elt.Street2,
-      elt.City,
-      elt.Country
-    ]);
-  
+
+    let headers = [];
+    let data = [];
+
+    if(fields.title) {
+      headers.push("Title");
+    }
+    if(fields.fullname) {
+      headers.push("Fullname");
+    }
+    if(fields.email) {
+      headers.push("Email");
+    }
+    if(fields.nic) {
+      headers.push("National Id");
+    }
+    if(fields.contactno) {
+      headers.push("Contact No");
+    }
+    if(fields.street1) {
+      headers.push("Street1");
+    }
+    if(fields.street2) {
+      headers.push("Street2");
+    }
+    if(fields.city) {
+      headers.push("City");
+    }
+    if(fields.country) {
+      headers.push("Country");
+    }
+    if(fields.vatno) {
+      headers.push("VAT No");
+    }
+
+    customers.map(elt => {
+      let tempdata = []
+      if(fields.title) {
+        tempdata.push(elt.Title);
+      }
+      if(fields.fullname) {
+        tempdata.push(elt.Fullname);
+      }
+      if(fields.email) {
+        tempdata.push(elt.Email);
+      }
+      if(fields.nic) {
+        tempdata.push(elt.NIC);
+      }
+      if(fields.contactno) {
+        tempdata.push(elt.ContactNo);
+      }
+      if(fields.street1) {
+        tempdata.push(elt.Street1);
+      }
+      if(fields.street2) {
+        tempdata.push(elt.Street2);
+      }
+      if(fields.city) {
+        tempdata.push(elt.City);
+      }
+      if(fields.country) {
+        tempdata.push(elt.Country);
+      }
+      if(fields.vatno) {
+        tempdata.push(elt.VATNo);
+      }
+      data.push(tempdata);
+    });
+
     const csvData = [headers, ...data];
   
     const csv = Papa.unparse(csvData);
@@ -380,21 +567,34 @@ function CustomerList() {
             <button onClick={() => {navigateTo(`/home/customer-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Customer</span></button>
           </div>
           <div className='search-container'>
-          <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
-          <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+            <form>
+              <input
+                type="text"
+                placeholder='Explore the possibilities...'
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearchInputChange(e);
+                  }
+                }}
+              />
+              <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+            </form>
           </div>
         </div>
         <div className='list-content'>
           <div className='features-panel'>
-            <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
-            <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
-            <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
+            <button title="PDF Exporter" onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
+            <button title="CSV Exporter" onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
+            <button title="Filter" onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
           </div>
           <div className='table-container'>
             <table>
               <thead>
                 <tr>
-                  <th style={{ display: fields.title ? 'table-cell' : 'none' }}>Title</th>
+                  <th style={{ display: fields.title ? 'table-cell' : 'none' }}><div className='th-container'><img src={SortLogo} alt="Sort Logo" /><span>Title</span></div></th>
                   <th style={{ display: fields.fullname ? 'table-cell' : 'none' }}>Fullname</th>
                   <th style={{ display: fields.email ? 'table-cell' : 'none' }}>Email</th>
                   <th style={{ display: fields.nic ? 'table-cell' : 'none' }}>NIC</th>
@@ -404,6 +604,8 @@ function CustomerList() {
                   <th style={{ display: fields.city ? 'table-cell' : 'none' }}>City</th>
                   <th style={{ display: fields.country ? 'table-cell' : 'none' }}>Country</th>
                   <th style={{ display: fields.vatno ? 'table-cell' : 'none' }}>VAT  No</th>
+                  <th style={{ display: fields.debit ? 'table-cell' : 'none' }}>Debit</th>
+                  <th style={{ display: fields.status ? 'table-cell' : 'none' }}>Status</th>
                   <th className='action-column'></th>
                 </tr>
               </thead>
@@ -414,19 +616,29 @@ function CustomerList() {
                   </tr>
                 ) : (
                   customers.map((customer) => (
-                    <tr key={customer.id}>
-                      <td style={{ display: fields.title ? 'table-cell' : 'none' }}>{customer.Title}</td>
+                    <tr key={customer.ID}>
+                      <td className='title' style={{ display: fields.title ? 'table-cell' : 'none' }}>{customer.Title}</td>
                       <td style={{ display: fields.fullname ? 'table-cell' : 'none' }}>{customer.Fullname}</td>
                       <td style={{ display: fields.email ? 'table-cell' : 'none' }}>{customer.Email}</td>
                       <td style={{ display: fields.nic ? 'table-cell' : 'none' }}>{customer.NIC}</td>
-                      <td style={{ display: fields.contactno ? 'table-cell' : 'none' }}>{customer.ContactNo}</td>
+                      <td className='mobile' style={{ display: fields.contactno ? 'table-cell' : 'none' }}>{customer.ContactNo}</td>
                       <td style={{ display: fields.street1 ? 'table-cell' : 'none' }}>{customer.Street1}</td>
                       <td style={{ display: fields.street2 ? 'table-cell' : 'none' }}>{customer.Street2}</td>
                       <td style={{ display: fields.city ? 'table-cell' : 'none' }}>{customer.City}</td>
                       <td style={{ display: fields.country ? 'table-cell' : 'none' }}>{customer.Country}</td>
                       <td style={{ display: fields.vatno ? 'table-cell' : 'none' }}>{customer.VatNo}</td>
+                      <td style={{ display: fields.debit ? 'table-cell' : 'none' }}>{customer.Debit}</td>
+                      <td className='status' style={{ display: fields.status ? 'table-cell' : 'none' }}>
+                        <div className='Statusbutton-container'>
+                          {customer.Status === 0 ? (
+                            <img src={GreyCircle} alt='Inactive'/>
+                          ) : (
+                            <img src ={GreenCircle} alt='Active'/>
+                        )}
+                        </div>
+                      </td>
                       <td>
-                        <button onClick={(event) => { handleClick(event); setCurrentCustomer(customer.ID); }}>
+                      <button onClick={(event) => {handleActionClick(event, customer)}}>
                           <img src={ActionLogo} alt='Action Logo' />
                         </button>
                       </td>
@@ -440,6 +652,21 @@ function CustomerList() {
       </div>
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+        {activeCustomer ? (
+          <MenuItem>
+            <button onClick={handleActivationChanges}>
+              <img src={DeactivateLogo} alt='Deactivate Logo' />
+              <span>Deactivate Customer</span>
+            </button>         
+          </MenuItem>
+          ) : (
+          <MenuItem>
+            <button onClick={handleActivationChanges}>
+              <img src={ActivateLogo} alt='Activate Logo' />
+              <span>Activate Customer</span>
+            </button>         
+          </MenuItem>
+        )}
         <MenuItem>
           <button onClick={() => {fetchCustomer(); handleRequest('edit');}}>
             <img src={EditLogo} alt="Edit Logo"/>
@@ -505,6 +732,14 @@ function CustomerList() {
                   <div className='checkbox-content'>
                     <input type='checkbox' name='vatno' checked={tempFields.vatno} onChange={handleCheckboxChange} />
                     <label>VAT No</label>
+                  </div>
+                  <div className='checkbox-content'>
+                    <input type='checkbox' name='debit' checked={tempFields.debit} onChange={handleCheckboxChange} />
+                    <label>Debit</label>
+                  </div>
+                  <div className='checkbox-content'>
+                    <input type='checkbox' name='status' checked={tempFields.status} onChange={handleCheckboxChange} />
+                    <label>Status</label>
                   </div>
                 </div>
                 <button type='submit'>Filter</button>

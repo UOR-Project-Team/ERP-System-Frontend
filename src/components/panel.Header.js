@@ -38,7 +38,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Get the token from localStorage
+    const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
       setCurrentUser({
@@ -48,7 +48,6 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         jobrole: decodedToken.jobrole,
         loginflag: decodedToken.loginflag,
       })
-      console.log('token data is',decodedToken);
     } else {
       console.log('Token not found');
     }
@@ -92,8 +91,8 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
                 <span><img src={DownLogo} alt="Down Logo"/></span>
               </button>
             </span>
-              <img src={NotificationLogo} alt="Notification Logo"/>
-              <img src={SettingsLogo} alt="Settings Logo" onClick={handleClick}/>
+              <img title='Notification' src={NotificationLogo} alt="Notification Logo"/>
+              <img title='Settings' src={SettingsLogo} alt="Settings Logo" onClick={handleClick}/>
           </div>
 
           <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>

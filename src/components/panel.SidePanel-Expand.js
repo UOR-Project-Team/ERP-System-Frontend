@@ -127,11 +127,11 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
           <img className={`subCategoryIcon ${rotatedButton.includes('masterlists') ? 'rotate' : ''}`} style={{width: '14px', height: '14px'}} src={SingleRightLogo} alt="SingleRight Logo" />
         </button>
           <div className={`subCategory ${activeSubcategories.includes('masterlists') ? 'visible' : ''}`}>
-            <button onClick={() => {navigateTo('/home/category-list'); updateHeaderText('Category List');}}>
+            <button onClick={() => {navigateTo('/home/category-list');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Category List</span>
             </button>
-            <button onClick={() => {navigateTo('/home/unit-list'); updateHeaderText('Unit List');}}>
+            <button onClick={() => {navigateTo('/home/unit-list');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Unit List</span>
             </button>

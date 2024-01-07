@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Dialogbox from '../services/Dialogbox'
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
@@ -32,7 +31,7 @@ function UserList() {
   const [modelContent, setModelContent] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [openDialog, setOpenDialog] = useState(false)  //Dialog box
+  const [openDialog, setOpenDialog] = useState(false)
 
   const navigateTo = useNavigate();
 
@@ -70,9 +69,8 @@ function UserList() {
       jobrole: '',
       contactno: '',
       address: '',
-      city: '',
-        
-  })
+      city: '', 
+    })
   }
 
   const [fields, setFields] = useState({
