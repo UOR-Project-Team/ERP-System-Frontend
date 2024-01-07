@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Dialogbox from '../services/Dialogbox'
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
@@ -32,7 +31,7 @@ function UserList() {
   const [modelContent, setModelContent] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [openDialog, setOpenDialog] = useState(false)  //Dialog box
+  const [openDialog, setOpenDialog] = useState(false)
 
   const navigateTo = useNavigate();
 
@@ -70,11 +69,9 @@ function UserList() {
       jobrole: '',
       contactno: '',
       address: '',
-      city: '',
-        
-  })
+      city: '', 
+    })
   }
-
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -335,12 +332,6 @@ function UserList() {
         </table>
       </div>
       </div>
-      <div className='list-addbutton-container'>
-            <Link to = "/home/user-master">
-                <button className='list-addbutton'>Add User</button>
-
-            </Link>
-       </div>
 
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={() => {fetchUser(); handleRequest('edit');}}>

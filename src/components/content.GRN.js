@@ -7,13 +7,13 @@ function GRN() {
 
   const [grnNumber, setgrnNumber] = useState(0);
   const [suppliers, setSuppliers] = useState([]);
-  const [selectedSupplierId, setSelectedSupplierId] = useState(null);
+  const [selectedSupplierId, setSelectedSupplierId] = useState('');
   const [selectedSupplierMobile, setSelectedSupplierMobile] = useState('');
   const [selectedSupplierEmail, setSelectedSupplierEmail] = useState('');
   const [items, setSupplierItems] = useState([]);
-  const [selectedItemId, setSelectedItemId] = useState(null);
-  const [quantity, setQuantity] = useState(null);
-  const [purchasePrice, setPurchasePrice] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [purchasePrice, setPurchasePrice] = useState('');
   const [SelectedItems, setSelectedItems] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
@@ -282,7 +282,7 @@ function GRN() {
                 </tr>
               ) : (
                 SelectedItems.map((selectedItem, index) => (
-                  <tr key={selectedItem.itemId}>
+                  <tr key={selectedItem.index}>
                     <td>{index + 1}</td>
                     {items.map((item) => {
                       if (item.ID === selectedItem.itemId) {

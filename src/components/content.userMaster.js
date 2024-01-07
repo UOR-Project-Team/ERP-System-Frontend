@@ -107,7 +107,7 @@ function UserMaster() {
 
   <div className='master-content'>
         <form className='form-container'>
-          <h3>Customer Details</h3>
+          <h3>User Details</h3>
             <TextField className='text-line-type1' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
             <label className='error-text'>{errorMessage.Fullname}</label>
             <TextField className='text-line-type1' name='username' value={formData.username} onChange={(e) => handleChanges(e)} label=" Username" variant="outlined" />
@@ -170,8 +170,8 @@ function UserMaster() {
             </div>
 
             <div className='button-container'>
-              <button type='submit' class='submit-button' onClick={handleSubmit}>Submit</button>
-              <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+              <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+              <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
             </div>
         </form>
         <ToastContainer/>

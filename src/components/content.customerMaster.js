@@ -215,8 +215,8 @@ function CustomerMaster() {
               </div>
             </div>
             <div className='button-container'>
-              <button type='submit' class='submit-button' onClick={handleSubmit}>Submit</button>
-              <button type='reset' class='reset-button' onClick={handleReset}>Reset</button>
+              <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+              <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
             </div>
         </form>
       </div>
