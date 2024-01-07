@@ -191,9 +191,7 @@ function ItemMaster() {
                 label="Category"
                 name='categoryDescription' 
                 value={values.categoryDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -214,9 +212,7 @@ function ItemMaster() {
                 label="Unit"
                 name='unitDescription' 
                 value={values.unitDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -237,9 +233,7 @@ function ItemMaster() {
                 label="Supplier Name"
                 name='supplierName' 
                 value={values.supplierName}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -247,6 +241,7 @@ function ItemMaster() {
             }}
             value={values.supplierName}
           />
+          
           <label className='error-text'>{errorMessage.supplierName}</label>
           
 

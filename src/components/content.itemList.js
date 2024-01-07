@@ -113,6 +113,7 @@ function ItemList() {
       } else {
         itemData= await itemServices.getAllItems();
       }
+      const itemData= await itemServices.getAllItems();
       setItems([...itemData]);
     }
     catch(error)
@@ -509,19 +510,13 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={categoryOptions}
-            //defaultValue={{value: getCategoryIdFromDescription(formData.categoryDescription), label: formData.categoryDescription}}
-            //defaultValue={selectedCategory}
-            
-            //defaultValue={itemInfo}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Category"
                 name='categoryDescription' 
                 value={formData.categoryDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -536,16 +531,12 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={unitOptions}
-            //defaultValue={selectedUnit}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Unit"
                 name='unitDescription' 
                 value={formData.unitDescription}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
               />
             )}
             onChange={(_, newValue) => {
@@ -560,16 +551,13 @@ function ItemList() {
             disablePortal
             className='text-line-type2'
             options={supplierOptions}
-            //defaultValue={selectedUnit}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Supplier"
                 name='supplierName' 
                 value={formData.supplierName}
-                onChange={(e) => {
-                  handleInputChange(e);
-                }}
+
               />
             )}
             onChange={(_, newValue) => {
@@ -578,9 +566,6 @@ function ItemList() {
             value={formData.supplierName}
           />
           <label className='error-text'>{errorMessage.supplierName}</label>
-
-
-
 
 
           <div className='button-container'>
