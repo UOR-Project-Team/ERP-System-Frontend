@@ -107,7 +107,7 @@ function UserMaster() {
 
   
 
-  const handleInputChange = (event) => {
+  const handleChanges = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,

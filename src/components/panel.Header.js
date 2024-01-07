@@ -30,7 +30,9 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   const [currentUser, setCurrentUser] = useState({
     username: '',
     fullname: '',
-    status: false
+    jobrole:'',
+    loginflag:'',
+    userid:'',
   })
 
   const navigate = useNavigate();
@@ -40,12 +42,13 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     if (token) {
       const decodedToken = jwtDecode(token);
       setCurrentUser({
+        userid: decodedToken.userid,
         username: decodedToken.username,
         fullname: decodedToken.fullname,
         jobrole: decodedToken.jobrole,
         loginflag: decodedToken.loginflag,
       })
-      console.log(decodedToken);
+      console.log('token data is',decodedToken);
     } else {
       console.log('Token not found');
     }
@@ -84,7 +87,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <button onClick={() => handleRequest('profile')}>
                 <span className='text-container'>
                   <div className='uname-text'>{currentUser.fullname}</div>
-                  <div className='type-text'>{currentUser.status ? ('Administrator') : ('System User')}</div>
+                  <div className='type-text'>{currentUser.jobrole === 'admin' ? ('Administrator') : ('System User')}</div>
                 </span>
                 <span><img src={DownLogo} alt="Down Logo"/></span>
               </button>

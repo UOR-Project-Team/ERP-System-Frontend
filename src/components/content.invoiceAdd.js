@@ -3,6 +3,11 @@ import Select from "react-select";
 import invoiceServices from "../services/services.invoice";
 import DeleteLogo from './../assets/icons/delete.png';
 
+import { useUser } from '../services/services.UserContext';
+import { showErrorToast, showSuccessToast } from "../services/services.toasterMessage";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function Invoice(){
@@ -24,8 +29,34 @@ function Invoice(){
     const [totalAmount, setTotalAmount] = useState(0);
     const [cash , setCash] = useState('');
     const [balance , setBalance] = useState(0); 
+    //const [user, setUser] = useState();
+
+    const {userid } = useUser();
+
+    const [invoiceData, setInvoiceData] = useState({
+      invoiceNumber: '',
+      Customerid:'',
+      userid: userid,
+      solditems :[],
+      totalAmount: ''
+
+    })
+
+    const [soldProduct, setsoldProduct] = useState({
+      productId: '',
+      barcode: '',
+      s_price: '',
+      quantity: ''
+    })
+
     
-    
+    const handleAddItemToInvoice = (itemData) => {
+      setInvoiceData(prevState => ({
+        ...prevState,
+        solditems: [...prevState.solditems, itemData]
+      }));
+    };
+
     
  
 
@@ -36,6 +67,10 @@ function Invoice(){
 
   useEffect(() => {
       handleQunatityChange();
+      setsoldProduct(prevData => ({
+        ...prevData,
+        s_price: quantity * price,
+      }));
     }, [quantity]);
 
   useEffect(() =>{
@@ -56,19 +91,39 @@ function Invoice(){
       calcBalance(totalAmount, cash, discount);
     }, [totalAmount, cash, discount]);
 
-  const handleSelectChange = (selectedOption) => {
+
+    const handleSelectChangeitem = (selectedOption)=>{
+
       const selectedItemId = selectedOption ? selectedOption.value : null;
       setSelectedItemId(selectedItemId);
+    }
+  const handleSelectChange = (selectedOption) => {
+      
+    const selectedC_Id = selectedOption ? selectedOption.value : null;
+      console.log('Selected Customer data', selectedC_Id)
+      //setSelectedCustomerId(selectedC_Id)
+      //setSelectedCustomerName(selectedOption.Fullname)
 
-      const selectedCustomerName = selectedOption ? selectedOption.Fullname : null;
-      const selectedCustomerTitle = selectedOption ? selectedOption.title : null;   
-       setSelectedCustomerName(selectedCustomerTitle+selectedCustomerName);
-      //console.log('selected item id' , selectedItemId);
+      setInvoiceData(prevData => ({
+        ...prevData,
+        Customerid: selectedC_Id,
+      }));
+
+      // const selectedCustomerName = selectedOption ? selectedOption.Fullname : null;
+      // const selectedCustomerTitle = selectedOption ? selectedOption.title : null;
+        
+      //  setSelectedCustomerName(selectedCustomerTitle+selectedCustomerName);
+      
+      
    };
 
   function generateRandomNumber() {
       const randomNumber = Math.floor(1000000 + Math.random() * 9000000);
       setinvoiceNumber('G' + randomNumber.toString());
+      setInvoiceData(prevData => ({
+        ...prevData,
+        invoiceNumber: 'G' + randomNumber.toString()
+      }));
    }
 
   const fetchCustomers = async () =>{
@@ -83,6 +138,7 @@ function Invoice(){
   const fetchItems = async() =>{
       try{
         const items = await invoiceServices.getItems();
+        //console.log('Items Are',items)
         setItems(items);
       }catch (error){
         console.error('error',error.message);
@@ -94,17 +150,30 @@ function Invoice(){
         return;
       }
       const newValue = parseInt(event.target.value, 10) || '';
-        setQuantity(newValue);    
+        setQuantity(newValue); 
+        
+        setsoldProduct(prevData => ({
+          ...prevData,
+          quantity: newValue
+        }));
     };
 
   const fetchPrice = useCallback(async () => {
     try {
       const response = await invoiceServices.getPrice(selectedItemId);
-      console.log(response);
+      //console.log(response);
       if (Array.isArray(response) && response.length > 0) {
         const unitPrice = response[0].Unit_Price;
+        const p_barcode = response[0].Barcode;
+        const p_id = response[0].id;
+        
+        setsoldProduct(prevData => ({
+          ...prevData,
+          productId: p_id,
+          barcode: p_barcode,
+        }));
         setPrice(unitPrice);
-        console.log('Unit Price:', unitPrice);
+       // console.log('Unit Price:', unitPrice);
       } else {
         console.error('Unit Price not found in the response:', response);
       }
@@ -138,6 +207,7 @@ function Invoice(){
            await fetchPrice(selectedItemId);  
            
            const selectedItem = items.find((item) => item.ID === parseInt(selectedItemId, 10));
+           
              if (!selectedItem) {
               console.error('Item not found for the selected ID:', selectedItemId);
               return;
@@ -147,6 +217,7 @@ function Invoice(){
               itemNameInputRef.current.focus();
               return;
              }  
+
             const newItem = {
                itemId: selectedItem.ID,
                itemCode: selectedItem.Code,
@@ -155,13 +226,24 @@ function Invoice(){
                unitPrice: price,
                totalPrice: quantity*price,
              };
-
+             
             const updatedItems = [...selectedItems, newItem];
             setSelectedItems(updatedItems);
 
-            const total = calcSubtotal(updatedItems);
-            setSubTotal(total);
-            calcTotal(total, discount);
+
+            const subtotal = calcSubtotal(updatedItems);
+
+            setSubTotal(subtotal);
+            calcTotal(subtotal, discount);
+             
+            handleAddItemToInvoice(soldProduct);
+            setsoldProduct({
+              productId: '',
+              barcode: '',
+              s_price: '',
+              quantity: ''
+            });
+            
 
             setQuantity('');
             itemNameInputRef.current.focus();
@@ -171,11 +253,29 @@ function Invoice(){
             console.error('Error fetching price:', error.message);
     }
   };
+
+  
   
   const handleRemoveItem = (index, quantity) => {
+    console.log('remove Index is ',index)
       const updatedItems = [...selectedItems];
       updatedItems.splice(index, 1);
       setSelectedItems(updatedItems);
+
+      //Handel invoice data changes
+      setInvoiceData((prevInvoiceData) => {
+        const updatedSoldItems = [...prevInvoiceData.solditems];
+        if (index >= 0 && index < updatedSoldItems.length) {
+          updatedSoldItems.splice(index, 1); // Remove item at indexToRemove
+        } else {
+          console.error('Invalid index provided');
+        }
+    
+        return {
+          ...prevInvoiceData,
+          solditems: updatedSoldItems, // Update solditems array in invoiceData
+        };
+      });
 
       const total = calcSubtotal(updatedItems);
       setSubTotal(total);
@@ -192,18 +292,29 @@ function Invoice(){
       };
 
   const calcSubtotal = (items) => {
-      let total = 0;
+      let sub_total = 0;
       items.forEach((selectedItem) => {
-        total += selectedItem.quantity * selectedItem.unitPrice;
+        sub_total += selectedItem.quantity * selectedItem.unitPrice;
       });
-      return total;
+      return sub_total;
   };
 
   const calcTotal = (subtotal, discount) => {
       if (discount <= 0) {
         setTotalAmount(subtotal);
+        setInvoiceData(prevData => ({
+          ...prevData,
+          totalAmount: subtotal
+        }));
+
       } else if (discount > 0 && discount <= 100) {
         setTotalAmount(subtotal * ((100 - discount) / 100));
+
+        setInvoiceData(prevData => ({
+          ...prevData,
+          totalAmount: subtotal * ((100 - discount) / 100)
+        }));
+
       } else if (discount > 100) {
         setTotalAmount(subtotal * 0);
       }
@@ -233,11 +344,63 @@ function Invoice(){
        setCash('');
        setBalance(0);
        setQuantity('');
-    
-    
-      
+
+       setInvoiceData({
+        invoiceNumber: '',
+        Customerid:'',
+        userid: '',
+        solditems :[],
+        totalAmount: ''
+       });
+       setsoldProduct({
+        productId: '',
+        barcode: '',
+        s_price: '',
+        quantity: ''
+      });
+
       
     };
+
+    const handleSavebutton = async(event)=>{
+
+      event.preventDefault();
+     console.log(invoiceData)
+
+     if (
+      invoiceData.invoiceNumber.trim() === '' ||
+      String(invoiceData.totalAmount).trim() === '' ||
+      invoiceData.solditems.length === 0 
+    ) {
+      showErrorToast('Please fill in all required fields');
+      return;
+    }
+
+     try{
+     const result = await invoiceServices.invoiceList(invoiceData);
+
+     if(result === 201){
+          showSuccessToast("Succesfully Updated")
+
+          setSelectedItems([]);
+          setSelectedItemId(null);
+          setPrice('');
+          setSubTotal(0);
+          setDiscount('');
+          setTotalAmount(0);
+          setCash('');
+          setBalance(0);
+          setQuantity('');
+     }else{
+          showErrorToast("Faild To Update the Invoice ")
+     }
+
+    }catch(error){
+      showErrorToast(" Please Try again ")
+    }
+
+    }
+
 
 return(
     <div className="grn-container">
@@ -247,7 +410,6 @@ return(
             <span className="content-left">Customer:</span>
             <span className="content-right">
             <Select className='select-box'
-               
                   styles={{
                     control: (provided) => ({
                       ...provided,
@@ -284,18 +446,19 @@ return(
                     },
                   })}
                   
-                
                   options={customers.map((customer) => ({
                     id: `${customer.ID}`,
                     title: `${customer.Title}`,
                     contactNo: `${customer.ContactNo}`,
                     Fullname: `${customer.Fullname}`,                  
-                     value: `${customer.ContactNo}${customer.Title}${customer.Fullname} `,
-                   
-                    label: `${customer.Title}${customer.Fullname},${customer.ContactNo}`,
+                    //value: `${customer.Title},${customer.Fullname},${customer.ContactNo}`,
+                     value: `${customer.ID}`,
+                    label: `${customer.Title}. ${customer.Fullname} ,${customer.ContactNo}`,
                   }))}
+                  
                   placeholder="Insert customer contact number"
                   onChange={handleSelectChange}
+                   //value={selectedCustomerName}
                   onKeyDown={handleKeyPress}         
               />
             </span>
@@ -354,11 +517,12 @@ return(
                   })}
                   options={items.map((item) => ({
                     id: `${item.ID}`,
-                    value: `${item.ID} ${item.Code} ${item.Name}`,
+                    //value: `${item.ID} ${item.Code} ${item.Name}`,
+                    value: `${item.ID}`,
                     label: `${item.Name}`,
                   }))}
                   placeholder="Insert item detail"
-                  onChange={handleSelectChange}
+                  onChange={handleSelectChangeitem}
                   onKeyPress={handleKeyPress}
                 />
               </span>
@@ -456,11 +620,12 @@ return(
           </button>
           
         
-          <button style={{ backgroundColor: '#2a6592' }}>Save & Print</button>
-          <button style={{ backgroundColor: 'green' }}>Save</button>
+          <button style={{ backgroundColor: '#2a6592' }} >Save & Print</button>
+          <button style={{ backgroundColor: 'green' }} onClick={handleSavebutton}>Save</button>
         </div>
       </div>
 
+      <ToastContainer/>
     </div>
   )
 

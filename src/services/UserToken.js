@@ -6,6 +6,7 @@ export const Usertoken = () => {
   if (token) {
     const decodedToken = jwtDecode(token);
     return {
+      userid: decodedToken.userid,
       username: decodedToken.username,
       fullname: decodedToken.fullname,
       jobrole: decodedToken.jobrole,
