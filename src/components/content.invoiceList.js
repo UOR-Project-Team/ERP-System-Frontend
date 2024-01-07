@@ -63,7 +63,7 @@ function InvoiceList() {
       const invoiceData= await invoiceServices.getAllInvoices();
       console.log(invoiceData)
       //setItems(itemData);
-      setInvoices([...Invoices]);
+      setInvoices([...invoiceData]);
     }
     catch(error)
     {
@@ -265,11 +265,11 @@ function InvoiceList() {
                 Invoices.map((invoice) => (
                   <tr key={invoice.id}>
                     <td>{invoice.ID}</td>
-                    <td>{invoice.Code}</td>
-                    <td>{invoice.Name }</td>
-                    <td>{invoice.CategoryName }</td>
-                    <td>{invoice.UnitName }</td>
-                    <td>{invoice.SupplierName}</td>
+                    <td>{invoice.No}</td>
+                    <td>{invoice.Date_Time }</td>
+                    <td>{invoice.Total_Amount }</td>
+                    <td>{invoice.UserName }</td>
+                    <td>{invoice.CustomerName}</td>
 
                     <td>
                       <button onClick={(event) => { handleClick(event); setCurrentInvoice(invoice.ID); }}>

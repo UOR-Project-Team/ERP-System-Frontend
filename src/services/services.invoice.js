@@ -32,6 +32,15 @@ const invoiceServices = {
     }
   },
 
+  getAllInvoices: async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/invoices`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error fetching invoices');
+    }
+  },
+
 
 
 
