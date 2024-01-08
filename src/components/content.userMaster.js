@@ -13,15 +13,15 @@ function UserMaster() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    Fullname:'',
-    email: '',
-    username: '',
-    password: '',
-    NIC: '',
-    jobrole: '',
-    contactno: '',
-    address: '',
-    city: '',
+    Fullname:'admintest',
+    email: 'admintest@gmail.com',
+    username: 'admintest',
+    password: 'a22',
+    NIC: '123',
+    jobrole: 'admin',
+    contactno: '0989765421',
+    address: '10,Galle',
+    city: 'matara',
   });
 
   const [errorMessage, setErrorMessage] = useState({
@@ -65,14 +65,54 @@ function UserMaster() {
         }
 
     }catch(error){
+      const { message, attributeName } = error.response.data;
+      showErrorToast(`${message}`);
+
+      if (attributeName) {
+        if(attributeName==='Fullname') {
+          setErrorMessage({
+            Fullname: 'Name Alredy Taken',
+          });
+        }else if(attributeName==='Username') {
+          setErrorMessage({
+            username: 'Username already Exists',
+          });
+        } else if(attributeName==='NIC') {
+          setErrorMessage({
+            NIC: 'This National ID/Passport already Exists',
+          });
+        } else if(attributeName==='ContactNo') {
+          setErrorMessage({
+            contactno: 'This Contact Number already Exists',
+          });
+        }
+      }
+
         console.error('Error:', error);
     }
-    
+    //reset the form
+  //   setFormData({
+  //     Fullname:'',
+  //     email: '',
+  //     username: '',
+  //     password: '',
+  //     NIC: '',
+  //     jobrole: '',
+  //     contactno: '',
+  //     address: '',
+  //     city: '',
+        
+  // })
   };
 
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  
+
+  const handleChanges = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleReset = () => {
