@@ -19,6 +19,7 @@ function GRN() {
   const [discount, setDiscount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
+
   useEffect(() => {
     generateRandomNumber();
   }, []);
@@ -111,10 +112,12 @@ function GRN() {
 
   }
 
+
   return (
     <div className='grn-container'>
       <div className='grn-content'>
           <span className='content1-left'>
+
             <div className='content1-container'>
               <span className='content-left'>Supplier Name :</span>
               <span className='content-right'>
@@ -176,7 +179,7 @@ function GRN() {
             </div>
             <div className='content1-container'>
               <span className='content-left'>Supplier Email :</span>
-              <span className='content-right'><input type='text' name='Email' value={selectedSupplierEmail} disabled placeholder='xxxxxxxxxx' /></span>
+              <span className='content-right'><input type='text' name='Email' value={selectedSupplierEmail} placeholder='xxxxxxxxxx' /></span>
             </div>
           </span>
           <span className='content1-right'>

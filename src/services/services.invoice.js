@@ -32,12 +32,34 @@ const invoiceServices = {
     }
   },
 
+
   getAllInvoices: async () => {
     try {
       const response = await axios.get(`${apiUrl}/invoices`);
       return response.data;
     } catch (error) {
       throw new Error('Error fetching invoices');
+    }
+  },
+
+  invoiceList: async(invoicedata)=>{
+
+    try{
+      const response = await axios.post(`${apiUrl}/list`, invoicedata, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if(response.status === 201){
+        return response.status;
+      }else{
+        throw new Error('Error Reciving  Invoice Data response');
+      }
+      
+
+    }catch(error){
+      throw new Error('Error Passing Invoice Data');
     }
   },
 
