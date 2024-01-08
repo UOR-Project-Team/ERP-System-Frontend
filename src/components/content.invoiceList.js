@@ -22,7 +22,7 @@ import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
 import FilterLogo from './../assets/icons/filter.png';
 import SearchLogo from './../assets/icons/search.png';
-import EditLogo from './../assets/icons/edit.png';
+import ViewLogo from './../assets/icons/view.png';
 import ActionLogo from './../assets/icons/action.png';
 import DeleteLogo from './../assets/icons/delete.png';
 import invoiceServices from '../services/services.invoice';
@@ -102,9 +102,10 @@ function InvoiceList() {
       };
 
     const handleRequest = (type) => {
-        setAnchorEl(null);
-        setModelContent(type);
-        setIsModalOpen(true);
+        navigateTo(`/home/invoice-display`)
+        // setAnchorEl(null);
+        // setModelContent(type);
+        // setIsModalOpen(true);
 
         //fetchItem(currentItem);
         // fetchCategoryOptions();
@@ -229,10 +230,21 @@ function InvoiceList() {
       <ToastContainer />
       <div className='list-content-top'>
         <div className='button-container'>
-          <button onClick={() => {navigateTo(`/home/item-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Invoice</span></button>
+          <button onClick={() => {navigateTo(`/home/invoice-add`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Invoice</span></button>
         </div>
         <div className='search-container'>
-        <input type="text" placeholder='Explore the possibilities...' value={searchInput} onChange={(e) =>  setSearchInput(e.target.value)} />
+        <input
+          type="text"
+          placeholder='Explore the possibilities...'
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSearchInputChange(e);
+            }
+          }}    
+        />
         <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
         </div>
       </div>
@@ -288,7 +300,7 @@ function InvoiceList() {
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
                 <MenuItem>
                   <button onClick={() => {handleRequest('edit');}}>
-                    <img src={EditLogo} alt='Edit Logo' />
+                    <img src={ViewLogo} alt='View Logo' />
                     <span>View Invoice</span>
                   </button>               
                         
