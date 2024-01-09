@@ -16,7 +16,7 @@ function InvoiceDisplay() {
 
   return (
     
-      <div className='grn-content'>
+      <div className=''>
         <table>
           <thead>
             <tr>
@@ -54,7 +54,7 @@ function InvoiceDisplay() {
                     <td className='price'>{'Rs ' + selectedItem.quantity * selectedItem.purchasePrice}</td>
                     <td>
                       <button onClick={() => handleRemoveItem(index, selectedItem.purchasePrice, selectedItem.quantity)}>
-                        <img src={DeleteLogo} alt='Action Logo' />
+                        <img src={DeleteLogo} alt='Action Logo'/>
                       </button>
                     </td>
                   </tr>
@@ -63,6 +63,19 @@ function InvoiceDisplay() {
             </tbody>
         </table>
       </div>
+
+      <div className='' style={{ display: 'flex', justifyContent: 'flex-end' }} >
+          <div className='button-container' >
+              <button style={{ backgroundColor: 'crimson' }} onClick={handlecancel}>Cancel</button>
+              <button style={{ backgroundColor: '#2a6592' }}>Save & Print</button>
+              <button style={{ backgroundColor: 'green' }} onClick={handlesavegrn}>Save</button>
+          </div>
+          </div>
+          <ToastContainer/>
+      </div>
+);
+
+        
     
   );
 }
