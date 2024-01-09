@@ -110,7 +110,7 @@ function Invoice(){
       
     const selectedC_Id = selectedOption ? selectedOption.value : null;
       console.log('Selected Customer data', selectedC_Id)
-      //setSelectedCustomerId(selectedC_Id)
+      setSelectedCustomerId(selectedC_Id)
       //setSelectedCustomerName(selectedOption.Fullname)
 
       setInvoiceData(prevData => ({
@@ -374,7 +374,7 @@ function Invoice(){
     const handleSavebutton = async(event)=>{
 
       event.preventDefault();
-     console.log(invoiceData)
+     //console.log(invoiceData)
 
      if (
       invoiceData.invoiceNumber.trim() === '' ||
@@ -566,6 +566,7 @@ function Invoice(){
 
     
     
+
 
 return(
   
