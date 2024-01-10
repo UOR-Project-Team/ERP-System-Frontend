@@ -1,32 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import validateUser from '../services/validate.userLoginForms';
 import {Usertoken} from '../services/UserToken'
 import { validateUsername, validatePassword, validateConfirmPassword } from '../services/validate.Password'
-
-
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
 import img3 from '../assets/images/login-background-3.jpg'
-//import { showErrorToast } from '../services/services.toasterMessage';
-
 import Modal from 'react-modal';
 import TextField from '@mui/material/TextField';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
-
-const images = [
-  img1,
-  img2,
-  img3
-];
-
-
+const images = [ img1, img2, img3 ];
 
 function Login({ updateAuthentication }) {
-
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -118,7 +106,7 @@ function Login({ updateAuthentication }) {
         const userinfo = await Usertoken();
 
         if(userinfo){
-            const {username, fullname, jobrole, loginflag} = userinfo;
+            const {loginflag} = userinfo;
             console.log('test3');
             console.log(loginflag)
             setresetFormData(prevData => ({
