@@ -82,7 +82,8 @@ function CategoryList({updateHeaderText}) {
     setCategories(result);
   };
 
-  const handleSearchInputChange = async () => {
+  const handleSearchInputChange = async (e) => {
+    e.preventDefault();
     try {
       if (searchInput === '') {
         await fetchCategories();
@@ -272,7 +273,7 @@ function CategoryList({updateHeaderText}) {
                   }
                 }}
               />
-              <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+              <button onClick={(e) => handleSearchInputChange(e)}><img src={SearchLogo} alt="Search Logo"/></button>
             </form>
           </div>
         </div>

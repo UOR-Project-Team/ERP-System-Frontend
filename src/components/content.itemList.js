@@ -22,7 +22,6 @@ import { showSuccessToast, showErrorToast } from '../services/services.toasterMe
 import AddLogo from './../assets/icons/add.png';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
-import FilterLogo from './../assets/icons/filter.png';
 import SearchLogo from './../assets/icons/search.png';
 import EditLogo from './../assets/icons/edit.png';
 import DeleteLogo from './../assets/icons/delete.png';
@@ -34,6 +33,7 @@ import supplierServices from '../services/services.supplier';
 import AllItemList from './lists.allItems';
 import UnitItemList from './lists.itemsByUnitID';
 import CategoryItemList from './lists.itemsByCategoryID';
+import SupplierItemList from './lists.itemsBySupplierID';
 
 function ItemList() {
 
@@ -49,12 +49,13 @@ function ItemList() {
   const [categories, setCategories] = useState([]);
   const [units, setUnits] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+
+  const navigateTo = useNavigate();
+
   const [fetchFlag, setFetchFlag] = useState({
     flag: '',
     id: 0
   });
-
-  const navigateTo = useNavigate();
 
   const [formData, setFormData] = useState({
     code: '',
@@ -92,6 +93,8 @@ function ItemList() {
         itemData= await itemServices.getItemsByUnitFilter(id);
       } else if(flag === 'category') {
         itemData= await itemServices.getItemsByCategoryFilter(id);
+      } else if(flag === 'supplier') {
+        itemData= await itemServices.getItemsBySupplierFilter(id);
       } else {
         itemData= await itemServices.getAllItems();
       }
@@ -107,13 +110,14 @@ function ItemList() {
     let itemData = [];
     try{
       if (fetchFlag.flag === 'unit') {
-        itemData= await itemServices.getItemsByUnitFilter(fetchFlag.id);
+        itemData = await itemServices.getItemsByUnitFilter(fetchFlag.id);
       } else if(fetchFlag.flag === 'category') {
-        itemData= await itemServices.getItemsByCategoryFilter(fetchFlag.id);
+        itemData = await itemServices.getItemsByCategoryFilter(fetchFlag.id);
+      } else if(fetchFlag.flag === 'supplier') {
+        itemData= await itemServices.getItemsBySupplierFilter(fetchFlag.id);
       } else {
-        itemData= await itemServices.getAllItems();
+        itemData = await itemServices.getAllItems();
       }
-      const itemData= await itemServices.getAllItems();
       setItems([...itemData]);
     }
     catch(error)
@@ -400,7 +404,8 @@ function ItemList() {
     setItems(result);
   };
 
-  const handleSearchInputChange = async () => {
+  const handleSearchInputChange = async (e) => {
+    e.preventDefault();
     try {
       if (searchInput === '') {
         await fetchUpdatedItems();
@@ -437,7 +442,7 @@ function ItemList() {
                   }
                 }}
               />
-              <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+              <button onClick={(e) => handleSearchInputChange(e)}><img src={SearchLogo} alt="Search Logo"/></button>
             </form>
           </div>
       </div>
@@ -454,7 +459,6 @@ function ItemList() {
           <div className='button-container'>
             <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
             <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
-            <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
           </div>
         </div>
         <div className='table-container'>
@@ -462,6 +466,7 @@ function ItemList() {
             <Route path="/" element={<AllItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
             <Route path="/unit/:id" element={<UnitItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
             <Route path="/category/:id" element={<CategoryItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
+            <Route path="/supplier/:id" element={<SupplierItemList Item={Item} fetchItems={fetchItems} handleActionClick={handleActionClick} />} />
           </Routes>   
         </div>
       </div>

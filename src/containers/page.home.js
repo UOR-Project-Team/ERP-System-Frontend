@@ -75,7 +75,7 @@ function Home({ updateAuthentication }) {
             <Route path="other-reports" element={<OtherReports />} />
             <Route path="category-list" element={<CategoryList updateHeaderText={updateHeaderText} />} />
             <Route path="/item-list/*" element={<ItemList />} />
-            <Route path="supplier-list" element={<SupplierList />} />
+            <Route path="supplier-list" element={<SupplierList updateHeaderText={updateHeaderText} />} />
             <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
             <Route path="invoice-list" element={<InvoiceList />} />

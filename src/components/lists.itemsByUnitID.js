@@ -8,7 +8,7 @@ function UnitItemList({ Item, fetchItems, handleActionClick }) {
 
     useEffect(() => {
         fetchItems('unit', id);
-      }, []);
+      }, [fetchItems, id]);
 
   return (
     <table>
@@ -20,7 +20,6 @@ function UnitItemList({ Item, fetchItems, handleActionClick }) {
           <th>Category</th>
           <th>Unit</th>
           <th>Supplier</th>
-          
           <th className='action-column'></th>
         </tr>
       </thead>

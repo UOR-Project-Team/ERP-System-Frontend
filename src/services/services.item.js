@@ -43,6 +43,15 @@ const itemServices ={
         }
       },
 
+      getItemsBySupplierFilter: async (supplierId) => {
+        try {
+          const response = await axios.get(`${apiUrl}/supplier/${supplierId}`);
+          return response.data;
+        } catch (error) {
+          throw new Error('Error fetching items');
+        }
+      },
+
       getItemById: async (itemId) => {
         try {
           let response = []

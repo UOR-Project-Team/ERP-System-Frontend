@@ -83,7 +83,8 @@ function UnitList({updateHeaderText}) {
     setUnits(result);
   };
 
-  const handleSearchInputChange = async () => {
+  const handleSearchInputChange = async (e) => {
+    e.preventDefault();
     try {
       if (searchInput === '') {
         await fetchUnits();

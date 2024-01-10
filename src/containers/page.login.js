@@ -7,6 +7,7 @@ import validateUser from '../services/validate.userLoginForms';
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
 import img3 from '../assets/images/login-background-3.jpg'
+import { showErrorToast } from '../services/services.toasterMessage';
 
 const images = [
   img1,
@@ -50,16 +51,7 @@ function Login({ updateAuthentication }) {
     setErrorMessage(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error !== '')) {
-      toast.error(`Please try again`, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showErrorToast(`Please check the inputs`);
       return
     }
   
@@ -76,41 +68,14 @@ function Login({ updateAuthentication }) {
         updateAuthentication(true)
         navigate('/home');
       } else {
-        toast.error(`Please try again later`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
+        showErrorToast(`Please try again later`);
       }
     } catch (error) {
       console.error('Error:', error);
       if (error.response && error.response.status === 401) {
-        toast.error(`Invalid Credentials`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
+        showErrorToast(`Invalid credentials`);
       } else {
-        toast.error(`Internal Server Error`, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
+        showErrorToast(`Internal Server Error`);
       }
     }
   }

@@ -37,7 +37,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
   return(
     <div className='expanded'>
       <div className='header'>
-        <button><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo"/></button>
+        <button title="Collapse"><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo"/></button>
       </div>
       <div className='body'>
         <button onClick={() => updateHeaderText('Dashboard')}>
@@ -139,7 +139,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Item List</span>
             </button>
-            <button onClick={() => {navigateTo('/home/supplier-list'); updateHeaderText('Supplier List');}}>
+            <button onClick={() => {navigateTo('/home/supplier-list');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Supplier List</span>
             </button>
