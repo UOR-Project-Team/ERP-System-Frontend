@@ -357,7 +357,7 @@ function Invoice(){
        setInvoiceData({
         invoiceNumber: '',
         Customerid:'',
-        userid: '',
+        userid: userid,
         solditems :[],
         totalAmount: ''
        });
