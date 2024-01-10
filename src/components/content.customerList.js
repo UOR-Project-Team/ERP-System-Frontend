@@ -32,7 +32,6 @@ import GreenCircle from '../assets/icons/green-circle.png'
 import GreyCircle from '../assets/icons/Grey-circle.png'
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
-import { arraySort } from '../services/array.sort';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function CustomerList() {
@@ -51,7 +50,7 @@ function CustomerList() {
   const navigateTo = useNavigate();
 
   const [fields, setFields] = useState(() => {
-    const storedFields = localStorage.getItem('fields');
+    const storedFields = localStorage.getItem('customer-fields');
     return storedFields ? JSON.parse(storedFields) : {
       title: true,
       fullname: true,
@@ -69,7 +68,7 @@ function CustomerList() {
   });
 
   const [tempFields, setTempFields] = useState(() => {
-    const storedFields = localStorage.getItem('fields');
+    const storedFields = localStorage.getItem('customer-fields');
     return storedFields ? JSON.parse(storedFields) : {
       title: true,
       fullname: true,
@@ -126,7 +125,7 @@ function CustomerList() {
   });
 
   useEffect(() => {
-    localStorage.setItem('fields', JSON.stringify(fields));
+    localStorage.setItem('customer-fields', JSON.stringify(fields));
     fetchCustomers();
   }, [fields]);
 
@@ -143,13 +142,13 @@ function CustomerList() {
     const result = customers.filter((customer) => {
       const values = Object.values(customer).join(' ').toLowerCase();
       const regex = new RegExp(`\\b${searchTerm.toLowerCase()}`);
-  
       return regex.test(values);
     });
     setCustomers(result);
   };
 
-  const handleSearchInputChange = () => {
+  const handleSearchInputChange = (e) => {
+    e.preventDefault();
     if (searchInput === '') {
       fetchCustomers();
     } else {
@@ -447,6 +446,7 @@ function CustomerList() {
         tempdata.push(elt.VATNo);
       }
       data.push(tempdata);
+      return null;
     });
 
     // Set table content
@@ -540,6 +540,7 @@ function CustomerList() {
         tempdata.push(elt.VATNo);
       }
       data.push(tempdata);
+      return null;
     });
 
     const csvData = [headers, ...data];
@@ -580,7 +581,7 @@ function CustomerList() {
                   }
                 }}
               />
-              <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+              <button onClick={(e) => handleSearchInputChange(e)}><img src={SearchLogo} alt="Search Logo"/></button>
             </form>
           </div>
         </div>

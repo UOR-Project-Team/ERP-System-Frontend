@@ -7,8 +7,8 @@ function CategoryItemList({ Item, fetchItems, handleActionClick }) {
     const { id } = useParams();
 
     useEffect(() => {
-        fetchItems('category', id);
-      }, []);
+      fetchItems('category', id);
+  }, [fetchItems, id]);
 
   return (
     <table>
@@ -20,7 +20,6 @@ function CategoryItemList({ Item, fetchItems, handleActionClick }) {
           <th>Category</th>
           <th>Unit</th>
           <th>Supplier</th>
-          
           <th className='action-column'></th>
         </tr>
       </thead>

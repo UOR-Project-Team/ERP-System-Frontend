@@ -34,7 +34,7 @@ import ActivateLogo from './../assets/icons/activate.png';
 import DeactivateLogo from './../assets/icons/deactivate.png';
 import ItemLogo from './../assets/icons/item.png';
 
-function SupplierList() {
+function SupplierList({ updateHeaderText }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [removeClick, setDialogOpen] = useState(false);
@@ -49,39 +49,44 @@ function SupplierList() {
 
   const navigateTo = useNavigate();
 
-  const [fields, setFields] = useState({
-    Title: true,
-    Fullname: true,
-    RegistrationNo: true,
-    Email: true,
-    ContactNo: true,
-    Fax: false,
-    Street1: false,
-    Street2: false,
-    City: true,
-    Country: true,
-    Description: true,
-    VatNo: false,
-    Credit: false,
-    Status: true
-    
+  const [fields, setFields] = useState(() => {
+    const storedFields = localStorage.getItem('supplier-fields');
+    return storedFields ? JSON.parse(storedFields) : {
+      Title: true,
+      Fullname: true,
+      RegistrationNo: true,
+      Email: true,
+      ContactNo: true,
+      Fax: false,
+      Street1: false,
+      Street2: false,
+      City: true,
+      Country: true,
+      Description: true,
+      VatNo: false,
+      Credit: false,
+      Status: true
+    };
   });
 
-  const [tempFields, setTempFields] = useState({
-    Title: true,
-    Fullname: true,
-    RegistrationNo: true,
-    Email: true,
-    ContactNo: true,
-    Fax: false,
-    Street1: false,
-    Street2: false,
-    City: true,
-    Country: true,
-    Description: true,
-    VatNo: false,
-    Credit: false,
-    Status: true
+  const [tempFields, setTempFields] = useState(() => {
+    const storedFields = localStorage.getItem('supplier-fields');
+    return storedFields ? JSON.parse(storedFields) : {
+      Title: true,
+      Fullname: true,
+      RegistrationNo: true,
+      Email: true,
+      ContactNo: true,
+      Fax: false,
+      Street1: false,
+      Street2: false,
+      City: true,
+      Country: true,
+      Description: true,
+      VatNo: false,
+      Credit: false,
+      Status: true
+    };
   });
 
   const [formData , setFormData] = useState({
@@ -115,8 +120,10 @@ function SupplierList() {
   });
 
   useEffect(() => {
+    localStorage.setItem('supplier-fields', JSON.stringify(fields));
     fetchSuppliers();
-  }, []);
+    updateHeaderText('Supplier List')
+  }, [updateHeaderText, fields]);
 
   const fetchSuppliers = async () => {
     try {
@@ -136,7 +143,8 @@ function SupplierList() {
     setSuppliers(result);
   };
 
-  const handleSearchInputChange = async () => {
+  const handleSearchInputChange = async (e) => {
+    e.preventDefault();
     try {
       if (searchInput === '') {
         await fetchSuppliers();
@@ -163,21 +171,20 @@ function SupplierList() {
     e.preventDefault();
     setIsModalOpen(false);
     setFields({
-      Title: tempFields.Title,
-      Fullname: tempFields.Fullname,
-      RegistrationNo: tempFields.RegistrationNo,
-      Email: tempFields.Email,
-      ContactNo: tempFields.ContactNo,
-      FAX: tempFields.Fax,
-      Street1: tempFields.Street1,
-      Street2: tempFields.Street2,
-      City: tempFields.City,
-      Country: tempFields.Country,
-      Description: tempFields.Description,
-      VATNo: tempFields.VatNo,
-      Credit:tempFields.Credit,
-      Status:tempFields.Status
-      
+      Title: tempFields.title || true,
+      Fullname: tempFields.Fullname || true,
+      RegistrationNo: tempFields.RegistrationNo || true,
+      Email: tempFields.Email || true,
+      ContactNo: tempFields.ContactNo || true,
+      Fax: tempFields.Fax || false,
+      Street1: tempFields.Street1 || false,
+      Street2: tempFields.Street2 || false,
+      City: tempFields.City || true,
+      Country: tempFields.Country || true,
+      Description: tempFields.Description || true,
+      VatNo: tempFields.VatNo || false,
+      Credit: tempFields.Credit || false,
+      Status: tempFields.Status || true
     });
   }
 
@@ -348,10 +355,96 @@ function SupplierList() {
     };
 
     // Set table headers
-    const headers = [["Title","Full Name", "Registratoin No", "Email", "Contact Number", "FAX", "Street1","Street2", "City","Country", "Description","VAT No","Credit"]];
+    let headers = [];
+    let tempHeader = []
+    let data = [];
 
-    // Map customer data
-    const data = suppliers.map(elt=> [ elt.Title, elt.Fullname, elt.RegistrationNo, elt.Email, elt.ContactNo, elt.Fax, elt.Street1,elt.Street2, elt.City,elt.Country, elt.Description, elt.VatNo, elt.Credit]);
+    if(fields.Title) {
+      tempHeader.push("Title");
+    }
+    if(fields.Fullname) {
+      tempHeader.push("Fullname");
+    }
+    if(fields.RegistrationNo) {
+      tempHeader.push("Registratio No");
+    }
+    if(fields.Email) {
+      tempHeader.push("Email");
+    }
+    if(fields.ContactNo) {
+      tempHeader.push("Contact No");
+    }
+    if(fields.Fax) {
+      tempHeader.push("Fax");
+    }
+    if(fields.Street1) {
+      tempHeader.push("Street1");
+    }
+    if(fields.Street2) {
+      tempHeader.push("Street2");
+    }
+    if(fields.City) {
+      tempHeader.push("City");
+    }
+    if(fields.Country) {
+      tempHeader.push("Country");
+    }
+    if(fields.Description) {
+      tempHeader.push("Description");
+    }
+    if(fields.VatNo) {
+      tempHeader.push("VAT No");
+    }
+    if(fields.Credit) {
+      tempHeader.push("Credit");
+    }
+
+    headers.push(tempHeader);
+
+    suppliers.map(elt => {
+      let tempdata = []
+      if(fields.title) {
+        tempdata.push(elt.Title);
+      }
+      if(fields.Fullname) {
+        tempdata.push(elt.Fullname);
+      }
+      if(fields.RegistrationNo) {
+        tempdata.push(elt.RegistrationNo);
+      }
+      if(fields.Email) {
+        tempdata.push(elt.Email);
+      }
+      if(fields.ContactNo) {
+        tempdata.push(elt.ContactNo);
+      }
+      if(fields.Fax) {
+        tempdata.push(elt.Fax);
+      }
+      if(fields.Street1) {
+        tempdata.push(elt.Street1);
+      }
+      if(fields.Street2) {
+        tempdata.push(elt.Street2);
+      }
+      if(fields.City) {
+        tempdata.push(elt.City);
+      }
+      if(fields.Country) {
+        tempdata.push(elt.Country);
+      }
+      if(fields.Description) {
+        tempdata.push(elt.Description);
+      }
+      if(fields.VatNo) {
+        tempdata.push(elt.VatNo);
+      }
+      if(fields.Credit) {
+        tempdata.push(elt.Credit);
+      }
+      data.push(tempdata);
+      return null;
+    });
 
     // Set table content
     let content = {
@@ -376,24 +469,94 @@ function SupplierList() {
   };
 
   const exportCSV = () => {
-    const headers = ["Title", "Full Name", "RegistrationNo", "Email", "ContactNo", "FAX", "Street1","Street2", "City","Country", "Description" , "VATNo" , "Credit"];
-  
-    const data = suppliers.map(elt => [
-      
-      elt.Title,
-      elt.Fullname,
-      elt.RegistrationNo,
-      elt.Email,
-      elt.ContactNo,
-      elt.Fax,
-      elt.Street1,
-      elt.Street2,
-      elt.City,
-      elt.Country,
-      elt.Description,
-      elt.VatNo,
-      elt.Credit
-    ]);
+
+    let headers = [];
+    let data = [];
+
+    if(fields.Title) {
+      headers.push("Title");
+    }
+    if(fields.Fullname) {
+      headers.push("Fullname");
+    }
+    if(fields.RegistrationNo) {
+      headers.push("Registratio No");
+    }
+    if(fields.Email) {
+      headers.push("Email");
+    }
+    if(fields.ContactNo) {
+      headers.push("Contact No");
+    }
+    if(fields.Fax) {
+      headers.push("Fax");
+    }
+    if(fields.Street1) {
+      headers.push("Street1");
+    }
+    if(fields.Street2) {
+      headers.push("Street2");
+    }
+    if(fields.City) {
+      headers.push("City");
+    }
+    if(fields.Country) {
+      headers.push("Country");
+    }
+    if(fields.Description) {
+      headers.push("Description");
+    }
+    if(fields.VatNo) {
+      headers.push("VAT No");
+    }
+    if(fields.Credit) {
+      headers.push("Credit");
+    }
+
+    suppliers.map(elt => {
+      let tempdata = []
+      if(fields.title) {
+        tempdata.push(elt.Title);
+      }
+      if(fields.Fullname) {
+        tempdata.push(elt.Fullname);
+      }
+      if(fields.RegistrationNo) {
+        tempdata.push(elt.RegistrationNo);
+      }
+      if(fields.Email) {
+        tempdata.push(elt.Email);
+      }
+      if(fields.ContactNo) {
+        tempdata.push(elt.ContactNo);
+      }
+      if(fields.Fax) {
+        tempdata.push(elt.Fax);
+      }
+      if(fields.Street1) {
+        tempdata.push(elt.Street1);
+      }
+      if(fields.Street2) {
+        tempdata.push(elt.Street2);
+      }
+      if(fields.City) {
+        tempdata.push(elt.City);
+      }
+      if(fields.Country) {
+        tempdata.push(elt.Country);
+      }
+      if(fields.Description) {
+        tempdata.push(elt.Description);
+      }
+      if(fields.VatNo) {
+        tempdata.push(elt.VatNo);
+      }
+      if(fields.Credit) {
+        tempdata.push(elt.Credit);
+      }
+      data.push(tempdata);
+      return null;
+    });
   
     const csvData = [headers, ...data];
   
@@ -436,7 +599,7 @@ function SupplierList() {
                 }
               }}
             />
-            <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
+            <button onClick={(e) => handleSearchInputChange(e)}><img src={SearchLogo} alt="Search Logo"/></button>
           </form>
         </div>
       </div>
@@ -464,8 +627,6 @@ function SupplierList() {
                 <th style={{ display: fields.VatNo ? 'table-cell' : 'none' }}>VAT  No</th>
                 <th style={{ display: fields.Credit ? 'table-cell' : 'none' }}>Credit</th>
                 <th style={{ display: fields.Status ? 'table-cell' : 'none' }}>Status</th>
-
-
                 <th className='action-column'></th>
               </tr>
             </thead>
@@ -498,10 +659,7 @@ function SupplierList() {
                         <button type='button' ><img src ={GreenCircle} alt='Active'/></button>
                      )}
                       </div>
-                        
-                        </td>
-
-
+                    </td>
                     <td>
                       <button onClick={(event) => {handleActionClick(event, supplier)}}>
                         <img src={ActionLogo} alt='Action Logo' />
@@ -516,10 +674,9 @@ function SupplierList() {
       </div>
       </div>
       
-
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem>
-          <button>
+          <button onClick={() => {navigateTo(`/home/item-list/supplier/${currentSupplier}`); updateHeaderText('Item List')}}>
             <img src={ItemLogo} alt='Item Logo' />
             <span>View Items</span>
           </button>         
@@ -583,7 +740,7 @@ function SupplierList() {
                   </div>
                   <div className='checkbox-content'>
                     <input type='checkbox' name='ContactNo' checked={tempFields.ContactNo} onChange={handleCheckboxChange} />
-                    <label>Cuntact Number</label>
+                    <label>Contact Number</label>
                   </div>
                   <div className='checkbox-content'>
                     <input type='checkbox' name='Fax' checked={tempFields.Fax} onChange={handleCheckboxChange} />
@@ -616,6 +773,10 @@ function SupplierList() {
                   <div className='checkbox-content'>
                     <input type='checkbox' name='Credit' checked={tempFields.Credit} onChange={handleCheckboxChange} />
                     <label>Credit</label>
+                  </div>
+                  <div className='checkbox-content'>
+                    <input type='checkbox' name='Status' checked={tempFields.Status} onChange={handleCheckboxChange} />
+                    <label>Status</label>
                   </div>
                 </div>
                 <button type='submit'>Filter</button>

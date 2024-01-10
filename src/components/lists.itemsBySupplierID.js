@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import ActionLogo from './../assets/icons/action.png';
 
-function AllItemList({ Item, fetchItems, handleActionClick }) {
+function SupplierItemList ({ Item, fetchItems, handleActionClick }) {
 
-  useEffect(() => {
-    fetchItems('all', 0);   
-  }, [fetchItems]);
+    const { id } = useParams();
+
+    useEffect(() => {
+        fetchItems('supplier', id);
+      }, [fetchItems, id]);
 
   return (
     <table>
@@ -46,4 +49,4 @@ function AllItemList({ Item, fetchItems, handleActionClick }) {
   );
 }
 
-export default AllItemList;
+export default SupplierItemList;
