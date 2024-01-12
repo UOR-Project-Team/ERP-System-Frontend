@@ -30,7 +30,6 @@ function GRN() {
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-  const itemQuantityInputRef = useRef(null); 
   const [sellingPrice, setsellingPrice] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
