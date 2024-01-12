@@ -34,7 +34,6 @@ function GRN() {
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
   const {userid , fullname} = useUser();
-
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
