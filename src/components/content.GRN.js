@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode-generator';
 import CompanyLogo from './../assets/logos/Uni_Mart.png';
+import {generatePDFGRN} from "../services/generatePrint";
 
 
 
@@ -309,146 +310,51 @@ function GRN() {
     reset();
   }
 
-  const handleExportToPDF = () =>{
+  const handleExportToPDF = () => {
+    
+    if (totalAmount === 0) {
+           showErrorToast('Cannot generate pdf without Sales');
+           console.error('empty');
+            return;
+          }
 
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString();
       const formattedTime = currentDate.toLocaleTimeString();
 
-      const qrCodeData = `${grnNumber}\nDate: ${formattedDate}\nTime: ${formattedTime}\nSupplier: ${selectedSupplierName}\nSupplier Contact: ${selectedSupplierMobile}\nSupplier Email: ${selectedSupplierEmail}`;
-      const qr = QRCode(0, 'L');
-      qr.addData(qrCodeData);
-      qr.make();
+      // const noteText1 = "Note:";
+      // const noteText2 = "* Returns are accepted within 7 days of purchase with a valid receipt.";
+      // const noteText3 = "* Refunds will be issued in accordance with the store's refund policy.";
+      const thankYouMessage = 'Thank You!';
+      const noteHeader = "GRN"
 
-      const qrCodeImage = qr.createDataURL();  
-      const unit = "pt";
-      const size = "A4";
-      const orientation = "landscape";
-      const pdf = new jsPDF(unit , unit , size ,orientation);
-
-      function headerText(){
-        pdf.setFont('helvetica', 'bold'); 
-        pdf.setFontSize(20); 
-        pdf.setTextColor(40);
-        }
-        function pdftext1(){
-          pdf.setFont('helvetica', 'regular'); 
-          pdf.setFontSize(12); 
-          pdf.setTextColor(40);
-        }
-        function pdftext2(){
-          pdf.setFont('times', 'regular');
-          pdf.setFontSize(12); 
-          pdf.setTextColor(40);
-        } 
-
-        function footerText(){
-          pdf.setFont('crimson text', 'regular');
-          pdf.setFontSize(10); 
-          pdf.setTextColor(40);
-        } 
-
-      const headerLeft = function(data) {
-        pdf.setFontSize(8);
-        pdf.setTextColor(40);
-        pdf.addImage(CompanyLogo, 'PNG' , 40,20,70,70);
-        headerText();
-        pdf.text('UNI MART' , 115 , 35);
-        pdftext2();
-        pdf.text('University Of Ruhuna' , 115 , 50);
-        pdf.text('Wellamadama' , 115 , 63);
-        pdf.text('Matara' , 115 , 76);
-        pdf.text('0372222222' , 115 , 89);
-
-      }
-
-      const SupplierDetails = function(data ){  
-        pdf.text(`Supplier Name:`, 45, 150);
-        pdf.text(`${selectedSupplierName}`, 140, 150);
-        pdf.text(`Supplier Mobile:`, 45, 165);
-        pdf.text(`${selectedSupplierMobile}`, 140, 165);
-        pdf.text(`Supplier Email:`, 45, 180);
-        pdf.text(`${selectedSupplierEmail}`, 140, 180);
-        pdf.text(`User:`, 400, 150);
-        pdf.text(`${fullname}`, 430, 150);
-    
-      }
-
-      const headerRight = function(data) {
-        headerText();
-        pdf.text('GRN' , 400 , 35);
-        pdf.addImage(qrCodeImage, 'JPEG', 396, 37, 60, 60);
-        pdftext2();
-        pdf.text(`${grnNumber}`, 460, 55);
-        pdf.text(`${formattedDate}`, 460, 70);
-        pdf.text(`${formattedTime}`, 460, 85);
-    };
-
-      const addTransactionTabel = (pdf , subTotal , discount , totalAmount) =>{
-        const subTotalData = [["Subtotal", `Rs${subTotal}`]]
-        const discountData = [["Discount", `${discount}%`]] 
-        const totalAmountData = [["Total Amount", `Rs${totalAmount}`]]  
-        const startYPosition = 250 +itemTableHeight;
-        const marginAdjustment = 10;      
-        pdf.autoTable({
-        body:  [...subTotalData, ...discountData, ...totalAmountData],
-        theme:'striped',
-        styles: {
-                
-                body: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-              },
   
-        margin: { top: startYPosition + marginAdjustment , left: 330 },
-        tableWidth: 230,
-        columnStyles: {
-                1: { columnWidth: 80 }, 
-              },
-                      
-      })
-      pdftext1();
-      pdf.text('Thank You!', 270, pdf.autoTable.previous.finalY + marginAdjustment + 100);     
-    }
-      const headers = ["No" ,"Item" ,"Item Code",  "Purchase Price" , "Quantity" , "Total Price"];
-      const data = SelectedItems.map((item , index) =>[index+1 ,item.itemName,item.itemCode, `Rs${item.purchasePrice}`, item.quantity , `Rs${item.purchasePrice * item.quantity}` ])
-      const itemTableHeight = SelectedItems.length * 20;
+      const pdf = generatePDFGRN(
+        totalAmount,
+        grnNumber,
+        formattedDate,
+        formattedTime,
+        selectedSupplierName,
+        selectedSupplierMobile,
+        selectedSupplierEmail,
+        fullname,
+        CompanyLogo,
+        SelectedItems,
+        subTotal,
+        discount,
+        // cash,
+        // balance,
+        // noteText1,
+        // noteText2,
+        // noteText3,
+        noteHeader,
+        thankYouMessage
+    );
+    pdf.save("ERP-GRN.pdf");  
+    showSuccessToast('PDF generated successfully');
+  };
 
-        
-      pdf.autoTable({
-        head: [headers],
-        body: data,
-        theme: 'striped',
-        styles: {
-          head: { fillColor: [38, 2, 97], textColor: [255, 255, 255] }, 
-          body: { fillColor: [255, 255, 255], textColor: [0, 0, 0] }, 
-        },
-        columnStyles: {
-          0: { columnWidth: 40 }, 
-          1: { columnWidth: 170 }, 
-          2: { columnWidth: 80 }, 
-          3: { columnWidth: 80 }, 
-          4: { columnWidth: 70 },
-          5: { columnWidth: 80 },  
-          
-        },
-        margin: { top: 220 },
-        addPageContent: function(data) {
-          pdf.setFontSize(8);
-          pdf.setTextColor(40);
-          headerLeft(data);
-          headerRight(data);
-          pdf.line(20, 120, 580, 120);
-          SupplierDetails(data);
-          pdf.line(20, 205, 580, 205);
-          addTransactionTabel(pdf , subTotal , discount, totalAmount );
-          pdf.line(20, 800, 580, 800);
-          footerText();
-          pdf.text("©INNOVA ERP Solutions. All rights reserved.",210,815);
-          pdf.text("Wellamadama, Matara , 0412223334",230,830)
-        }
-      });  
-      pdf.save("ERP-GRN.pdf");
 
-  }
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
