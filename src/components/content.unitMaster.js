@@ -36,59 +36,70 @@ function UnitMaster(){
             return
         }
           
-          try {
+        try {
             const response = await unitServices.createUnit(formData );
             showSuccessToast('Unit successfully added');
             console.log('Unit created:', response);
+
             handleReset();
-            
 
             setTimeout(() => {
-              navigate('/home/unit-list');
+                navigate('/home/unit-list');
             }, 2000);
 
-           
+        } catch (error) {
+            const { message, attributeName } = error.response.data;
+            showErrorToast(`${message}`);
+            
+            if (attributeName) {
+                if(attributeName==='unique_description') {
+                    setErrorMessage({
+                        Description: 'This Description already Exists',
+                    });
+                }
+                if(attributeName==='unique_si') {
+                    setErrorMessage({
+                        SI: 'This SI already Exists',
+                    });
+                }
+            }
+        
+            console.error('Error:', message);
+        
+        }     
+          
+    };
 
-          } catch(error){
-            console.error('Error creating unit:', error.message);
-            if (error.response && error.response.data && error.response.data.error) {
-              showErrorToast('Error creating unit');
-            } else {
-              showErrorToast('Error Occured');
-          }
-          }
-        };
+    const handleReset = () =>{
+        setFormData((prevdata) => ({
+            Description:'',
+            SI: ''
+        }));
+        setErrorMessage({
+            Description:'',
+            SI: ''
+        });
+    };
 
-        const handleReset = () =>{
-            setFormData((prevdata) => ({
-                Description:'',
-                SI: ''
-            }));
-            setErrorMessage({
-                Description:'',
-                SI: ''
-            });
-        };
-
-        return(
-            <div>
-                <ToastContainer />
-                <div className='master-content' style={{height: '92vh'}}>
-                    <form className='form-container' style={{marginTop:'22vh'}}>
-                        <h3>Unit Details</h3>
-                            <TextField className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
-                            <label className='error-text'>{errorMessage.Description}</label>
-                            <TextField className='text-line-type1' name='SI' value={formData.SI} onChange={(e) => handleChanges(e)} label="SI" variant='outlined' />
-                            <label className='error-text'>{errorMessage.SI}</label>
-                            <div className='button-container'>
-                                 <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
-                                 <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
-                            </div>
-                    </form>
-                    
-                </div>
+    return(
+        <div>
+            <ToastContainer />
+            <div className='master-content' style={{height: '92vh'}}>
+                <form className='form-container' style={{marginTop:'22vh'}}>
+                    <h3>Unit Details</h3>
+                        <TextField error={errorMessage.Description ? true : false} className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
+                        <label className='error-text'>{errorMessage.Description}</label>
+                        <TextField error={errorMessage.SI ? true : false} className='text-line-type1' name='SI' value={formData.SI} onChange={(e) => handleChanges(e)} label="SI" variant='outlined' />
+                        <label className='error-text'>{errorMessage.SI}</label>
+                        <div className='button-container'>
+                                <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+                                <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
+                        </div>
+                </form>
+                
             </div>
-        )
+        </div>
+    )
     
 }
 

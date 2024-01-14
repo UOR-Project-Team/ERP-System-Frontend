@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Select from "react-select";
 import grnServices from '../services/services.grn';
 import DeleteLogo from './../assets/icons/delete.png';
-
 import { useUser } from '../services/services.UserContext';
 import { showErrorToast, showSuccessToast } from "../services/services.toasterMessage";
 import { ToastContainer } from 'react-toastify';
@@ -650,7 +649,7 @@ function GRN() {
           <tbody>
               {SelectedItems.length === 0 ? (
                 <tr>
-                  <td colSpan="11" style={{padding: '12px 4px'}}>No data to show</td>
+                  <td colSpan="11" style={{padding: '12px 4px'}}>No items have been added to the list yet</td>
                 </tr>
               ) : (
                 SelectedItems.map((selectedItem, index) => (

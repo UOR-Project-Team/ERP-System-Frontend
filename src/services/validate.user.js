@@ -3,7 +3,6 @@ const validateUser = (formData) => {
       Fullname: '',
       username: '',
       email: '',
-      password: '',
       NIC: '',
       contactno: '',
       jobrole: '',

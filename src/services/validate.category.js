@@ -1,14 +1,12 @@
 const validateCategory = (formData) => {
-    const errors = {
-      Description: '',
-   
-    };
-  
-    if (!formData.Description) {
-        errors.Description = 'Please insert category *';
-    }
-  
-    return errors;
+  const errors = {
+    Description: '',
   };
-  
-  export default validateCategory;
+
+  if (!formData.Description) {
+      errors.Description = 'Please insert category *';
+  }
+  return errors;
+};
+
+export default validateCategory;

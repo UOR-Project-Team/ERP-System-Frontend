@@ -5,11 +5,8 @@ const validateCustomer = (formData) => {
     email: '',
     nic: '',
     contactno: '',
-    street1: '',
-    street2: '',
     city: '',
     country: '',
-    vatno: '',
   };
 
   if (!formData.title) {

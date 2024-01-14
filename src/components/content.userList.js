@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TextField from '@mui/material/TextField';
-import Dialogbox from '../services/Dialogbox'
+import Dialogbox from '../services/services.dialogbox'
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

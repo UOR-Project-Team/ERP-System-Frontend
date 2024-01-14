@@ -11,7 +11,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Modal from 'react-modal';
 import "jspdf-autotable";
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
@@ -20,7 +19,6 @@ import { showSuccessToast, showErrorToast } from '../services/services.toasterMe
 import AddLogo from './../assets/icons/add.png';
 import PdfLogo from './../assets/icons/pdf.png';
 import CsvLogo from './../assets/icons/csv.png';
-import FilterLogo from './../assets/icons/filter.png';
 import SearchLogo from './../assets/icons/search.png';
 import ViewLogo from './../assets/icons/view.png';
 import ActionLogo from './../assets/icons/action.png';
@@ -36,33 +34,19 @@ function InvoiceList() {
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogDescription, setDialogDescription] = useState('');
   const [searchInput, setSearchInput] = useState('');
-  const [modelContent, setModelContent] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [currentInvoice, setCurrentInvoice] = useState(0);
 
   const navigateTo = useNavigate();
-  
-
 
   useEffect(()=>{
     fetchInvoices();
   }, []);
-
-
-
-
-
-
-
-
 
   //fetch all invoices function
   const fetchInvoices = async ()=>{
     try{
       const invoiceData= await invoiceServices.getAllInvoices();
       console.log(invoiceData)
-      //setItems(itemData);
       setInvoices([...invoiceData]);
     }
     catch(error)
@@ -84,35 +68,24 @@ function InvoiceList() {
         fetchInvoices();
         setDialogOpen(false);
         showSuccessToast('Invoice successfully deleted');
+      } catch (error) {
+        console.error('Error deleting invoice:', error.message);
+        showErrorToast('Error deleting invoice')
+      }
+    }
+  };
 
-        } catch (error) {
-            console.error('Error deleting invoice:', error.message);
-            showErrorToast('Error deleting invoice')
-          }
-        }
-      };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-      const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-      };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-      };
-
-    const handleRequest = (type) => {
-        navigateTo(`/home/invoice-display`)
-        // setAnchorEl(null);
-        // setModelContent(type);
-        // setIsModalOpen(true);
-
-        //fetchItem(currentItem);
-        // fetchCategoryOptions();
-        // fetchUnitOptions();
-        // fetchSupplierOptions();
-  
-      };
+  const handleRequest = (type) => {
+    navigateTo(`/home/invoice-display`);
+  };
 
 
       const exportPDF = () => {
@@ -252,7 +225,6 @@ function InvoiceList() {
         <div className='features-panel'>
           <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
           <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
-          <button onClick={() => {setIsModalOpen(true); setModelContent('filter')}}><img src={FilterLogo} alt="Filter Logo" /></button>
         </div>
         <div className='table-container'>
           <table>
@@ -298,19 +270,19 @@ function InvoiceList() {
       </div>
       </div>
       <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
-                <MenuItem>
-                  <button onClick={() => {handleRequest('edit');}}>
-                    <img src={ViewLogo} alt='View Logo' />
-                    <span>View Invoice</span>
-                  </button>               
-                        
-                </MenuItem>
-                <MenuItem onClick={() => {setDialogTitle('Delete Item'); setDialogDescription('Do you want to delete this Item record?'); setDialogOpen(true); setAnchorEl(null);}}>
-                  <button>
-                    <img src={DeleteLogo} alt="Delete Logo"/>
-                    <span>Delete Invoice</span>
-                  </button>
-                </MenuItem>
+        <MenuItem>
+          <button onClick={() => {handleRequest('edit');}}>
+            <img src={ViewLogo} alt='View Logo' />
+            <span>View Invoice</span>
+          </button>               
+                
+        </MenuItem>
+        <MenuItem onClick={() => {setDialogTitle('Delete Item'); setDialogDescription('Do you want to delete this Item record?'); setDialogOpen(true); setAnchorEl(null);}}>
+          <button>
+            <img src={DeleteLogo} alt="Delete Logo"/>
+            <span>Delete Invoice</span>
+          </button>
+        </MenuItem>
       </Menu>
 
 

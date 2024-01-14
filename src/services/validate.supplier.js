@@ -2,14 +2,10 @@ const validateSupplier = (formData) => {
     const errors = {
       Title: '',
       Fullname:'',
-      Description: '',
       RegistrationNo: '',
-      VatNo: '',
       Email: '',
       ContactNo: '',
       Fax: '',
-      Street1: '',
-      Street2: '',
       City: '',
       Country: '',
     };
@@ -40,10 +36,12 @@ const validateSupplier = (formData) => {
         errors.ContactNo = 'Contact No must be at least 10 digits';
     } 
 
-    if (!/^\+?\d+$/.test(formData.Fax)) {
-        errors.Fax = 'FAX No must contain only numbers';
-    } else if (formData.Fax.length < 10) {
-        errors.Fax = 'FAX No must be at least 10 digits';
+    if(formData.Fax) {
+        if (!/^\+?\d+$/.test(formData.Fax)) {
+            errors.Fax = 'FAX No must contain only numbers';
+        } else if (formData.Fax.length < 10) {
+            errors.Fax = 'FAX No must be at least 10 digits';
+        }
     }
 
     if (!formData.City) {

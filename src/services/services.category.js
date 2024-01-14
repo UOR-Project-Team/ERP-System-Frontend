@@ -12,7 +12,7 @@ const categoryServices = {
       });
       return response.data;
     } catch (error) {
-      throw new Error('Error creating category');
+      throw error;
     }
   },
 
