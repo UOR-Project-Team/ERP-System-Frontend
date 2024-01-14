@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Select from "react-select";
 import grnServices from '../services/services.grn';
 import DeleteLogo from './../assets/icons/delete.png';
@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode-generator';
 import CompanyLogo from './../assets/logos/Uni_Mart.png';
+import {generatePDFGRN} from "../services/generatePrint";
 
 
 
@@ -20,7 +21,7 @@ function GRN() {
   const [selectedSupplierId, setSelectedSupplierId] = useState('');
   const [selectedSupplierMobile, setSelectedSupplierMobile] = useState('');
   const [selectedSupplierName, setSelectedSupplierName] = useState('');
-
+  const itemNameInputRef = useRef(null); 
   const [selectedSupplierEmail, setSelectedSupplierEmail] = useState('');
   const [items, setSupplierItems] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState('');
@@ -30,13 +31,10 @@ function GRN() {
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-
   const [sellingPrice, setsellingPrice] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
-
   const {userid , fullname} = useUser();
-
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
@@ -130,6 +128,12 @@ function GRN() {
 
     const SelectedItem = items.find((item) => item.ID === parseInt(selectedItemId, 10));
 
+    if (!quantity || isNaN(quantity)) {
+      console.error('Quantity is empty or not a valid number');
+      itemNameInputRef.current.focus();
+      return;
+     }  
+
     const newItem = {
       itemId: selectedItemId,
       itemName :SelectedItem.Name,
@@ -158,6 +162,7 @@ function GRN() {
     setPurchasePrice('');
     setsellingPrice('');
     setSelecteditemLabel(null);
+    itemNameInputRef.current.focus();
 
   }
 
@@ -171,14 +176,14 @@ function GRN() {
     setgrnData((prevInvoiceData) => {
       const updatedSoldItems = [...prevInvoiceData.puchaseditems];
       if (index >= 0 && index < updatedSoldItems.length) {
-        updatedSoldItems.splice(index, 1); // Remove item at indexToRemove
+        updatedSoldItems.splice(index, 1); 
       } else {
         console.error('Invalid index provided');
       }
   
       return {
         ...prevInvoiceData,
-        puchaseditems: updatedSoldItems, // Update solditems array in invoiceData
+        puchaseditems: updatedSoldItems, 
       };
     });
 
@@ -228,17 +233,13 @@ function GRN() {
     } else if(discount>100) {
       setTotalAmount(total * (0))
     }
-
-
   }
 
   const handlesavegrn = async(event)=>{
     event.preventDefault();
-
     const total = calcSubtotal() + (purchasePrice * quantity);
     setSubTotal(total);
     calcTotal(total, discount);
-
     console.log(grnData);
 
     if (
@@ -302,157 +303,90 @@ function GRN() {
     setSelectedLabel(null);
     setSelecteditemLabel(null);
 
-    //refetching 
     fetchSuppliers();
-   // fetchItems()
 
   }
   const handlecancel = ()=>{
     reset();
   }
 
-  const handleExportToPDF = () =>{
+  const handleExportToPDF = () => {
+    
+    if (totalAmount === 0) {
+           showErrorToast('Cannot generate pdf without Sales');
+           console.error('empty');
+            return;
+          }
 
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString();
       const formattedTime = currentDate.toLocaleTimeString();
 
-      const qrCodeData = `${grnNumber}\nDate: ${formattedDate}\nTime: ${formattedTime}\nSupplier: ${selectedSupplierName}\nSupplier Contact: ${selectedSupplierMobile}\nSupplier Email: ${selectedSupplierEmail}`;
-      const qr = QRCode(0, 'L');
-      qr.addData(qrCodeData);
-      qr.make();
+      // const noteText1 = "Note:";
+      // const noteText2 = "* Returns are accepted within 7 days of purchase with a valid receipt.";
+      // const noteText3 = "* Refunds will be issued in accordance with the store's refund policy.";
+      const thankYouMessage = 'Thank You!';
+      const noteHeader = "GRN"
 
-      const qrCodeImage = qr.createDataURL();  
-      const unit = "pt";
-      const size = "A4";
-      const orientation = "landscape";
-      const pdf = new jsPDF(unit , unit , size ,orientation);
-
-      function headerText(){
-        pdf.setFont('helvetica', 'bold'); 
-        pdf.setFontSize(20); 
-        pdf.setTextColor(40);
-        }
-        function pdftext1(){
-          pdf.setFont('helvetica', 'regular'); 
-          pdf.setFontSize(12); 
-          pdf.setTextColor(40);
-        }
-        function pdftext2(){
-          pdf.setFont('times', 'regular');
-          pdf.setFontSize(12); 
-          pdf.setTextColor(40);
-        } 
-
-        function footerText(){
-          pdf.setFont('crimson text', 'regular');
-          pdf.setFontSize(10); 
-          pdf.setTextColor(40);
-        } 
-
-      const headerLeft = function(data) {
-        pdf.setFontSize(8);
-        pdf.setTextColor(40);
-        pdf.addImage(CompanyLogo, 'PNG' , 40,20,70,70);
-        headerText();
-        pdf.text('UNI MART' , 115 , 35);
-        pdftext2();
-        pdf.text('University Of Ruhuna' , 115 , 50);
-        pdf.text('Wellamadama' , 115 , 63);
-        pdf.text('Matara' , 115 , 76);
-        pdf.text('0372222222' , 115 , 89);
-
-      }
-
-      const SupplierDetails = function(data ){  
-        pdf.text(`Supplier Name:`, 45, 150);
-        pdf.text(`${selectedSupplierName}`, 140, 150);
-        pdf.text(`Supplier Mobile:`, 45, 165);
-        pdf.text(`${selectedSupplierMobile}`, 140, 165);
-        pdf.text(`Supplier Email:`, 45, 180);
-        pdf.text(`${selectedSupplierEmail}`, 140, 180);
-        pdf.text(`User:`, 400, 150);
-        pdf.text(`${fullname}`, 430, 150);
-    
-      }
-
-      const headerRight = function(data) {
-        headerText();
-        pdf.text('GRN' , 400 , 35);
-        pdf.addImage(qrCodeImage, 'JPEG', 396, 37, 60, 60);
-        pdftext2();
-        pdf.text(`${grnNumber}`, 460, 55);
-        pdf.text(`${formattedDate}`, 460, 70);
-        pdf.text(`${formattedTime}`, 460, 85);
-    };
-
-      const addTransactionTabel = (pdf , subTotal , discount , totalAmount) =>{
-        const subTotalData = [["Subtotal", `Rs${subTotal}`]]
-        const discountData = [["Discount", `${discount}%`]] 
-        const totalAmountData = [["Total Amount", `Rs${totalAmount}`]]  
-        const startYPosition = 250 +itemTableHeight;
-        const marginAdjustment = 10;      
-        pdf.autoTable({
-        body:  [...subTotalData, ...discountData, ...totalAmountData],
-        theme:'striped',
-        styles: {
-                
-                body: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-              },
   
-        margin: { top: startYPosition + marginAdjustment , left: 330 },
-        tableWidth: 230,
-        columnStyles: {
-                1: { columnWidth: 80 }, 
-              },
-                      
-      })
-      pdftext1();
-      pdf.text('Thank You!', 270, pdf.autoTable.previous.finalY + marginAdjustment + 100);     
-    }
-      const headers = ["No" ,"Item" ,"Item Code",  "Purchase Price" , "Quantity" , "Total Price"];
-      const data = SelectedItems.map((item , index) =>[index+1 ,item.itemName,item.itemCode, `Rs${item.purchasePrice}`, item.quantity , `Rs${item.purchasePrice * item.quantity}` ])
-      const itemTableHeight = SelectedItems.length * 20;
+      const pdf = generatePDFGRN(
+        totalAmount,
+        grnNumber,
+        formattedDate,
+        formattedTime,
+        selectedSupplierName,
+        selectedSupplierMobile,
+        selectedSupplierEmail,
+        fullname,
+        CompanyLogo,
+        SelectedItems,
+        subTotal,
+        discount,
+        // cash,
+        // balance,
+        // noteText1,
+        // noteText2,
+        // noteText3,
+        noteHeader,
+        thankYouMessage
+    );
+    pdf.save("ERP-GRN.pdf");  
+    showSuccessToast('PDF generated successfully');
+  };
 
-        
-      pdf.autoTable({
-        head: [headers],
-        body: data,
-        theme: 'striped',
-        styles: {
-          head: { fillColor: [38, 2, 97], textColor: [255, 255, 255] }, 
-          body: { fillColor: [255, 255, 255], textColor: [0, 0, 0] }, 
-        },
-        columnStyles: {
-          0: { columnWidth: 40 }, 
-          1: { columnWidth: 170 }, 
-          2: { columnWidth: 80 }, 
-          3: { columnWidth: 80 }, 
-          4: { columnWidth: 70 },
-          5: { columnWidth: 80 },  
-          
-        },
-        margin: { top: 220 },
-        addPageContent: function(data) {
-          pdf.setFontSize(8);
-          pdf.setTextColor(40);
-          headerLeft(data);
-          headerRight(data);
-          pdf.line(20, 120, 580, 120);
-          SupplierDetails(data);
-          pdf.line(20, 205, 580, 205);
-          addTransactionTabel(pdf , subTotal , discount, totalAmount );
-          pdf.line(20, 800, 580, 800);
-          footerText();
-          pdf.text("©INNOVA ERP Solutions. All rights reserved.",210,815);
-          pdf.text("Wellamadama, Matara , 0412223334",230,830)
+
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+  
+      const activeElement = document.activeElement;
+      const inputFieldIds = ['itemInput','quantityInput', 'purchaseInput', 'sellingInput'];
+  
+      const currentIndex = inputFieldIds.indexOf(activeElement.id);
+  
+      if (currentIndex !== -1) {
+        if (currentIndex < inputFieldIds.length - 1) {
+          const nextInputFieldId = inputFieldIds[currentIndex + 1];
+  
+          if (nextInputFieldId === 'quantityInput') {
+            const isLastItemNameInput = activeElement.id === 'itemNameInput' && currentIndex === inputFieldIds.length - 2;
+  
+            if (isLastItemNameInput) {
+              document.getElementById('quantityInput').focus();
+            } else {
+              document.getElementById(nextInputFieldId).focus();
+            }
+          } else {
+            document.getElementById(nextInputFieldId).focus();
+          }
+        } else {
+          document.getElementById('GRNFormId').submit();
         }
-      });  
-      pdf.save("ERP-Invoice.pdf");
-
-  }
-
-
+      }
+    }
+  };
+   
   return (
     <div className='grn-container'>
       <div className='grn-content'>
@@ -518,8 +452,6 @@ function GRN() {
                     setSelectedSupplierEmail(selectedSupplierEmail);
 
                     const selectedSupplierName  = selectedOption ? selectedOption.Fullname : null;
-                    //const selectedSupplierTitle = selectedOption ? selectedOption.Title : null;
-
                     setSelectedSupplierName(selectedSupplierName);
                     setgrnData(prevData =>({
                       ...prevData,
@@ -547,12 +479,16 @@ function GRN() {
             
           </span>
       </div>
-      <form className='grn-content'>
+      <form  className='grn-content'>
           <span className='content1-left'>
             <div className='content1-container'>
               <span className='content-left'>Item Name :</span>
               <span className='content-right'>
-                <Select className='select-box'
+                <Select 
+                id='itemInput'
+                className='select-box'
+                ref={itemNameInputRef}
+                 
                   styles={{
                     control: (provided) => ({
                       ...provided,
@@ -593,38 +529,42 @@ function GRN() {
                     value: `${item.ID}`,
                     label: item.Name,
                   }))}
-                  value={selecteditemLabel ? { label: selecteditemLabel } : null}
+                   value={selecteditemLabel ? { label: selecteditemLabel } : null}
                   placeholder="Insert item detail"
                   onChange={(selectedOption) => {
-                    setSelecteditemLabel(selectedOption ? selectedOption.label : null)
+                  setSelecteditemLabel(selectedOption ? selectedOption.label : null)
                     const selectedIemId = selectedOption ? selectedOption.id : null;
                     setSelectedItemId(selectedIemId);
                     setpurchasedProduct(prevData =>({
                       ...prevData,
                       productId: selectedIemId,
+                     
                     }))
+                    
                     const itembarcode = BarcodeGenerator(grnNumber,selectedIemId)
                     setpurchasedProduct(prevData =>({
                       ...prevData,
                       barcode: itembarcode,
                     }))
+                    
                   }}
-                />
+                  onKeyPress={handleKeyPress} 
+                />               
               </span>
             </div>
             <div className='content1-container'>
               <span className='content-left'>Quantity :</span>
-              <span className='content-right'><input type='number' name='quantity' value={quantity} onChange={handleQunatityChange} placeholder='xxxx' /></span>
+              <span className='content-right'><input type='number' id='quantityInput' name='quantity' value={quantity} onChange={handleQunatityChange} placeholder='xxxx' onKeyDown={handleKeyPress}  /></span>
             </div>
           </span>
-          <span className='content1-right'>
+          <span className='content1-right'> 
             <div className='content1-container'>
               <span className='content-left'>Purchase price :</span>
-              <span className='content-right'><input type='number' name='grnNo' value={purchasePrice} onChange={handlePurchasePriceChange} placeholder='xxxxx.xx' /></span>
+              <span className='content-right'><input type='number' id='purchaseInput' name='grnNo' value={purchasePrice} onChange={handlePurchasePriceChange} placeholder='xxxxx.xx' onKeyDown={handleKeyPress} /></span>
             </div>
             <div className='content1-container'>
               <span className='content-left'>Selling price :</span>
-              <span className='content-right'><input type='number' name='grnNo' value={sellingPrice} onChange={handleSellingPriceChange} placeholder='xxxxx.xx' /></span>
+              <span className='content-right'><input type='number' id='sellingInput' name='grnNo' value={sellingPrice} onChange={handleSellingPriceChange} placeholder='xxxxx.xx' /></span>
             </div>
             <div className='content1-container'>
               <span className='content-left'>
@@ -709,5 +649,4 @@ function GRN() {
     </div>
   );
 }
-
 export default GRN;

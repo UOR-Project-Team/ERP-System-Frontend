@@ -7,7 +7,7 @@ import { showErrorToast, showSuccessToast } from "../services/services.toasterMe
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CompanyLogo from './../assets/logos/Uni_Mart.png';
-import {generatePDF} from "../services/generatePrint";
+import {generatePDFInvoice} from "../services/generatePrint";
 
 
 
@@ -422,9 +422,10 @@ function Invoice(){
       const noteText2 = "* Returns are accepted within 7 days of purchase with a valid receipt.";
       const noteText3 = "* Refunds will be issued in accordance with the store's refund policy.";
       const thankYouMessage = 'Thank You! Come Again';
+      const noteHeader = "INVOICE"
 
   
-      const pdf = generatePDF(
+      const pdf = generatePDFInvoice(
         totalAmount,
         invoiceNumber,
         formattedDate,
@@ -441,6 +442,7 @@ function Invoice(){
         noteText1,
         noteText2,
         noteText3,
+        noteHeader,
         thankYouMessage
     );
     pdf.save("ERP-Invoice.pdf");  
