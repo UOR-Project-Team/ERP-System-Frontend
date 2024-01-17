@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import Header from '../components/panel.Header';
-import SidePanelCollapse from '../components/panel.SidePanel-Collapse';
-import SidePanelExpand from '../components/panel.SidePanel-Expand';
+import Header from '../components/panel.header';
+import SidePanelCollapse from '../components/panel.sidePanel-Collapse';
+import SidePanelExpand from '../components/panel.sidePanel-Expand';
 import Dashboard from '../components/content.dashboard';
 import CustomerMaster from '../components/content.customerMaster';
 import CategoryMaster from '../components/content.categoryMaster';
@@ -28,10 +28,12 @@ function Home({ updateAuthentication }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [headerText, setHeaderText] = useState("Control Panel");
 
+  // Side Panel component changing funcion
   const togglePanel = () => {
     setIsExpanded((prev) => !prev);
   };
 
+  // Header text changing funcion
   const updateHeaderText = (text) => {
     setHeaderText(text);
   };
@@ -40,6 +42,7 @@ function Home({ updateAuthentication }) {
     return headerText;
   }
 
+  // Logout funcion
   const toggleupdateAuthentication = () => {
     updateAuthentication(false)
   };

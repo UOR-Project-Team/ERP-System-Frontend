@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
-import { ToastContainer  } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import { useNavigate } from "react-router-dom";
 
@@ -29,12 +29,10 @@ function CustomerMaster() {
     fullname: '',
     email: '',
     nic: '',
+    vatno: '',
     contactno: '',
-    street1: '',
-    street2: '',
     city: '',
     country: '',
-    vatno: '',
   });
 
   const handleChanges = (e) => {
@@ -107,12 +105,10 @@ function CustomerMaster() {
     setErrorMessage({
       title: '',
       fullname: '',
+      email: '',
       nic: '',
       vatno: '',
-      email: '',
       contactno: '',
-      street1: '',
-      street2: '',
       city: '',
       country: '',
     });
@@ -135,6 +131,7 @@ function CustomerMaster() {
                       {...params}
                       label="Title"
                       name='title' 
+                      error={errorMessage.title ? true : false}
                       value={formData.title}
                       onChange={(e) => {
                         handleChanges(e);
@@ -149,28 +146,28 @@ function CustomerMaster() {
                 <label className='error-text'>{errorMessage.title}</label>
               </div>
               <div className='line-type3-right-content'>
-                <TextField className='text-line-type2' name='fullname' value={formData.fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
+                <TextField error={errorMessage.fullname ? true : false} className='text-line-type2' name='fullname' value={formData.fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
                 <label className='error-text'>{errorMessage.fullname}</label>
               </div>
             </div>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='nic' value={formData.nic} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
+                <TextField error={errorMessage.nic ? true : false} className='text-line-type2' name='nic' value={formData.nic} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
                 <label className='error-text'>{errorMessage.nic}</label>
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='vatno' value={formData.vatno} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
+                <TextField error={errorMessage.vatno ? true : false} className='text-line-type2' name='vatno' value={formData.vatno} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
                 <label className='error-text'>{errorMessage.vatno}</label>
               </div>
             </div>
             <h3>Contact Details</h3>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
+                <TextField error={errorMessage.email ? true : false} className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
                 <label className='error-text'>{errorMessage.email}</label>
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
+                <TextField error={errorMessage.contactno ? true : false} className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
                 <label className='error-text'>{errorMessage.contactno}</label>
               </div>
             </div>
@@ -178,16 +175,16 @@ function CustomerMaster() {
             <div className='line-type2-container'>
               <div className='line-type2-content'>
                 <TextField className='text-line-type2' name='street1' value={formData.street1} onChange={(e) => handleChanges(e)} label="Street 1" variant="outlined"/>
-                <label className='error-text'>{errorMessage.street1}</label>
+                <label className='error-text'></label>
               </div>
               <div className='line-type2-content'>
                 <TextField className='text-line-type2' name='street2' value={formData.street2} onChange={(e) => handleChanges(e)} label="Street 2" variant="outlined" />
-                <label className='error-text'>{errorMessage.street2}</label>
+                <label className='error-text'></label>
               </div>
             </div>
             <div className='line-type2-container'>
             <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
+                <TextField error={errorMessage.city ? true : false} className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
                 <label className='error-text'>{errorMessage.city}</label>
               </div>
               <div className='line-type2-content'>
@@ -200,6 +197,7 @@ function CustomerMaster() {
                       {...params}
                       label="Country"
                       name='country' 
+                      error={errorMessage.country ? true : false}
                       value={formData.country}
                       onChange={(e) => {
                         handleChanges(e);

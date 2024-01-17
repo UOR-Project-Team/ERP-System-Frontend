@@ -7,7 +7,6 @@ import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
-
 function SupplierMaster() {
 
   const navigate = useNavigate(); 
@@ -29,14 +28,11 @@ function SupplierMaster() {
   const [errorMessage, setErrorMessage] = useState({
     Title: '',
     Fullname:'',
-    Description: '',
     RegistrationNo: '',
     VatNo: '',
     Email: '',
     ContactNo: '',
     Fax: '',
-    Street1: '',
-    Street2: '',
     City: '',
     Country: '',
   });
@@ -114,14 +110,11 @@ function SupplierMaster() {
     setErrorMessage({
       Title: '',
       Fullname:'',
-      Description: '',
       RegistrationNo: '',
       VatNo: '',
       Email: '',
       ContactNo: '',
       Fax: '',
-      Street1: '',
-      Street2: '',
       City: '',
       Country: '',
     });
@@ -138,12 +131,13 @@ function SupplierMaster() {
                 <Autocomplete
                   disablePortal
                   className='text-line-type2'
-                  options={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]}
+                  options={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       label="Title"
                       name='title' 
+                      error={errorMessage.Title ? true : false}
                       value={formData.Title}
                       onChange={(e) => {
                         handleChanges(e);
@@ -158,36 +152,36 @@ function SupplierMaster() {
                 <label className='error-text'>{errorMessage.Title}</label>
               </div>
               <div className='line-type3-right-content'>
-                <TextField className='text-line-type2' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
+                <TextField error={errorMessage.Fullname ? true : false} className='text-line-type2' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
                 <label className='error-text'>{errorMessage.Fullname}</label>
               </div>
             </div>
             <TextField className='text-line-type2' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant="outlined" />
-            <label className='error-text'>{errorMessage.Description}</label>
+            <label className='error-text'></label>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type1' name='RegistrationNo' value={formData.RegistrationNo} onChange={(e) => handleChanges(e)} label="Registration Number" variant="outlined" />
+                <TextField error={errorMessage.RegistrationNo ? true : false} className='text-line-type1' name='RegistrationNo' value={formData.RegistrationNo} onChange={(e) => handleChanges(e)} label="Registration Number" variant="outlined" />
                 <label className='error-text'>{errorMessage.RegistrationNo}</label>  
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='VatNo' value={formData.VatNo} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
+                <TextField error={errorMessage.VatNo ? true : false} className='text-line-type2' name='VatNo' value={formData.VatNo} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
                 <label className='error-text'>{errorMessage.VatNo}</label>
               </div>
             </div>
             <h3>Contact Details</h3>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='Email' value={formData.Email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
+                <TextField error={errorMessage.Email ? true : false} className='text-line-type2' name='Email' value={formData.Email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
                 <label className='error-text'>{errorMessage.Email}</label>
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='ContactNo' value={formData.ContactNo} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
+                <TextField error={errorMessage.ContactNo ? true : false} className='text-line-type2' name='ContactNo' value={formData.ContactNo} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
                 <label className='error-text'>{errorMessage.ContactNo}</label>
               </div>
               </div>
               <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='Fax' value={formData.Fax} onChange={(e) => handleChanges(e)} label="Fax Number" variant="outlined" />
+                <TextField error={errorMessage.Fax ? true : false} className='text-line-type2' name='Fax' value={formData.Fax} onChange={(e) => handleChanges(e)} label="Fax Number" variant="outlined" />
                 <label className='error-text'>{errorMessage.Fax}</label>
               </div>
             
@@ -196,16 +190,16 @@ function SupplierMaster() {
             <div className='line-type2-container'>
               <div className='line-type2-content'>
                 <TextField className='text-line-type2' name='Street1' value={formData.Street1} onChange={(e) => handleChanges(e)} label="Street 1" variant="outlined"/>
-                <label className='error-text'>{errorMessage.Street1}</label>
+                <label className='error-text'></label>
               </div>
               <div className='line-type2-content'>
                 <TextField className='text-line-type2' name='Street2' value={formData.Street2} onChange={(e) => handleChanges(e)} label="Street 2" variant="outlined" />
-                <label className='error-text'>{errorMessage.Street2}</label>
+                <label className='error-text'></label>
               </div>
             </div>
             <div className='line-type2-container'>
             <div className='line-type2-content'>
-              <TextField className='text-line-type2' name='City' value={formData.City} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
+              <TextField error={errorMessage.City ? true : false} className='text-line-type2' name='City' value={formData.City} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
               <label className='error-text'>{errorMessage.City}</label>
             </div>
             <div className='line-type2-content'>
@@ -218,6 +212,7 @@ function SupplierMaster() {
                     {...params}
                     label="Country"
                     name='country' 
+                    error={errorMessage.Country ? true : false}
                     value={formData.Country}
                     onChange={(e) => {
                       handleChanges(e);

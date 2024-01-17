@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 import validateUser from '../services/validate.userLoginForms';
-import {Usertoken} from '../services/UserToken'
+import {Usertoken} from '../services/token.userToken'
 import { validateUsername, validatePassword, validateConfirmPassword } from '../services/validate.Password'
 import img1 from '../assets/images/login-background-1.jpg'
 import img2 from '../assets/images/login-background-2.jpg'
@@ -17,15 +17,6 @@ const images = [ img1, img2, img3 ];
 function Login({ updateAuthentication }) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  
   const [image, setImage] = useState(0)
   const [formData, setFormData] = useState({
     username: '',
@@ -38,7 +29,13 @@ function Login({ updateAuthentication }) {
     cnfPassword: '',
   })
 
-  
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
