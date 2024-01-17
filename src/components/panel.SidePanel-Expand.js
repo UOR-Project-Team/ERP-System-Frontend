@@ -16,6 +16,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
 
   const navigateTo = useNavigate();
 
+  // Sub category expanding and Arrow rotating function
   const handleSubcategoryClick = (subcategory) => {
     setActiveSubcategories((prevSubcategories) => {
       if (prevSubcategories.includes(subcategory)) {
@@ -24,7 +25,6 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
         return [...prevSubcategories, subcategory];
       }
     });
-  
     setRotatedButton((prevSubcategories) => {
       if (prevSubcategories.includes(subcategory)) {
         return prevSubcategories.filter((item) => item !== subcategory);
@@ -155,11 +155,10 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
               <span>Invoice List</span>
             </button>
-            <button onClick={() => {navigateTo('/home/unit-list'); updateHeaderText('Unit List');}}>
+            <button onClick={() => {navigateTo('/home/grn-list'); updateHeaderText('GRN List');}}>
               <img src={DoubleRightLogo} alt="Double RightLogo"/>
-              <span>Unit List</span>
+              <span>GRN List</span>
             </button>
-
           </div>
       </div>
     </div>

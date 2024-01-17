@@ -2,7 +2,7 @@
     if(!username){
         return 'Username is required *';
     }else{
-        return "fghg";
+        return "";
     }
 }
     
@@ -10,7 +10,7 @@ export const validatepassword = (password)=>{
     if(!password){
         return 'Password is required *';
     }else{
-        return "fghg";
+        return "";
     }
 }
 

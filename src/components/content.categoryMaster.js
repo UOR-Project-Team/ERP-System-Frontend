@@ -34,7 +34,7 @@ function CategoryMaster(){
             return
         }
           
-          try {
+        try {
             const response = await categoryServices.createCategory({ Description: formData.Description });
             showSuccessToast('Category successfully added');
             
@@ -42,46 +42,50 @@ function CategoryMaster(){
             handleReset();
 
             setTimeout(() => {
-              navigate('/home/category-list');
+                navigate('/home/category-list');
             }, 2000);
 
-          } catch(error){
-            console.error('Error creating category:', error.message);
-            if (error.response && error.response.data && error.response.data.error) {
-              showErrorToast('Failed to create Category. Please try again.');
+        } catch (error) {
+            if (error.response) {
+                const { message } = error.response.data;
+                showErrorToast(`${message}`);
+                console.error('Error:', message);
+                setErrorMessage({
+                    Description: 'This category Already Exists'
+                });
             } else {
-              
-              showErrorToast('Error Occured');
-          }
-          }
+                showErrorToast('An error occurred while creating.');
+                console.error('Error:', error);
+            }
         };
+    }
 
-        const handleReset = () =>{
-            setFormData((prevdata) => ({
-                Description:''
-            }));
-            setErrorMessage({
-                Description:''
-            });
-        };
+    const handleReset = () =>{
+        setFormData((prevdata) => ({
+            Description:''
+        }));
+        setErrorMessage({
+            Description:''
+        });
+    };
 
-        return(
-            <div>
-                <ToastContainer />
-                <div className='master-content' style={{height: '92vh'}}>
-                    <form className='form-container' style={{marginTop:'25vh'}}>
-                        <h3>Category Details</h3>
-                            <TextField className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
-                            <label className='error-text'>{errorMessage.Description}</label>
-                            <div className='button-container'>
-                                 <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
-                                 <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
-                            </div>
-                    </form>
-                    
-                </div>
+    return(
+        <div>
+            <ToastContainer />
+            <div className='master-content' style={{height: '92vh'}}>
+                <form className='form-container' style={{marginTop:'25vh'}}>
+                    <h3>Category Details</h3>
+                        <TextField error={errorMessage.Description ? true : false} className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
+                        <label className='error-text'>{errorMessage.Description}</label>
+                        <div className='button-container'>
+                                <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+                                <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
+                        </div>
+                </form>
+                
             </div>
-        )
+        </div>
+    )
     
 }
 

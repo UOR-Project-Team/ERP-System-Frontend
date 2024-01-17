@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Select from "react-select";
 import grnServices from '../services/services.grn';
 import DeleteLogo from './../assets/icons/delete.png';
-
 import { useUser } from '../services/services.UserContext';
 import { showErrorToast, showSuccessToast } from "../services/services.toasterMessage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jsPDF from 'jspdf';
+import QRCode from 'qrcode-generator';
+import CompanyLogo from './../assets/logos/Uni_Mart.png';
+import {generatePDFGRN} from "../services/generatePrint";
+
+
 
 function GRN() {
 
@@ -14,6 +19,8 @@ function GRN() {
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplierId, setSelectedSupplierId] = useState('');
   const [selectedSupplierMobile, setSelectedSupplierMobile] = useState('');
+  const [selectedSupplierName, setSelectedSupplierName] = useState('');
+  const itemNameInputRef = useRef(null); 
   const [selectedSupplierEmail, setSelectedSupplierEmail] = useState('');
   const [items, setSupplierItems] = useState([]);
   const [selectedItemId, setSelectedItemId] = useState('');
@@ -23,20 +30,17 @@ function GRN() {
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-
   const [sellingPrice, setsellingPrice] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
-
-  const {userid } = useUser();
-
+  const {userid , fullname} = useUser();
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
     userid: userid,
     puchaseditems :[],
     totalAmount: ''
-
+ 
   })
 
   const [purchasedProduct, setpurchasedProduct] = useState({
@@ -120,16 +124,29 @@ function GRN() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const SelectedItem = items.find((item) => item.ID === parseInt(selectedItemId, 10));
+
+    if (!quantity || isNaN(quantity)) {
+      console.error('Quantity is empty or not a valid number');
+      itemNameInputRef.current.focus();
+      return;
+     }  
+
     const newItem = {
       itemId: selectedItemId,
+      itemName :SelectedItem.Name,
+      itemCode : SelectedItem.Code,
       purchasePrice: purchasePrice,
       quantity: quantity,
       sell_Price: sellingPrice
     }
+
     const total = calcSubtotal() + (purchasePrice * quantity);
     setSubTotal(total);
     calcTotal(total, discount);
     setSelectedItems((prevItems) => [...prevItems, newItem]);
+
 
     handleAddItemToInvoice(purchasedProduct);
     setpurchasedProduct({
@@ -144,6 +161,7 @@ function GRN() {
     setPurchasePrice('');
     setsellingPrice('');
     setSelecteditemLabel(null);
+    itemNameInputRef.current.focus();
 
   }
 
@@ -157,14 +175,14 @@ function GRN() {
     setgrnData((prevInvoiceData) => {
       const updatedSoldItems = [...prevInvoiceData.puchaseditems];
       if (index >= 0 && index < updatedSoldItems.length) {
-        updatedSoldItems.splice(index, 1); // Remove item at indexToRemove
+        updatedSoldItems.splice(index, 1); 
       } else {
         console.error('Invalid index provided');
       }
   
       return {
         ...prevInvoiceData,
-        puchaseditems: updatedSoldItems, // Update solditems array in invoiceData
+        puchaseditems: updatedSoldItems, 
       };
     });
 
@@ -214,17 +232,13 @@ function GRN() {
     } else if(discount>100) {
       setTotalAmount(total * (0))
     }
-
-
   }
 
   const handlesavegrn = async(event)=>{
     event.preventDefault();
-
     const total = calcSubtotal() + (purchasePrice * quantity);
     setSubTotal(total);
     calcTotal(total, discount);
-
     console.log(grnData);
 
     if (
@@ -288,17 +302,90 @@ function GRN() {
     setSelectedLabel(null);
     setSelecteditemLabel(null);
 
-    //refetching 
     fetchSuppliers();
-   // fetchItems()
 
   }
   const handlecancel = ()=>{
     reset();
   }
 
+  const handleExportToPDF = () => {
+    
+    if (totalAmount === 0) {
+           showErrorToast('Cannot generate pdf without Sales');
+           console.error('empty');
+            return;
+          }
+
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString();
+      const formattedTime = currentDate.toLocaleTimeString();
+
+      // const noteText1 = "Note:";
+      // const noteText2 = "* Returns are accepted within 7 days of purchase with a valid receipt.";
+      // const noteText3 = "* Refunds will be issued in accordance with the store's refund policy.";
+      const thankYouMessage = 'Thank You!';
+      const noteHeader = "GRN"
+
+  
+      const pdf = generatePDFGRN(
+        totalAmount,
+        grnNumber,
+        formattedDate,
+        formattedTime,
+        selectedSupplierName,
+        selectedSupplierMobile,
+        selectedSupplierEmail,
+        fullname,
+        CompanyLogo,
+        SelectedItems,
+        subTotal,
+        discount,
+        // cash,
+        // balance,
+        // noteText1,
+        // noteText2,
+        // noteText3,
+        noteHeader,
+        thankYouMessage
+    );
+    pdf.save("ERP-GRN.pdf");  
+    showSuccessToast('PDF generated successfully');
+  };
 
 
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+  
+      const activeElement = document.activeElement;
+      const inputFieldIds = ['itemInput','quantityInput', 'purchaseInput', 'sellingInput'];
+  
+      const currentIndex = inputFieldIds.indexOf(activeElement.id);
+  
+      if (currentIndex !== -1) {
+        if (currentIndex < inputFieldIds.length - 1) {
+          const nextInputFieldId = inputFieldIds[currentIndex + 1];
+  
+          if (nextInputFieldId === 'quantityInput') {
+            const isLastItemNameInput = activeElement.id === 'itemNameInput' && currentIndex === inputFieldIds.length - 2;
+  
+            if (isLastItemNameInput) {
+              document.getElementById('quantityInput').focus();
+            } else {
+              document.getElementById(nextInputFieldId).focus();
+            }
+          } else {
+            document.getElementById(nextInputFieldId).focus();
+          }
+        } else {
+          document.getElementById('GRNFormId').submit();
+        }
+      }
+    }
+  };
+   
   return (
     <div className='grn-container'>
       <div className='grn-content'>
@@ -348,6 +435,7 @@ function GRN() {
                     id: `${supplier.ID}`,
                     contactNo: `${supplier.ContactNo}`,
                     email: `${supplier.Email}`,
+                    Fullname : `${supplier.Fullname}`,
                     value: `${supplier.ID} ${supplier.Fullname} ${supplier.ContactNo} ${supplier.Email}`,
                     label: supplier.Fullname,
                   }))}
@@ -361,6 +449,9 @@ function GRN() {
                     setSelectedSupplierId(selectedSupplierId);
                     setSelectedSupplierMobile(selectedSupplierMobile);
                     setSelectedSupplierEmail(selectedSupplierEmail);
+
+                    const selectedSupplierName  = selectedOption ? selectedOption.Fullname : null;
+                    setSelectedSupplierName(selectedSupplierName);
                     setgrnData(prevData =>({
                       ...prevData,
                       supplierid: selectedSupplierId,
@@ -387,12 +478,16 @@ function GRN() {
             
           </span>
       </div>
-      <form className='grn-content'>
+      <form  className='grn-content'>
           <span className='content1-left'>
             <div className='content1-container'>
               <span className='content-left'>Item Name :</span>
               <span className='content-right'>
-                <Select className='select-box'
+                <Select 
+                id='itemInput'
+                className='select-box'
+                ref={itemNameInputRef}
+                 
                   styles={{
                     control: (provided) => ({
                       ...provided,
@@ -433,38 +528,42 @@ function GRN() {
                     value: `${item.ID}`,
                     label: item.Name,
                   }))}
-                  value={selecteditemLabel ? { label: selecteditemLabel } : null}
+                   value={selecteditemLabel ? { label: selecteditemLabel } : null}
                   placeholder="Insert item detail"
                   onChange={(selectedOption) => {
-                    setSelecteditemLabel(selectedOption ? selectedOption.label : null)
+                  setSelecteditemLabel(selectedOption ? selectedOption.label : null)
                     const selectedIemId = selectedOption ? selectedOption.id : null;
                     setSelectedItemId(selectedIemId);
                     setpurchasedProduct(prevData =>({
                       ...prevData,
                       productId: selectedIemId,
+                     
                     }))
+                    
                     const itembarcode = BarcodeGenerator(grnNumber,selectedIemId)
                     setpurchasedProduct(prevData =>({
                       ...prevData,
                       barcode: itembarcode,
                     }))
+                    
                   }}
-                />
+                  onKeyPress={handleKeyPress} 
+                />               
               </span>
             </div>
             <div className='content1-container'>
               <span className='content-left'>Quantity :</span>
-              <span className='content-right'><input type='number' name='quantity' value={quantity} onChange={handleQunatityChange} placeholder='xxxx' /></span>
+              <span className='content-right'><input type='number' id='quantityInput' name='quantity' value={quantity} onChange={handleQunatityChange} placeholder='xxxx' onKeyDown={handleKeyPress}  /></span>
             </div>
           </span>
-          <span className='content1-right'>
+          <span className='content1-right'> 
             <div className='content1-container'>
               <span className='content-left'>Purchase price :</span>
-              <span className='content-right'><input type='number' name='grnNo' value={purchasePrice} onChange={handlePurchasePriceChange} placeholder='xxxxx.xx' /></span>
+              <span className='content-right'><input type='number' id='purchaseInput' name='grnNo' value={purchasePrice} onChange={handlePurchasePriceChange} placeholder='xxxxx.xx' onKeyDown={handleKeyPress} /></span>
             </div>
             <div className='content1-container'>
               <span className='content-left'>Selling price :</span>
-              <span className='content-right'><input type='number' name='grnNo' value={sellingPrice} onChange={handleSellingPriceChange} placeholder='xxxxx.xx' /></span>
+              <span className='content-right'><input type='number' id='sellingInput' name='grnNo' value={sellingPrice} onChange={handleSellingPriceChange} placeholder='xxxxx.xx' /></span>
             </div>
             <div className='content1-container'>
               <span className='content-left'>
@@ -490,7 +589,7 @@ function GRN() {
           <tbody>
               {SelectedItems.length === 0 ? (
                 <tr>
-                  <td colSpan="11" style={{padding: '12px 4px'}}>No data to show</td>
+                  <td colSpan="11" style={{padding: '12px 4px'}}>No items have been added to the list yet</td>
                 </tr>
               ) : (
                 SelectedItems.map((selectedItem, index) => (
@@ -541,7 +640,7 @@ function GRN() {
       <div className='grn-content' style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div className='button-container' >
           <button style={{ backgroundColor: 'crimson' }} onClick={handlecancel}>Cancel</button>
-          <button style={{ backgroundColor: '#2a6592' }}>Save & Print</button>
+          <button style={{ backgroundColor: '#2a6592' }} onClick={handleExportToPDF}>Save & Print</button>
           <button style={{ backgroundColor: 'green' }} onClick={handlesavegrn}>Save</button>
         </div>
       </div>
@@ -549,5 +648,4 @@ function GRN() {
     </div>
   );
 }
-
 export default GRN;

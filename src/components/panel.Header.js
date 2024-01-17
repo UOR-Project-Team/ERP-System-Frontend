@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import Modal from 'react-modal';
-import { jwtDecode } from "jwt-decode";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { useUser } from '../services/services.UserContext';
 import {
   Dialog,
   DialogTitle,
@@ -29,13 +29,6 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelContent, setModelContent] = useState('profile');
   const [removeClick, setDialogOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    username: '',
-    fullname: '',
-    jobrole:'',
-    loginflag:'',
-    userid:'',
-  })
 
   const [formData, setFormData] = useState({
     fullname:'',
@@ -62,29 +55,14 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   })
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setCurrentUser({
-        userid: decodedToken.userid,
-        username: decodedToken.username,
-        fullname: decodedToken.fullname,
-        jobrole: decodedToken.jobrole,
-        loginflag: decodedToken.loginflag,
-      })
-    } else {
-      console.log('Token not found');
-    }
-  }, []); 
+  const {fullname, jobrole } = useUser();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-      setAnchorEl(null);
+    setAnchorEl(null);
   };
 
   const handleRequest = (type) => {
@@ -242,26 +220,26 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             )}
           </Modal>
 
-          <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-              <DialogTitle id="alert-dialog-title">{"Logout"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description" style={{width: '250px'}}>
-                  Are you sure?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button color="primary" onClick={handleLogout}>
-                  Yes
-                </Button>
-                <Button color="primary" autoFocus onClick={() => setDialogOpen(false)}>
-                  No
-                </Button>
-              </DialogActions>
-          </Dialog>
+        <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">{"Logout"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description" style={{width: '250px'}}>
+                Are you sure?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={handleLogout}>
+                Yes
+              </Button>
+              <Button color="primary" autoFocus onClick={() => setDialogOpen(false)}>
+                No
+              </Button>
+            </DialogActions>
+        </Dialog>
 
-      </div>
-    );
-  }
+    </div>
+  );
+}
   
   export default Header;
 

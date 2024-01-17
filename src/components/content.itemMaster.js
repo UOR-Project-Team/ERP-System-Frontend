@@ -142,10 +142,27 @@ function ItemMaster() {
         navigate('/home/item-list');
       }, 2000);
     } catch (error) {
-      showErrorToast('Error Occured');
-      console.error('Error:');
-    }
-  };
+      const { message, attributeName } = error.response.data;
+      showErrorToast(`${message}`);
+      
+      if (attributeName) {
+          if(attributeName==='unique_name') {
+              setErrorMessage({
+                  Description: 'This Item Name already Exists',
+              });
+          }
+          if(attributeName==='unique_code') {
+              setErrorMessage({
+                  SI: 'This Item Code already Exists',
+              });
+          }
+      }
+  
+      console.error('Error:', message);
+  
+  }     
+    
+};
 
   //Handle Reset
   const handleReset = () => {
@@ -175,10 +192,16 @@ function ItemMaster() {
         <form onSubmit={handleSubmit} className='form-container' >
 
           <h3>Item Details</h3>
-          <TextField className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
-          <label className='error-text'>{errorMessage.code}</label>       
-          <TextField className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
-          <label className='error-text'>{errorMessage.itemName}</label>
+          <div className='line-type3-container'>
+            <div className='line-type3-left-content'>
+              <TextField error={errorMessage.code ? true : false} className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
+              <label className='error-text'>{errorMessage.code}</label>
+            </div>
+            <div className='line-type3-right-content'>
+              <TextField error={errorMessage.itemName ? true : false} className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
+              <label className='error-text'>{errorMessage.itemName}</label>
+            </div>
+          </div>
 
           <h3>Category Details</h3>
           <Autocomplete
@@ -241,13 +264,10 @@ function ItemMaster() {
             }}
             value={values.supplierName}
           />
-          
           <label className='error-text'>{errorMessage.supplierName}</label>
-          
-
 
           <div className='button-container'>
-            <button type="submit" className='submit-button'>Save</button>
+            <button type="submit" className='submit-button'>Submit</button>
             <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
           </div>
         </form>

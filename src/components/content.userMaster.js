@@ -13,22 +13,21 @@ function UserMaster() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    Fullname:'admintest',
-    email: 'admintest@gmail.com',
-    username: 'admintest',
-    password: 'a22',
-    NIC: '123',
-    jobrole: 'admin',
-    contactno: '0989765421',
-    address: '10,Galle',
-    city: 'matara',
+    Fullname:'',
+    email: '',
+    username: '',
+    password: '',
+    NIC: '',
+    jobrole: '',
+    contactno: '',
+    address: '',
+    city: '',
   });
 
   const [errorMessage, setErrorMessage] = useState({
     Fullname:'',
     email: '',
     username: '',
-    password: '',
     NIC: '',
     jobrole: '',
     contactno: '',
@@ -53,18 +52,17 @@ function UserMaster() {
         const response = await axios.post('http://localhost:8081/user/create', formData)
 
         if(response.status ===200){
-          console.log("Suucesfully Added")
+          console.log("Succesfully Added")
           showSuccessToast('User created successfully!');
           handleReset();
           setTimeout(() => {
-            navigate('/home/customer-list');
+            navigate('/home/user-list');
           }, 2000);
         }else{
-           // showToastMessage('Error occurred. Please try again.', 'error');
             showErrorToast('Failed to create user. Please try again.');
         }
 
-    }catch(error){
+    } catch(error) {
       const { message, attributeName } = error.response.data;
       showErrorToast(`${message}`);
 
@@ -87,25 +85,9 @@ function UserMaster() {
           });
         }
       }
-
         console.error('Error:', error);
     }
-    //reset the form
-  //   setFormData({
-  //     Fullname:'',
-  //     email: '',
-  //     username: '',
-  //     password: '',
-  //     NIC: '',
-  //     jobrole: '',
-  //     contactno: '',
-  //     address: '',
-  //     city: '',
-        
-  // })
   };
-
-  
 
   const handleChanges = (event) => {
     const { name, value } = event.target;
@@ -132,7 +114,6 @@ function UserMaster() {
       Fullname:'',
       email: '',
       username: '',
-      password: '',
       NIC: '',
       jobrole: '',
       contactno: '',
@@ -141,82 +122,78 @@ function UserMaster() {
     });
   };
 
-
-
   return (
+    <div className='master-content'>
+      <form className='form-container'>
+        <h3>User Details</h3>
+          <TextField className='text-line-type1' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
+          <label className='error-text'>{errorMessage.Fullname}</label>
+          <TextField className='text-line-type1' name='username' value={formData.username} onChange={(e) => handleChanges(e)} label=" Username" variant="outlined" />
+          <label className='error-text'>{errorMessage.username}</label>
+          <TextField className='text-line-type1' name='password' value={formData.password} onChange={(e) => handleChanges(e)} label=" Password" variant="outlined" />
+          <label className='error-text'></label>
 
-  <div className='master-content'>
-        <form className='form-container'>
-          <h3>User Details</h3>
-            <TextField className='text-line-type1' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
-            <label className='error-text'>{errorMessage.Fullname}</label>
-            <TextField className='text-line-type1' name='username' value={formData.username} onChange={(e) => handleChanges(e)} label=" Username" variant="outlined" />
-            <label className='error-text'>{errorMessage.username}</label>
-            <TextField className='text-line-type1' name='password' value={formData.password} onChange={(e) => handleChanges(e)} label=" Password" variant="outlined" />
-            <label className='error-text'>{errorMessage.password}</label>
-
-            <div className='line-type2-container'>
-              <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='NIC' value={formData.NIC} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
-                <label className='error-text'>{errorMessage.NIC}</label>
-              </div>
-              <div className='line-type2-content'>
-                <Autocomplete
-                  disablePortal
-                  className='text-line-type2'
-                  options={[{ label: 'Administrator' }, { label: 'Staff Member' }]}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Job Role"
-                      name='jobrole' 
-                      value={formData.jobrole}
-                      onChange={(e) => {
-                        handleChanges(e);
-                      }}
-                    />
-                  )}
-                  onChange={(_, newValue) => {
-                    setFormData((prevData) => ({ ...prevData, jobrole: newValue?.label || '' }));
-                  }}
-                  value={formData.jobrole}
-                />
-                   <label className='error-text'>{errorMessage.jobrole}</label>
-              </div>
+          <div className='line-type2-container'>
+            <div className='line-type2-content'>
+              <TextField className='text-line-type2' name='NIC' value={formData.NIC} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
+              <label className='error-text'>{errorMessage.NIC}</label>
             </div>
-
-            <h3>Contact Details</h3>
-            <div className='line-type2-container'>
-              <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
-                <label className='error-text'>{errorMessage.email}</label> 
-              </div>
-              <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.contactno}</label> 
-              </div>
+            <div className='line-type2-content'>
+              <Autocomplete
+                disablePortal
+                className='text-line-type2'
+                options={[{ label: 'Administrator' }, { label: 'Staff Member' }]}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Job Role"
+                    name='jobrole' 
+                    value={formData.jobrole}
+                    onChange={(e) => {
+                      handleChanges(e);
+                    }}
+                  />
+                )}
+                onChange={(_, newValue) => {
+                  setFormData((prevData) => ({ ...prevData, jobrole: newValue?.label || '' }));
+                }}
+                value={formData.jobrole}
+              />
+                  <label className='error-text'>{errorMessage.jobrole}</label>
             </div>
+          </div>
 
-            <h3>Address</h3>
-            <div className='line-type2-container'>
-              <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='address' value={formData.address} onChange={(e) => handleChanges(e)} label="Address" variant="outlined"/>
-                <label className='error-text'>{errorMessage.address}</label> 
-              </div>
-              <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined" />
-                <label className='error-text'>{errorMessage.city}</label> 
-              </div>
+          <h3>Contact Details</h3>
+          <div className='line-type2-container'>
+            <div className='line-type2-content'>
+              <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
+              <label className='error-text'>{errorMessage.email}</label> 
             </div>
+            <div className='line-type2-content'>
+              <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
+              <label className='error-text'>{errorMessage.contactno}</label> 
+            </div>
+          </div>
 
-            <div className='button-container'>
-              <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
-              <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
+          <h3>Address</h3>
+          <div className='line-type2-container'>
+            <div className='line-type2-content'>
+              <TextField className='text-line-type2' name='address' value={formData.address} onChange={(e) => handleChanges(e)} label="Address" variant="outlined"/>
+              <label className='error-text'>{errorMessage.address}</label> 
             </div>
-        </form>
-        <ToastContainer/>
-  </div>
-      
+            <div className='line-type2-content'>
+              <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined" />
+              <label className='error-text'>{errorMessage.city}</label> 
+            </div>
+          </div>
+
+          <div className='button-container'>
+            <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+            <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
+          </div>
+      </form>
+      <ToastContainer/>
+    </div>    
   );
 };
 

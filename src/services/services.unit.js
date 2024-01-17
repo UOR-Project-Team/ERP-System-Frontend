@@ -12,7 +12,7 @@ const unitServices = {
       });
       return response.data;
     } catch (error) {
-      throw new Error('Error creating unit');
+      throw error;
     }
   },
 
