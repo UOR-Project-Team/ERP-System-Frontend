@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import Header from '../components/panel.Header';
-import SidePanelCollapse from '../components/panel.SidePanel-Collapse';
-import SidePanelExpand from '../components/panel.SidePanel-Expand';
+import Header from '../components/panel.header';
+import SidePanelCollapse from '../components/panel.sidePanel-Collapse';
+import SidePanelExpand from '../components/panel.sidePanel-Expand';
 import Dashboard from '../components/content.dashboard';
 import CustomerMaster from '../components/content.customerMaster';
 import CategoryMaster from '../components/content.categoryMaster';
