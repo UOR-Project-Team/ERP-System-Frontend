@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
 import React, { useEffect, useState, useRef } from 'react';
-=======
-import React, { useEffect, useRef, useState } from 'react';
->>>>>>> Stashed changes
 import Select from "react-select";
 import grnServices from '../services/services.grn';
 import DeleteLogo from './../assets/icons/delete.png';
@@ -37,16 +33,11 @@ function GRN() {
   const [sellingPrice, setsellingPrice] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
-<<<<<<< Updated upstream
   const {userid , fullname} = useUser();
-=======
   const [selectedIteminfo, setSelectedIteminfo] = useState(null);
 
   const isMounted = useRef(false)
 
-  const {userid } = useUser();
-
->>>>>>> Stashed changes
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
@@ -584,11 +575,8 @@ function GRN() {
                       ...prevData,
                       barcode: itembarcode,
                     }))
-<<<<<<< Updated upstream
-=======
                     //console.log('Selected Item Info ', selectedIteminfo);
                     //console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
->>>>>>> Stashed changes
                     
                   }}
                   onKeyPress={handleKeyPress} 
