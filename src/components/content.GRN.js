@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import React, { useEffect, useState, useRef } from 'react';
+=======
+import React, { useEffect, useRef, useState } from 'react';
+>>>>>>> Stashed changes
 import Select from "react-select";
 import grnServices from '../services/services.grn';
 import DeleteLogo from './../assets/icons/delete.png';
@@ -33,7 +37,16 @@ function GRN() {
   const [sellingPrice, setsellingPrice] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
+<<<<<<< Updated upstream
   const {userid , fullname} = useUser();
+=======
+  const [selectedIteminfo, setSelectedIteminfo] = useState(null);
+
+  const isMounted = useRef(false)
+
+  const {userid } = useUser();
+
+>>>>>>> Stashed changes
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
@@ -70,6 +83,22 @@ function GRN() {
   useEffect(()=>{
     fetchItems();
   },[selectedSupplierId])
+
+
+  useEffect(() => {
+    if (selectedIteminfo && selectedIteminfo.Unit_Mean_Price) {
+      if (!isMounted.current) {
+        // Update the isMounted ref to true
+        isMounted.current = true;
+        return; // Skip the rest of the code for the initial load
+      }
+
+      console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
+      setsellingPrice(selectedIteminfo.Unit_Mean_Price);
+    }
+  }, [selectedIteminfo, selectedItemId]);
+  
+  
 
   const fetchSuppliers = async () => {
     try {
@@ -288,6 +317,7 @@ function GRN() {
     setsellingPrice('');
     setSupplierItems([]);
     setSuppliers([])
+    setsellingPrice();
 
     setgrnData({
       grnNo: '',
@@ -533,7 +563,16 @@ function GRN() {
                   onChange={(selectedOption) => {
                   setSelecteditemLabel(selectedOption ? selectedOption.label : null)
                     const selectedIemId = selectedOption ? selectedOption.id : null;
+                    //console.log('Select Item Id IS ', selectedIemId)
+
+                    
+
+                    const selectedItemDetails = items.find(item => item.ID == selectedIemId);
+                    console.log('Details ',selectedItemDetails)
+                    setSelectedIteminfo(selectedItemDetails);
                     setSelectedItemId(selectedIemId);
+
+                    //console.log('Selected Item Info ', selectedIteminfo);
                     setpurchasedProduct(prevData =>({
                       ...prevData,
                       productId: selectedIemId,
@@ -545,6 +584,11 @@ function GRN() {
                       ...prevData,
                       barcode: itembarcode,
                     }))
+<<<<<<< Updated upstream
+=======
+                    //console.log('Selected Item Info ', selectedIteminfo);
+                    //console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
+>>>>>>> Stashed changes
                     
                   }}
                   onKeyPress={handleKeyPress} 

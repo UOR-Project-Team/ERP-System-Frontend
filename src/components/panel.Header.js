@@ -123,8 +123,8 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <span>
             <button onClick={() => handleRequest('profile')}>
                 <span className='text-container'>
-                  <div className='uname-text'>{currentUser.fullname}</div>
-                  <div className='type-text'>{currentUser.jobrole === 'admin' ? ('Administrator') : ('System User')}</div>
+                  <div className='uname-text'>{fullname}</div>
+                  <div className='type-text'>{jobrole === 'admin' ? ('Administrator') : ('System User')}</div>
                 </span>
                 <span><img src={DownLogo} alt="Down Logo"/></span>
               </button>
