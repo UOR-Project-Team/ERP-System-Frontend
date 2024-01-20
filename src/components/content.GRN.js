@@ -34,6 +34,10 @@ function GRN() {
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
   const {userid , fullname} = useUser();
+  const [selectedIteminfo, setSelectedIteminfo] = useState(null);
+
+  const isMounted = useRef(false)
+
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
@@ -70,6 +74,22 @@ function GRN() {
   useEffect(()=>{
     fetchItems();
   },[selectedSupplierId])
+
+
+  useEffect(() => {
+    if (selectedIteminfo && selectedIteminfo.Unit_Mean_Price) {
+      if (!isMounted.current) {
+        // Update the isMounted ref to true
+        isMounted.current = true;
+        return; // Skip the rest of the code for the initial load
+      }
+
+      console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
+      setsellingPrice(selectedIteminfo.Unit_Mean_Price);
+    }
+  }, [selectedIteminfo, selectedItemId]);
+  
+  
 
   const fetchSuppliers = async () => {
     try {
@@ -288,6 +308,7 @@ function GRN() {
     setsellingPrice('');
     setSupplierItems([]);
     setSuppliers([])
+    setsellingPrice();
 
     setgrnData({
       grnNo: '',
@@ -533,7 +554,16 @@ function GRN() {
                   onChange={(selectedOption) => {
                   setSelecteditemLabel(selectedOption ? selectedOption.label : null)
                     const selectedIemId = selectedOption ? selectedOption.id : null;
+                    //console.log('Select Item Id IS ', selectedIemId)
+
+                    
+
+                    const selectedItemDetails = items.find(item => item.ID == selectedIemId);
+                    console.log('Details ',selectedItemDetails)
+                    setSelectedIteminfo(selectedItemDetails);
                     setSelectedItemId(selectedIemId);
+
+                    //console.log('Selected Item Info ', selectedIteminfo);
                     setpurchasedProduct(prevData =>({
                       ...prevData,
                       productId: selectedIemId,
@@ -545,6 +575,8 @@ function GRN() {
                       ...prevData,
                       barcode: itembarcode,
                     }))
+                    //console.log('Selected Item Info ', selectedIteminfo);
+                    //console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
                     
                   }}
                   onKeyPress={handleKeyPress} 

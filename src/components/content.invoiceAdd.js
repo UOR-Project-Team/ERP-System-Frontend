@@ -35,6 +35,11 @@ function Invoice(){
     const [balance , setBalance] = useState(0); 
     //const [user, setUser] = useState();
 
+    const [selectedcustomerLabel, setSelectedcustomerLabel] = useState(null);
+    const [selecteditemLabel, setSelecteditemLabel] = useState(null);
+    const [selectedIteminfo, setSelectedIteminfo] = useState(null);
+    const [stock, setstock] = useState(false)
+
     const {userid, fullname } = useUser();
 
     const [invoiceData, setInvoiceData] = useState({
@@ -98,11 +103,19 @@ function Invoice(){
 
     const handleSelectChangeitem = (selectedOption)=>{
 
+      setSelecteditemLabel(selectedOption ? selectedOption.label : null)
       const selectedItemId = selectedOption ? selectedOption.value : null;
       setSelectedItemId(selectedItemId);
+
+      const selectedItemDetails = items.find(item => item.ID == selectedItemId);
+      //console.log('item info',selectedItemDetails);
+      //console.log('Total Quantity', selectedItemDetails.Total_Quantity)
+      setSelectedIteminfo(selectedItemDetails);
+      setstock(true);
     }
   const handleSelectChange = (selectedOption) => {
       
+    setSelectedcustomerLabel(selectedOption ? selectedOption.label : null)
     const selectedC_Id = selectedOption ? selectedOption.value : null;
       console.log('Selected Customer data', selectedC_Id)
       setSelectedCustomerId(selectedC_Id)
@@ -249,7 +262,8 @@ function Invoice(){
               quantity: ''
             });
             
-
+            setSelecteditemLabel(null)
+            //fetchItems();
             setQuantity('');
             itemNameInputRef.current.focus();
     
@@ -364,6 +378,11 @@ function Invoice(){
         quantity: ''
       });
 
+      setSelecteditemLabel(null);
+      generateRandomNumber();
+      setSelectedcustomerLabel(null)
+
+
       
     };
 
@@ -382,6 +401,7 @@ function Invoice(){
     }
 
      try{
+
      const result = await invoiceServices.invoiceList(invoiceData);
 
      if(result === 201){
@@ -396,6 +416,9 @@ function Invoice(){
           setCash('');
           setBalance(0);
           setQuantity('');
+
+          setSelectedcustomerLabel(null)
+
      }else{
           showErrorToast("Faild To Update the Invoice ")
      }
@@ -505,14 +528,13 @@ return(
                     title: `${customer.Title}`,
                     contactNo: `${customer.ContactNo}`,
                     Fullname: `${customer.Fullname}`,                  
-                    //value: `${customer.Title},${customer.Fullname},${customer.ContactNo}`,
                      value: `${customer.ID}`,
-                    label: `${customer.Title}. ${customer.Fullname} ,${customer.ContactNo}`,
+                    label: customer.Title +' '+ customer.Fullname +' '+ customer.ContactNo
                   }))}
                   
                   placeholder="Insert customer contact number"
                   onChange={handleSelectChange}
-                   //value={selectedCustomerName}
+                  value={selectedcustomerLabel ? { label: selectedcustomerLabel } : null}
                   onKeyDown={handleKeyPress}         
               />
             </span>
@@ -573,8 +595,10 @@ return(
                     id: `${item.ID}`,
                     //value: `${item.ID} ${item.Code} ${item.Name}`,
                     value: `${item.ID}`,
-                    label: `${item.Name}`,
+                    label: item.Name ,
+                    //label: item.Name + '  ' + item.Unit_Price,
                   }))}
+                  value={selecteditemLabel ? { label: selecteditemLabel } : null}
                   placeholder="Insert item detail"
                   onChange={handleSelectChangeitem}
                   onKeyPress={handleKeyPress}
@@ -586,7 +610,13 @@ return(
             <div className='content1-container'>
               <span className='content-left'>Quantity :</span>
               <span className='content-right'>
-                <input type='number' id='quantityInput' name='quantity' value={quantity} onChange={handleQunatityChange} placeholder='0' /></span>
+                <input type='number' id='quantityInput' name='quantity' value={quantity} onChange={handleQunatityChange} placeholder='0' />
+                {stock && (
+                      <div style={{ color: 'crimson', fontSize: 'smaller', marginTop: '5px' }}>
+                        Max Stock: {selectedIteminfo.Total_Quantity}
+                      </div>
+                )}
+                </span>
             </div>
           </span>
           <span className="content-right">
