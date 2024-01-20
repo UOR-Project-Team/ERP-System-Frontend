@@ -1,13 +1,18 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Usertoken } from './token.userToken';
 
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-  const userData = Usertoken(); // Get user data using Usertoken function
+  const initialUserData = Usertoken(); // Get initial user data using Usertoken function
+  const [userData, setUserData] = useState(initialUserData);
+
+  const updateUser = (newUserData) => {
+    setUserData(newUserData);
+  };
 
   return (
-    <UserContext.Provider value={userData}>
+    <UserContext.Provider value={{ userData, updateUser }}>
       {children}
     </UserContext.Provider>
   );

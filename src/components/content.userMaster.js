@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
@@ -7,6 +6,7 @@ import validateUser from '../services/validate.user';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Autocomplete from '@mui/material/Autocomplete';
+import userServices from '../services/services.user';
 
 function UserMaster() {
 
@@ -49,18 +49,13 @@ function UserMaster() {
     }
 
     try{
-        const response = await axios.post('http://localhost:8081/user/create', formData)
-
-        if(response.status ===200){
-          console.log("Succesfully Added")
-          showSuccessToast('User created successfully!');
-          handleReset();
-          setTimeout(() => {
-            navigate('/home/user-list');
-          }, 2000);
-        }else{
-            showErrorToast('Failed to create user. Please try again.');
-        }
+      const response = await userServices.createUser(formData)
+      showSuccessToast('User successfully added');
+      console.log('User created:', response);
+      handleReset();
+      setTimeout(() => {
+        navigate('/home/user-list');
+      }, 2000);
 
     } catch(error) {
       const { message, attributeName } = error.response.data;

@@ -513,7 +513,41 @@ body, html {
     font-weight: bold;
 }
 
+.body-container .dashboard-container .row-container3 {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Roboto Condensed', sans-serif;
+    justify-content: center;
+}
 
+.body-container .dashboard-container .row-container3 .column-container1 {
+    width: 50%;
+}
+
+.body-container .dashboard-container .row-container3 .column-container1 .r1 {
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.body-container .dashboard-container .row-container3 .column-container2 {
+    width: 50%;
+    background-color: #f3f3f3;
+    padding: 10px;
+    margin-left: 5px;
+}
+
+.body-container .dashboard-container .row-container3 .column-container1 .r1 .c1, .body-container .dashboard-container .row-container3 .column-container1 .r2 .c1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.body-container .dashboard-container .row-container3 .column-container2 .r1 {
+    font-size: 20px;
+    font-weight: bold;
+}
 
 
 
