@@ -54,7 +54,19 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     contactno: '',
     address: '',
     city: '',
-  })
+  });
+
+  const [passwordData, setPasswordData] = useState({
+    currentPW: '',
+    newPW: '',
+    confirmPW: ''
+  });
+
+  const [passwordError, setPasswordError] = useState({
+    currentPW: '',
+    newPW: '',
+    confirmPW: ''
+  });
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -154,6 +166,31 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     });
   };
 
+  const handlePasswordChanges = (event) => {
+    const { name, value } = event.target;
+    setPasswordData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handlePasswordSubmit = () => {
+
+  };
+
+  const handlePasswordReset = () => {
+    setPasswordData({
+        currentPW: '',
+        newPW: '',
+        confirmPW: ''
+    });
+    setPasswordError({
+        currentPW: '',
+        newPW: '',
+        confirmPW: ''
+    });
+  };
+
   return (
     <div className="header">
         <div className="left">
@@ -246,15 +283,15 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <div className='edit-model'>
               <h3>Change Password</h3>
               <form className='form-container'>
-                <TextField className='text-line-type1' name='current-password'  label="Current Password" variant='outlined' />
-                <label className='error-text'></label>
-                <TextField className='text-line-type1' name='new-password'  label="New Password" variant='outlined' />
-                <label className='error-text'></label>
-                <TextField className='text-line-type1' name='confirm-password'  label="Confirm Password" variant='outlined' />
-                <label className='error-text'></label>
+                <TextField className='text-line-type1' name='currentPW' value={passwordData.currentPW} onChange={(e) => handlePasswordChanges(e)} label="Current Password" variant='outlined' />
+                <label className='error-text'>{passwordData.currentPW}</label>
+                <TextField className='text-line-type1' name='newPW' value={passwordData.newPW} onChange={(e) => handlePasswordChanges(e)} label="New Password" variant='outlined' />
+                <label className='error-text'>{passwordData.newPW}</label>
+                <TextField className='text-line-type1' name='confirmPW' value={passwordData.confirmPW} onChange={(e) => handlePasswordChanges(e)} label="Confirm Password" variant='outlined' />
+                <label className='error-text'>{passwordData.confirmPW}</label>
                 <div className='button-container'>
-                  <button type='submit' class='submit-button' onClick={handleUpdateSubmit}>Submit</button>
-                  <button type='reset' class='reset-button' onClick={handleUpdateReset}>Reset</button>
+                  <button type='submit' class='submit-button' onClick={handlePasswordSubmit}>Submit</button>
+                  <button type='reset' class='reset-button' onClick={handlePasswordReset}>Reset</button>
                 </div>
               </form>
             </div>
