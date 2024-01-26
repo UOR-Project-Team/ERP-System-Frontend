@@ -6,15 +6,12 @@ import { useUser } from '../services/services.UserContext';
 import { showErrorToast, showSuccessToast } from "../services/services.toasterMessage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import jsPDF from 'jspdf';
-import QRCode from 'qrcode-generator';
 import CompanyLogo from './../assets/logos/Uni_Mart.png';
 import {generatePDFGRN} from "../services/generatePrint";
 
-
-
 function GRN() {
 
+  const { userData } = useUser();
   const [grnNumber, setgrnNumber] = useState(0);
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplierId, setSelectedSupplierId] = useState('');
@@ -33,19 +30,17 @@ function GRN() {
   const [sellingPrice, setsellingPrice] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [selecteditemLabel, setSelecteditemLabel] = useState(null);
-  const {userid , fullname} = useUser();
   const [selectedIteminfo, setSelectedIteminfo] = useState(null);
 
-  const isMounted = useRef(false)
+  const isMounted = useRef(false);
 
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
-    userid: userid,
+    userid: userData.userid,
     puchaseditems :[],
     totalAmount: ''
- 
-  })
+  });
 
   const [purchasedProduct, setpurchasedProduct] = useState({
     productId: '',
@@ -53,7 +48,55 @@ function GRN() {
     purchase_price: '',
     unitprice: '',
     quantity: ''
-  })
+  });
+
+  useEffect(() => {
+    generateRandomNumber();
+    fetchSuppliers();
+    fetchItems();
+
+    if (selectedIteminfo && selectedIteminfo.Unit_Mean_Price) {
+        if (!isMounted.current) {
+            // Update the isMounted ref to true
+            isMounted.current = true;
+            return; // Skip the rest of the code for the initial load
+        }
+        console.log('Base Price', selectedIteminfo.Unit_Mean_Price);
+        setsellingPrice(selectedIteminfo.Unit_Mean_Price);
+    }
+
+  }, [selectedSupplierId, selectedIteminfo, selectedItemId]);
+
+  function generateRandomNumber() {
+    let count = 0;
+    let randomNumber = Math.floor(1000000 + Math.random() * 9000000);
+
+    //  while(fetchGRNInfo(randomNumber)) {
+    //   randomNumber = Math.floor(1000000 + Math.random() * 9000000);
+    //  }
+
+    setgrnNumber('GRN' + randomNumber.toString());
+    setgrnData(prevData =>({
+      ...prevData,
+      grnNo: 'GRN' + randomNumber.toString(),
+    }))
+  }
+
+  const fetchGRNInfo = async (generatedID) => {
+    try {
+      const grns = await grnServices.generateGRNID('GRN' + generatedID);
+  
+      if (grns.message) {
+        return 0
+      } else {
+        return 0
+      }
+  
+    } catch (error) {
+      console.error('Error fetching GRN:');
+      return 0;
+    }
+  }
 
   const handleAddItemToInvoice = (itemData) => {
     setgrnData(prevState => ({
@@ -62,32 +105,7 @@ function GRN() {
     }));
   };
 
-
-  useEffect(() => {
-    generateRandomNumber();
-  }, []);
-
-  useEffect(() => {
-    fetchSuppliers();
-  }, []);
-
-  useEffect(()=>{
-    fetchItems();
-  },[selectedSupplierId])
-
-
-  useEffect(() => {
-    if (selectedIteminfo && selectedIteminfo.Unit_Mean_Price) {
-      if (!isMounted.current) {
-        // Update the isMounted ref to true
-        isMounted.current = true;
-        return; // Skip the rest of the code for the initial load
-      }
-
-      console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
-      setsellingPrice(selectedIteminfo.Unit_Mean_Price);
-    }
-  }, [selectedIteminfo, selectedItemId]);
+  
   
   
 
@@ -212,14 +230,6 @@ function GRN() {
     calcTotal(total, discount);
   };
   
-  function generateRandomNumber() {
-    const randomNumber = Math.floor(1000000 + Math.random() * 9000000);
-    setgrnNumber('G' + randomNumber.toString());
-    setgrnData(prevData =>({
-      ...prevData,
-      grnNo: 'G' + randomNumber.toString(),
-    }))
-  }
 
   const BarcodeGenerator = (grnNumber,selectedproductId)=>{
 
@@ -280,7 +290,7 @@ function GRN() {
         setgrnData({
           grnNo: '',
           supplierid:'',
-          userid: userid,
+          userid: userData.userid,
           puchaseditems :[],
           totalAmount: ''
 
@@ -313,7 +323,7 @@ function GRN() {
     setgrnData({
       grnNo: '',
       supplierid:'',
-      userid: userid,
+      userid: userData.userid,
       puchaseditems :[],
       totalAmount: ''
 
@@ -357,7 +367,7 @@ function GRN() {
         selectedSupplierName,
         selectedSupplierMobile,
         selectedSupplierEmail,
-        fullname,
+        userData.fullname,
         CompanyLogo,
         SelectedItems,
         subTotal,
@@ -575,8 +585,6 @@ function GRN() {
                       ...prevData,
                       barcode: itembarcode,
                     }))
-                    //console.log('Selected Item Info ', selectedIteminfo);
-                    //console.log('Base Price',selectedIteminfo.Unit_Mean_Price)
                     
                   }}
                   onKeyPress={handleKeyPress} 

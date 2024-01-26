@@ -215,15 +215,16 @@ function CustomerList() {
   const handleActivationChanges = async (e) => {
     try {
       if(activeCustomer) {
-        const response = await customerServices.deactivateCustomer(currentCustomer)
+        const response = await customerServices.deactivateCustomer(currentCustomer);
         console.log('Customer deactivate:', response);
+        showSuccessToast('Deactivated successfully');
       } else {
-        const response = await customerServices.activateCustomer(currentCustomer)
+        const response = await customerServices.activateCustomer(currentCustomer);
         console.log('Customer activate:', response);
+        showSuccessToast('Activated successfully');
       }
       fetchCustomers();
       handleClose();
-      showSuccessToast('Activation successfully changed')    
     } catch(error) {
       console.error('Error activation changes:', error.message);
       showErrorToast(`Error Occured!`);

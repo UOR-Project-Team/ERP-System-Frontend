@@ -9,13 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import CompanyLogo from './../assets/logos/Uni_Mart.png';
 import {generatePDFInvoice} from "../services/generatePrint";
 
-
-
-
-
 function Invoice(){
 
-  
+  const { userData } = useUser();
 
     const [invoiceNumber , setinvoiceNumber] = useState(0);
     const [customers , setCustomers] = useState([]);
@@ -33,19 +29,15 @@ function Invoice(){
     const [totalAmount, setTotalAmount] = useState(0);
     const [cash , setCash] = useState('');
     const [balance , setBalance] = useState(0); 
-    //const [user, setUser] = useState();
-
     const [selectedcustomerLabel, setSelectedcustomerLabel] = useState(null);
     const [selecteditemLabel, setSelecteditemLabel] = useState(null);
     const [selectedIteminfo, setSelectedIteminfo] = useState(null);
     const [stock, setstock] = useState(false)
 
-    const {userid, fullname } = useUser();
-
     const [invoiceData, setInvoiceData] = useState({
       invoiceNumber: '',
       Customerid:'',
-      userid: userid,
+      userid: userData.userid,
       solditems :[],
       totalAmount: ''
 
@@ -367,7 +359,7 @@ function Invoice(){
        setInvoiceData({
         invoiceNumber: '',
         Customerid:'',
-        userid: userid,
+        userid: userData.userid,
         solditems :[],
         totalAmount: ''
        });
@@ -455,7 +447,7 @@ function Invoice(){
         formattedTime,
         selectedCustomerName,
         selectedCustomerContact,
-        fullname,
+        userData.fullname,
         CompanyLogo,
         selectedItems,
         subTotal,

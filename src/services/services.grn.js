@@ -3,6 +3,16 @@ const apiUrl = 'http://localhost:8081/grn';
 
 const grnServices = {
 
+  generateGRNID: async (grnId) => {
+    try {
+      const response = await axios.get(`${apiUrl}/generateID/${grnId}`);
+      console.log('GRN Data ',response.data)
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getAllSuppliers: async () => {
     try {
       const response = await axios.get(`${apiUrl}/suppliers`);
