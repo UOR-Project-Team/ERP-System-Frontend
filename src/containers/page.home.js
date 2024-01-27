@@ -23,6 +23,7 @@ import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
 import UnitList from '../components/content.unitList';
+import InvoiceView from '../components/content.invoiceView';
 
 function Home({ updateAuthentication }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -81,6 +82,9 @@ function Home({ updateAuthentication }) {
             <Route path="supplier-list" element={<SupplierList updateHeaderText={updateHeaderText} />} />
             <Route path="user-list" element={<UserList />} />
             <Route path="customer-list" element={<CustomerList />} />
+            {/* <Route path="invoice-view" element={<InvoiceView />} /> */}
+            <Route path="invoice-view/:invoiceNo" element={<InvoiceView />} />
+
             <Route path="invoice-list" element={<InvoiceList />} />
             <Route path="unit-list" element={<UnitList updateHeaderText={updateHeaderText} />} />
             <Route path="*" element={<Navigate to="/" />} />

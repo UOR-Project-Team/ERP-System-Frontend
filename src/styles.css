@@ -1710,3 +1710,25 @@ body, html {
   height: 25px;
    
 }
+
+.grn-container1 {
+    padding: 5px;
+}
+
+.grn-container1 .grn-content1 {
+    margin-bottom: 5px;
+    padding: 6px 4px;
+}
+
+.button-container-InvoiceView{
+    display: flex;
+    justify-content: end;
+    margin-top: 5vh;
+    margin-right: 1.5em;
+    
+}
+.btn-invoiceView{
+    width:10px;
+    height: 10px;
+}
+

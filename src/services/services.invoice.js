@@ -32,6 +32,32 @@ const invoiceServices = {
     }
   },
 
+  getInvoiceData: async(invoiceNo)=>{
+    try{
+      const response = await axios.get(`${apiUrl}/invoice/${invoiceNo}`);
+      console.log(response);
+      return response.data;
+      
+    }catch(error){
+      throw new Error('Error fetching invoice by ID');
+    }
+
+  },
+
+  getSalesData: async(invoiceNo)=>{
+    try{
+      const response = await axios.get(`${apiUrl}/sales/${invoiceNo}`);
+      console.log(response);
+      return response.data;
+      
+    }catch(error){
+      throw new Error('Error fetching sales items by ID');
+    }
+
+  },
+
+
+
 
   getAllInvoices: async () => {
     try {
