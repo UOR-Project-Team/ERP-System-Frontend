@@ -34,9 +34,13 @@ import AllItemList from './lists.allItems';
 import UnitItemList from './lists.itemsByUnitID';
 import CategoryItemList from './lists.itemsByCategoryID';
 import SupplierItemList from './lists.itemsBySupplierID';
+import CompanyLogo from '../assets/logos/Uni_Mart.png';
+import QRCode from 'qrcode-generator';
+import { useUser } from '../services/services.UserContext';
 
 function ItemList() {
 
+  const { userData } = useUser();
   const [Item, setItems] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [removeClick, setDialogOpen] = useState(false);
@@ -229,39 +233,95 @@ function ItemList() {
     const unit = "pt";
     const size = "A4";
     const orientation = "landscape";
-    const doc = new jsPDF(orientation, unit, size);
+    const pdf = new jsPDF(orientation, unit, size);
 
-    const header = function(data) {
-      doc.setFontSize(8);
-      doc.setTextColor(40);
-      doc.text("Innova ERP Solution - Item Report", data.settings.margin.left, 30);
-    };
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
+    const formattedTime = currentDate.toLocaleTimeString();
+
+    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userData.fullname}`;
+    const qr = QRCode(0, 'L');
+    qr.addData(qrCodeData);
+    qr.make();
+    const qrCodeImage = qr.createDataURL();
+
+    const noteHeader = "ITEM LIST"
+
+    function headerText(){
+      pdf.setFont('helvetica', 'bold'); 
+      pdf.setFontSize(20); 
+      pdf.setTextColor(40);
+      }
+
+    function pdftext2(){
+      pdf.setFont('times', 'regular');
+      pdf.setFontSize(12); 
+      pdf.setTextColor(40);
+      } 
+
+    function footerText(){
+      pdf.setFont('crimson text', 'regular');
+      pdf.setFontSize(10); 
+      pdf.setTextColor(40);
+  } 
+
+    const headerLeft = function(data) {
+      pdf.setFontSize(8);
+      pdf.setTextColor(40);
+      pdf.addImage(CompanyLogo, 'PNG' , 40,20,70,70);
+      headerText();
+      pdf.text('UNI MART' , 115 , 35);
+      pdftext2();
+      pdf.text('University Of Ruhuna' , 115 , 50);
+      pdf.text('Wellamadama' , 115 , 63);
+      pdf.text('Matara' , 115 , 76);
+      pdf.text('0372222222' , 115 , 89);
+  };
+
+    const headerRight = function(data) {
+      headerText();
+      pdf.text(noteHeader , 638 , 35);
+      pdf.addImage(qrCodeImage, 'JPEG', 635, 37, 60, 60);
+      pdftext2();
+      pdf.text(`${userData.fullname}`, 700, 55);
+      pdf.text(`${formattedDate}`, 700, 70);
+      pdf.text(`${formattedTime}`, 700, 85);
+   };
 
     const footer = function(data) {
-      const pageCount = doc.internal.getNumberOfPages();
-      doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 10);
+      const pageCount = pdf.internal.getNumberOfPages();
+      pdf.line(20, pdf.internal.pageSize.height-30, pdf.internal.pageSize.width-20, pdf.internal.pageSize.height-30);
+      footerText();
+      pdf.text("©INNOVA ERP Solutions. All rights reserved.",320,pdf.internal.pageSize.height-20);
+      pdf.text("Wellamadama, Matara , 0412223334",342,pdf.internal.pageSize.height-10)
+      pdf.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, pdf.internal.pageSize.height - 15);
     };
 
     const headers = [["ID", "Code","Item Name","Category","Unit"]];
     const data = Item.map(elt=> [elt.ID, elt.Code, elt.Name , elt.CategoryName, elt.UnitName,]);
 
     let content = {
-      startY: 50,
+      startY: 150,
       head: headers,
       body: data
     };
 
-    doc.autoTable({
+    pdf.autoTable({
       ...content,
       theme: 'striped',
-      headerStyles: { fillColor: [38, 2, 97], textColor: [255, 255, 255] },
+      styles: {
+        head: { fillColor: [38, 2, 97], textColor: [255, 255, 255] }, 
+        body: { fillColor: [255, 255, 255], textColor: [0, 0, 0] }, 
+      },
       addPageContent: function(data) {
-          header(data);
+          headerRight(data);
+          headerLeft(data);
+          pdf.line(20, 120, pdf.internal.pageSize.width-20, 120);
           footer(data);
       }
     });
     setDialogOpen(false);
-    doc.save("ERP-item-report.pdf");
+    pdf.save("ERP-item-report.pdf");
   };
   
   const exportCSV = () => {
