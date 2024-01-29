@@ -22,14 +22,19 @@ function ItemMaster() {
     itemName:'',
     categoryDescription:'',
     unitDescription:'',
-    supplierName:'' 
+    supplierName:'',
+    reorderLevel:'',
+    reorderQuantity:'' 
+    
   })
   const [errorMessage, setErrorMessage] = useState({
     code: '',
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
-    supplierName:''
+    supplierName:'',
+    reorderLevel:'',
+    reorderQuantity:''
   })
 
   // Fetch categories from the server
@@ -123,7 +128,9 @@ function ItemMaster() {
       itemName: values.itemName,
       categoryId: categoryId,
       unitId: unitId,
-      supplierId: supplierId
+      supplierId: supplierId,
+      reorderLevel:values.reorderLevel,
+      reorderQuantity:values.reorderQuantity
     }
     const validationErrors = validateItem(values);
     setErrorMessage(validationErrors);
@@ -173,9 +180,7 @@ function ItemMaster() {
       unitDescription:'',
       supplierName:''
     }));
-    setTimeout(()=>{
-      navigate('/home/item-list');
-    },2000);
+    
     setErrorMessage({
       code: '',
       itemName: '',
@@ -265,6 +270,19 @@ function ItemMaster() {
             value={values.supplierName}
           />
           <label className='error-text'>{errorMessage.supplierName}</label>
+
+
+          <h3>Reorder Details</h3>
+          <div className='line-type2-container'>
+            <div className='line-type2-content'>
+              <TextField type="number" error={errorMessage.code ? true : false} className='text-line-type1' name='reorderLevel' value={values.reorderLevel} onChange={(e) => handleInputChange(e)} label="Reorder Level" variant="outlined"  />
+              <label className='error-text'>{errorMessage.reorderLevel}</label>
+            </div>
+            <div className='line-type2-content'>
+              <TextField type="number" error={errorMessage.itemName ? true : false} className='text-line-type1' name='reorderQuantity' value={values.reorderQuantity} onChange={(e) => handleInputChange(e)} label="Reorder Quantity" variant="outlined" />
+              <label className='error-text'>{errorMessage.reorderQuantity}</label>
+            </div>
+          </div>
 
           <div className='button-container'>
             <button type="submit" className='submit-button'>Submit</button>

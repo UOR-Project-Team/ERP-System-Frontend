@@ -66,7 +66,9 @@ function ItemList() {
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
-    supplierName: ''
+    supplierName: '',
+    reorderLevel:'',
+    reorderQuantity:''
   });
 
   const [formResetData, setFormResetData] = useState({
@@ -74,7 +76,9 @@ function ItemList() {
     itemName: '',
     categoryDescription:'',
     unitDescription:'',
-    supplierName:''
+    supplierName:'',
+    reorderLevel:'',
+    reorderQuantity:''
   });
 
   const [errorMessage, setErrorMessage] = useState({
@@ -82,7 +86,9 @@ function ItemList() {
     itemName: '',
     categoryDescription: '',
     unitDescription: '',
-    supplierName:''
+    supplierName:'',
+    reorderLevel:'',
+    reorderQuantity:''
   })
   
   //fetch all items function
@@ -351,21 +357,26 @@ function ItemList() {
 
   const fetchItem = () => {
     const foundItem = Item.find((item) => item.ID === currentItem);
-
+    
     if (foundItem) {
       setFormData({
         code: foundItem.Code || '',
         itemName: foundItem.Name || '',
         categoryDescription: foundItem.CategoryName || '',
         unitDescription: foundItem.UnitName || '',
-        supplierName: foundItem.SupplierName||''
+        supplierName: foundItem.SupplierName||'',
+        reorderLevel: foundItem.Reorder_Level||'',
+        reorderQuantity: foundItem.Reorder_Quantity||''
+        
       });
       setFormResetData({
         code: foundItem.Code || '',
         itemName: foundItem.Name || '',
         categoryDescription: foundItem.CategoryName || '',
         unitDescription: foundItem.UnitName || '',
-        supplierName: foundItem.SupplierName||''
+        supplierName: foundItem.SupplierName||'',
+        reorderLevel: foundItem.Reorder_Level||'',
+        reorderQuantity: foundItem.Reorder_Quantity||''
       });
     } else {
       console.log("Item not found");
@@ -394,7 +405,9 @@ function ItemList() {
       itemName: formData.itemName,
       categoryId: categoryId,
       unitId: unitId,
-      supplierId: supplierId
+      supplierId: supplierId,
+      reorderLevel: formData.reorderLevel,
+      reorderQuantity: formData.reorderQuantity
 
     }
     console.log(submitItemData);
@@ -631,6 +644,20 @@ function ItemList() {
             value={formData.supplierName}
           />
           <label className='error-text'>{errorMessage.supplierName}</label>
+
+
+
+          <h3>Reorder Details</h3>
+          <div className='line-type2-container'>
+            <div className='line-type2-content'>
+              <TextField type="number" error={errorMessage.code ? true : false} className='text-line-type1' name='reorderLevel' value={formData.reorderLevel} onChange={(e) => handleInputChange(e)} label="Reorder Level" variant="outlined"  />
+              <label className='error-text'>{errorMessage.reorderLevel}</label>
+            </div>
+            <div className='line-type2-content'>
+              <TextField type="number" error={errorMessage.itemName ? true : false} className='text-line-type1' name='reorderQuantity' value={formData.reorderQuantity} onChange={(e) => handleInputChange(e)} label="Reorder Quantity" variant="outlined" />
+              <label className='error-text'>{errorMessage.reorderQuantity}</label>
+            </div>
+          </div>
 
 
           <div className='button-container'>

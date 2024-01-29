@@ -4,7 +4,9 @@ const validateItem = (formData) => {
         itemName:'',
         categoryDescription:'',
         unitDescription:'',
-        supplierName:''
+        supplierName:'',
+        reorderLevel:'',
+        reorderQuantity:''
     };
   
     if (!formData.code) {
@@ -26,6 +28,23 @@ const validateItem = (formData) => {
     if (!formData.supplierName) {
         errors.supplierName = 'Supplier is required *';
     }
+
+
+    //validation for reorderLevel
+    if (!formData.reorderLevel) {
+        errors.reorderLevel = 'Reorder Level is required *';
+    } 
+    // else if (!Number.isInteger(formData.reorderLevel)) {
+    //     errors.reorderLevel = 'Reorder Level must be a whole number';
+    // }
+
+    //validation for reorderQuantity
+    if (!formData.reorderQuantity) {
+        errors.reorderQuantity = 'Reorder Quantity is required *';
+    } 
+    // else if (!Number.isInteger(formData.reorderQuantity)) {
+    //     errors.reorderQuantity = 'Reorder Quantity must be a whole number';
+    // }
   
 
     return errors;
