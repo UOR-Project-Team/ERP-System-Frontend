@@ -1,11 +1,10 @@
-import axios from 'axios';
-const apiUrl = 'http://localhost:8081/grn';
+import connection from "../connection";
 
 const grnServices = {
 
   generateGRNID: async (grnId) => {
     try {
-      const response = await axios.get(`${apiUrl}/generateID/${grnId}`);
+      const response = await connection.get(`/grn/generateID/${grnId}`);
       console.log('GRN Data ',response.data)
       return response.data;
     } catch (error) {
@@ -15,7 +14,7 @@ const grnServices = {
 
   getAllSuppliers: async () => {
     try {
-      const response = await axios.get(`${apiUrl}/suppliers`);
+      const response = await connection.get(`/grn/suppliers`);
       console.log('Supplier Data ',response.data)
       return response.data;
     } catch (error) {
@@ -25,7 +24,7 @@ const grnServices = {
 
   getItems: async (supplierId) => {
     try {
-      const response = await axios.get(`${apiUrl}/items/${supplierId}`);
+      const response = await connection.get(`/grn/items/${supplierId}`);
       console.log('response data is ',response.data)
       return response.data;
 
@@ -36,7 +35,7 @@ const grnServices = {
 
   addgrn: async(grndata)=>{
     try{
-      const response = await axios.post(`${apiUrl}/list`, grndata, {
+      const response = await connection.post(`/grn/list`, grndata, {
         headers: {
           'Content-Type': 'application/json',
         },

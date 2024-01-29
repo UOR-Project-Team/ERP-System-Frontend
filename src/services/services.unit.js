@@ -1,11 +1,10 @@
-import axios from 'axios';
-const apiUrl = 'http://localhost:8081/unit';
+import connection from "../connection";
 
 const unitServices = {
   
   createUnit: async (data) => {
     try {
-      const response = await axios.post(`${apiUrl}/create`, data, {
+      const response = await connection.post(`/unit/create`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -18,7 +17,7 @@ const unitServices = {
 
   getAllUnits: async () => {
     try {
-      const response = await axios.get(`${apiUrl}`);
+      const response = await connection.get(`/unit`);
       return response.data.units;
     } catch (error) {
       throw new Error('Error fetching units');
@@ -27,7 +26,7 @@ const unitServices = {
 
   getUnitById: async (unitId) => {
     try {
-      const response = await axios.get(`${apiUrl}/${unitId}`);
+      const response = await connection.get(`/unit/${unitId}`);
       return response.data;
 
     } catch (error) {
@@ -37,7 +36,7 @@ const unitServices = {
 
   updateUnit: async (unitId, data) => {
     try {
-      const response = await axios.put(`${apiUrl}/${unitId}`, data, {
+      const response = await connection.put(`/unit/${unitId}`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -51,7 +50,7 @@ const unitServices = {
 
   deleteUnit: async (unitId) => {
     try {
-      const response = await axios.delete(`${apiUrl}/${unitId}`);
+      const response = await connection.delete(`/unit/${unitId}`);
       return response.data;
     } catch (error) {
       throw new Error(`Error deleting unit: ${error.message}`);

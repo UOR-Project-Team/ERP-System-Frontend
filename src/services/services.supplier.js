@@ -1,11 +1,10 @@
-import axios from 'axios';
-const apiUrl = 'http://localhost:8081/supplier';
+import connection from "../connection";
 
 const supplierServices = {
   
   createSupplier: async (data) => {
     try {
-      const response = await axios.post(`${apiUrl}/create`, data, {
+      const response = await connection.post(`/supplier/create`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -18,7 +17,7 @@ const supplierServices = {
 
   getAllSuppliers: async () => {
     try {
-      const response = await axios.get(`${apiUrl}`);
+      const response = await connection.get(`/supplier`);
       return response.data.suppliers;
     } catch (error) {
       throw new Error('Error fetching suppliers');
@@ -27,7 +26,7 @@ const supplierServices = {
 
   getSupplierById: async (supplierId) => {
     try {
-      const response = await axios.get(`${apiUrl}/show/${supplierId}`);
+      const response = await connection.get(`/supplier/show/${supplierId}`);
       return response.data;
 
     } catch (error) {
@@ -37,7 +36,7 @@ const supplierServices = {
 
   updateSupplier: async (supplierId, data) => {
     try {
-      const response = await axios.put(`${apiUrl}/${supplierId}`, data, {
+      const response = await connection.put(`/supplier/${supplierId}`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -50,7 +49,7 @@ const supplierServices = {
 
   activateSupplier: async (supplierId) => {
     try {
-      const response = await axios.put(`${apiUrl}/activate/${supplierId}`);
+      const response = await connection.put(`/supplier/activate/${supplierId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -59,7 +58,7 @@ const supplierServices = {
 
   deactivateSupplier: async (supplierId) => {
     try {
-      const response = await axios.put(`${apiUrl}/deactivate/${supplierId}`);
+      const response = await connection.put(`/supplier/deactivate/${supplierId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -68,7 +67,7 @@ const supplierServices = {
 
   deleteSupplier: async (supplierId) => {
     try {
-      const response = await axios.delete(`${apiUrl}/${supplierId}`);
+      const response = await connection.delete(`/supplier/${supplierId}`);
       return response.data;
     } catch (error) {
       throw new Error(`Error deleting supplier: ${error.message}`);

@@ -14,8 +14,8 @@ function App() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
+    const storedToken = localStorage.getItem('token');
+    setIsAuthenticated(!!storedToken);
   }, []);
 
   return (

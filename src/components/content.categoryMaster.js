@@ -18,6 +18,20 @@ function CategoryMaster(){
             Description:''
     });
 
+    const styles = theme => ({
+        textField: {
+            width: '90%',
+            marginLeft: 'auto',
+            marginRight: 'auto',            
+            paddingBottom: 0,
+            marginTop: 0,
+            fontWeight: 500
+        },
+        input: {
+            color: 'white'
+        }
+    });
+
     const handleChanges = (e) => {
         const { name , value } = e.target;
         setFormData((prevdata) => ({...prevdata , [name]: value}));
@@ -75,7 +89,17 @@ function CategoryMaster(){
             <div className='master-content' style={{height: '92vh'}}>
                 <form className='form-container' style={{marginTop:'25vh'}}>
                     <h3>Category Details</h3>
-                        <TextField error={errorMessage.Description ? true : false} className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
+                        <TextField
+                            // className={classes.textField}
+                            error={errorMessage.Description ? true : false}
+                            name='Description' value={formData.Description}
+                            onChange={(e) => handleChanges(e)}
+                            label="Description"
+                            variant='outlined'
+                            // InputProps={{
+                            //     className: classes.input,
+                            // }}
+                            />
                         <label className='error-text'>{errorMessage.Description}</label>
                         <div className='button-container'>
                                 <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
