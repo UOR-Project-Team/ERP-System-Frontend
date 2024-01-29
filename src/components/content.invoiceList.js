@@ -130,138 +130,25 @@ function InvoiceList() {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleRequest = (type) => {
-    navigateTo(`/home/invoice-display`);
+
+  const handleRequest = (type, invoiceNo) => {
+    if (type === 'view') {
+      navigateTo(`/home/invoice-view/${invoiceNo}`);
+      console.log(invoiceNo);
+    } else if (type === 'delete') {
+      setDialogTitle('Delete Item');
+      setDialogDescription('Do you want to delete this Item record?');
+      setDialogOpen(true);
+      setAnchorEl(null);
+    }
   };
-
-  // const exportPDF = () => {
-  //       const unit = "pt";
-  //       const size = "A4";
-  //       const orientation = "landscape";
-  //       const pdf = new jsPDF(orientation, unit, size);
-
-  //       const currentDate = new Date();
-  //       const formattedDate = currentDate.toLocaleDateString();
-  //       const formattedTime = currentDate.toLocaleTimeString();
-
-  //       const selectDate = subDays(currentDate, selectedInterval);
-  //       const startDate = addDays(selectDate,1);
-  //       const formattedStartDate = startDate.toLocaleDateString();
-      
-       
-  //       const formattedEndDate = currentDate.toLocaleDateString();
-
-  //       if(selectedInterval ===700){
-  //         const qrCodeData = `Date Range: ${formattedStartDate} to ${formattedEndDate}\nGeneratedDate: ${formattedDate}\nGeneratedTime: ${formattedTime}\nUser: ${userData.fullname}`;      
-  //         const qr = QRCode(0, 'L');
-  //         qr.addData(qrCodeData);
-  //         qr.make();
-  //         const qrCodeImage = qr.createDataURL();
-  //         return qrCodeImage;
-  //       }else {
-
-  //         const qrCodeData = `Date Range: ${formattedStartDate} to ${formattedEndDate}\nGeneratedDate: ${formattedDate}\nGeneratedTime: ${formattedTime}\nUser: ${userData.fullname}`;
-  //         const qr = QRCode(0, 'L');
-  //         qr.addData(qrCodeData);
-  //         qr.make();
-  //         const qrCodeImage = qr.createDataURL();
-  //         return qrCodeImage;
-  //       }
-
-    
-  //       // const qrCodeData = `Date Range: ${formattedStartDate} to ${formattedEndDate}\nGeneratedDate: ${formattedDate}\nGeneratedTime: ${formattedTime}\nUser: ${userData.fullname}`;
-  //       // const qr = QRCode(0, 'L');
-  //       // qr.addData(qrCodeData);
-  //       // qr.make();
-  //       // const qrCodeImage = qr.createDataURL();
-    
-  //       const noteHeader = "INVOICE LIST"
-    
-  //       function headerText(){
-  //         pdf.setFont('helvetica', 'bold'); 
-  //         pdf.setFontSize(20); 
-  //         pdf.setTextColor(40);
-  //         }
-    
-  //       function pdftext2(){
-  //         pdf.setFont('times', 'regular');
-  //         pdf.setFontSize(12); 
-  //         pdf.setTextColor(40);
-  //         } 
-    
-  //       function footerText(){
-  //         pdf.setFont('crimson text', 'regular');
-  //         pdf.setFontSize(10); 
-  //         pdf.setTextColor(40);
-  //     } 
-    
-             
-  //       const headerLeft = function(data) {
-  //         pdf.setFontSize(8);
-  //         pdf.setTextColor(40);
-  //         pdf.addImage(CompanyLogo, 'PNG' , 40,20,70,70);
-  //         headerText();
-  //         pdf.text('UNI MART' , 115 , 35);
-  //         pdftext2();
-  //         pdf.text('University Of Ruhuna' , 115 , 50);
-  //         pdf.text('Wellamadama' , 115 , 63);
-  //         pdf.text('Matara' , 115 , 76);
-  //         pdf.text('0372222222' , 115 , 89);
-  //       };
-    
-  //       const headerRight = function(data) {
-  //         headerText();
-  //         pdf.text(noteHeader , 638 , 35);
-  //         pdf.addImage(qrCodeImage, 'JPEG', 635, 37, 60, 60);
-  //         pdftext2();
-  //         pdf.text(`${userData.fullname}`, 700, 55);
-  //         pdf.text(`${formattedDate}`, 700, 70);
-  //         pdf.text(`${formattedTime}`, 700, 85);
-  //        };
-
-
-  //     const footer = function(data) {
-  //       const pageCount = pdf.internal.getNumberOfPages();
-  //       pdf.line(20, pdf.internal.pageSize.height-30, pdf.internal.pageSize.width-20, pdf.internal.pageSize.height-30);
-  //       footerText();
-  //       pdf.text("©INNOVA ERP Solutions. All rights reserved.",320,pdf.internal.pageSize.height-20);
-  //       pdf.text("Wellamadama, Matara , 0412223334",342,pdf.internal.pageSize.height-10)
-  //       pdf.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, pdf.internal.pageSize.height - 15);
-  //   };
-  //   const headers = [["ID", "No","Date/Time","Total Amount","User","Customer"]]; 
-  //   const data = filteredInvoices.map(elt=> [elt.ID, elt.No, elt.Date_Time , elt.Total_Amount, elt.UserName,elt.CustomerName]);
-
-    
-  //   let content = {
-  //     startY: 150,
-  //     head: headers,
-  //     body: data
-  //   };
-
-  //   pdf.autoTable({
-  //       ...content,
-  //       theme: 'striped',
-  //       styles: {
-  //         head: { fillColor: [38, 2, 97], textColor: [255, 255, 255] }, 
-  //         body: { fillColor: [255, 255, 255], textColor: [0, 0, 0] }, 
-  //       },
-  //       addPageContent: function(data) {
-  //           headerLeft(data);
-  //           headerRight(data);
-  //           pdf.line(20, 120, pdf.internal.pageSize.width-20, 120);
-  //           footer(data);
-  //       }
-  //     });
-  
-  //     setDialogOpen(false);
-  //     pdf.save("ERP-invoice-report.pdf");
-  //   };
 
   const exportPDF = async () => {
     try {
@@ -501,7 +388,7 @@ function InvoiceList() {
                     <td>{invoice.CustomerName}</td>
 
                     <td>
-                      <button onClick={(event) => { handleClick(event); setCurrentInvoice(invoice.ID); }}>
+                      <button onClick={(event) => { handleClick(event); setCurrentInvoice(invoice.No); }}>
                         <img src={ActionLogo} alt='Action Logo' />
                       </button>
                     </td>
@@ -514,23 +401,20 @@ function InvoiceList() {
         </div>
       </div>
       </div>
-      <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
+      <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem>
-          <button onClick={() => {handleRequest('edit');}}>
+          <button onClick={() => handleRequest('view', currentInvoice)}>
             <img src={ViewLogo} alt='View Logo' />
             <span>View Invoice</span>
-          </button>               
-                
+          </button>
         </MenuItem>
-        <MenuItem onClick={() => {setDialogTitle('Delete Item'); setDialogDescription('Do you want to delete this Item record?'); setDialogOpen(true); setAnchorEl(null);}}>
+        <MenuItem onClick={() => handleRequest('delete')}>
           <button>
             <img src={DeleteLogo} alt="Delete Logo"/>
             <span>Delete Invoice</span>
           </button>
         </MenuItem>
       </Menu>
-
-
       <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
               <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
               <DialogContent>
@@ -547,9 +431,7 @@ function InvoiceList() {
               </Button>
               </DialogActions>
       </Dialog>
-      
-
-    </div>
+      </div>
   );
 }
 
