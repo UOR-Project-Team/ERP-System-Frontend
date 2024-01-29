@@ -11,7 +11,7 @@ import {generatePDFInvoice} from "../services/generatePrint";
 
 function Invoice(){
 
-  const { userData } = useUser();
+  const { userTokenData } = useUser();
 
     const [invoiceNumber , setinvoiceNumber] = useState(0);
     const [customers , setCustomers] = useState([]);
@@ -37,7 +37,7 @@ function Invoice(){
     const [invoiceData, setInvoiceData] = useState({
       invoiceNumber: '',
       Customerid:'',
-      userid: userData.userid,
+      userid: userTokenData.userid,
       solditems :[],
       totalAmount: ''
 
@@ -359,7 +359,7 @@ function Invoice(){
        setInvoiceData({
         invoiceNumber: '',
         Customerid:'',
-        userid: userData.userid,
+        userid: userTokenData.userid,
         solditems :[],
         totalAmount: ''
        });
@@ -447,7 +447,7 @@ function Invoice(){
         formattedTime,
         selectedCustomerName,
         selectedCustomerContact,
-        userData.fullname,
+        userTokenData.fullname,
         CompanyLogo,
         selectedItems,
         subTotal,

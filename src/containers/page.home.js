@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/panel.Header';
 import SidePanelCollapse from '../components/panel.SidePanel-Collapse';
 import SidePanelExpand from '../components/panel.SidePanel-Expand';
@@ -46,6 +46,21 @@ function Home({ updateAuthentication }) {
   const toggleupdateAuthentication = () => {
     updateAuthentication(false)
   };
+
+  const handleResize = () => {
+    const deviceWidth = window.innerWidth;
+    if(deviceWidth <= 890) {
+      setIsExpanded(false);
+    }
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div className="master-container">

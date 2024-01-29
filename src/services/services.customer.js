@@ -1,10 +1,14 @@
-import http from "../http-common";
+import connection from "../connection";
 
 const customerServices = {
   
   createCustomer: async (data) => {
     try {
-      const response = await http.post(`/customer/create`, data);
+      const response = await connection.post(`/customer/create`, data,  {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -13,7 +17,7 @@ const customerServices = {
 
   getAllCustomers: async () => {
     try {
-      const response = await http.get(`/customer`);
+      const response = await connection.get(`/customer`);
       return response.data;
     } catch (error) {
       throw new Error('Error fetching customers');
@@ -22,7 +26,7 @@ const customerServices = {
 
   getCustomerById: async (customerId) => {
     try {
-      const response = await http.get(`/customer/${customerId}`);
+      const response = await connection.get(`/customer/${customerId}`);
       return response.data;
     } catch (error) {
       throw new Error('Error fetching customer by ID');
@@ -31,7 +35,11 @@ const customerServices = {
 
   updateCustomer: async (customerId, data) => {
     try {
-      const response = await http.put(`/customer/${customerId}`, data);
+      const response = await connection.put(`/customer/${customerId}`, data,  {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -40,7 +48,7 @@ const customerServices = {
 
   activateCustomer: async (customerId) => {
     try {
-      const response = await http.put(`/customer/activate/${customerId}`);
+      const response = await connection.put(`/customer/activate/${customerId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -49,7 +57,7 @@ const customerServices = {
 
   deactivateCustomer: async (customerId) => {
     try {
-      const response = await http.put(`/customer//deactivate/${customerId}`);
+      const response = await connection.put(`/customer//deactivate/${customerId}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -58,7 +66,7 @@ const customerServices = {
 
   deleteCustomer: async (customerId) => {
     try {
-      const response = await http.delete(`/customer//${customerId}`);
+      const response = await connection.delete(`/customer//${customerId}`);
       return response.data;
     } catch (error) {
       throw new Error(`Error deleting customer: ${error.message}`);

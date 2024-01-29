@@ -90,7 +90,7 @@ function Login({ updateAuthentication }) {
     }
   
     try {
-      const response =await axios.post('http://localhost:8081/login', {
+      const response = await axios.post('http://localhost:8081/login', {
           username: formData.username, 
           password: formData.password,
       });
