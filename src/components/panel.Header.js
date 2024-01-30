@@ -280,7 +280,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
           <button onClick={() => handleRequest('profile')}>
               <span className='text-container'>
                 <div className='uname-text'>{userTokenData.fullname}</div>
-                <div className='type-text'>{userTokenData.jobrole === 'admin' ? ('Administrator') : ('System User')}</div>
+                <div className='type-text'>{userTokenData.jobrole}</div>
               </span>
             </button>
           </span>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import connection from "../connection";
 import TextField from '@mui/material/TextField';
 import Dialogbox from '../services/services.dialogbox'
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
@@ -35,9 +35,9 @@ import {
 import Papa from 'papaparse';
 
 
-function UserList() {
+function UserList({updateHeaderText}) {
 
-  const { userData } = useUser();
+  const { userTokenData } = useUser();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState();
   const [userID, setUserId] = useState();
@@ -145,8 +145,6 @@ function UserList() {
     });
   };
 
-  
-
   const handleOpenDialog = () => {
     // Open the confirmation dialog
     setOpenDialog(true);
@@ -161,7 +159,7 @@ function UserList() {
 
   const fetchData =async() => {
 
-    axios.get('http://localhost:8081/user/show')
+    connection.get('/user/show')
       .then(response => {
         setUsers(response.data.user);
       })
@@ -180,7 +178,7 @@ function UserList() {
     const id =userID;
     if(id){
       try {
-         await axios.delete(`http://localhost:8081/user/delete/${id}`); 
+         await connection.delete(`/user/delete/${id}`); 
         //showToastMessage('Successfully Deleted!', 'success');
         showSuccessToast('User Deleted successfully!');
         setTimeout(() => {
@@ -206,7 +204,7 @@ function UserList() {
 
     setSearch(searchvalue);
     try {
-      const response = await axios.get(`http://localhost:8081/user/search?term=${searchvalue}`);
+      const response = await connection.get(`/user/search?term=${searchvalue}`);
       setUsers(response.data.user);
     } catch (error) {
       console.error('Error searching users:', error);
@@ -220,7 +218,7 @@ function UserList() {
     try {
       
       
-      axios.get(`http://localhost:8081/user/getuser/${id}`)
+      connection.get(`/user/getuser/${id}`)
       .then(response => {
         console.log(response.data)
         const userData = response.data.user[0];
@@ -285,7 +283,7 @@ function UserList() {
     const id =userID;
     try {
       
-      const response = await axios.put(`http://localhost:8081/user/update/${id}`, formData);
+      const response = await connection.put(`/user/update/${id}`, formData);
       
       if(response.status ===200){
         //setPasswordError('');
@@ -324,7 +322,7 @@ function UserList() {
     const formattedDate = currentDate.toLocaleDateString();
     const formattedTime = currentDate.toLocaleTimeString();
 
-    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userData.fullname}`;
+    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userTokenData.fullname}`;
     const qr = QRCode(0, 'L');
     qr.addData(qrCodeData);
     qr.make();
@@ -368,7 +366,7 @@ function UserList() {
       pdf.text(noteHeader , 638 , 35);
       pdf.addImage(qrCodeImage, 'JPEG', 635, 37, 60, 60);
       pdftext2();
-      pdf.text(`${userData.fullname}`, 700, 55);
+      pdf.text(`${userTokenData.fullname}`, 700, 55);
       pdf.text(`${formattedDate}`, 700, 70);
       pdf.text(`${formattedTime}`, 700, 85);
    };
@@ -553,7 +551,7 @@ function UserList() {
 
       <div className='list-content-top'>
         <div className='button-container'>
-          <button onClick={() => {navigateTo(`/home/user-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add User</span></button>
+          <button onClick={() => {navigateTo(`/home/user-master`); updateHeaderText('User Master');}}><img src={AddLogo} alt='Add Logo'/><span>Add User</span></button>
         </div>
         <div className='search-container'>
           <input type="text" placeholder='Explore the possibilities...' value={search} onChange={(e) =>  setSearch(e.target.value)} />
@@ -644,13 +642,13 @@ function UserList() {
         <MenuItem onClick={() => {fetchUser(); handleRequest('edit');}}>
           <button >
             <img src={EditLogo} alt="Edit Logo"/>
-            <span>Edit Customer</span>
+            <span>Edit User</span>
           </button>
         </MenuItem>
         <MenuItem onClick={() => handleDeleteUser(userID)}>
           <button>
             <img src={DeleteLogo} alt="Delete Logo"/>
-            <span>Delete Customer</span>
+            <span>Delete User</span>
           </button>
         </MenuItem>
       </Menu>

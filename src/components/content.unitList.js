@@ -33,7 +33,7 @@ import { useUser } from '../services/services.UserContext';
 
 function UnitList({updateHeaderText}) {
 
-  const { userData } = useUser();
+  const { userTokenData } = useUser();
   const [anchorEl, setAnchorEl] = useState(null);
   const [removeClick, setDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState('');
@@ -204,7 +204,7 @@ function UnitList({updateHeaderText}) {
     const formattedDate = currentDate.toLocaleDateString();
     const formattedTime = currentDate.toLocaleTimeString();
 
-    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userData.fullname}`;
+    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userTokenData.fullname}`;
     const qr = QRCode(0, 'L');
     qr.addData(qrCodeData);
     qr.make();
@@ -248,7 +248,7 @@ function UnitList({updateHeaderText}) {
       pdf.text(noteHeader , 638 , 35);
       pdf.addImage(qrCodeImage, 'JPEG', 635, 37, 60, 60);
       pdftext2();
-      pdf.text(`${userData.fullname}`, 700, 55);
+      pdf.text(`${userTokenData.fullname}`, 700, 55);
       pdf.text(`${formattedDate}`, 700, 70);
       pdf.text(`${formattedTime}`, 700, 85);
    };
@@ -322,7 +322,7 @@ function UnitList({updateHeaderText}) {
         <ToastContainer />
         <div className='list-content-top'>
           <div className='button-container'>
-            <button onClick={() => {navigateTo(`/home/unit-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Unit</span></button>
+            <button onClick={() => {navigateTo(`/home/unit-master`); updateHeaderText('Unit Master');}}><img src={AddLogo} alt='Add Logo'/><span>Add Unit</span></button>
           </div>
           <div className='search-container'>
             <form>

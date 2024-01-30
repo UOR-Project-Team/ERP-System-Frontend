@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../services/services.UserContext';
 import RightArrowLogo from './../assets/icons/right.png';
 import DashboardLogo from './../assets/icons/dashboard.png';
 import MasterFileLogo from './../assets/icons/customer.png';
@@ -13,6 +14,8 @@ import MenuItem from '@mui/material/MenuItem';
 const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   
   const navigateTo = useNavigate();
+
+  const { userTokenData } = useUser();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorE2, setAnchorE2] = useState(null);
@@ -55,11 +58,17 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </div>
       <div className='body'>
         <button title="Dashboard" onClick={() => {navigateTo('/home'); updateHeaderText('Dashboard');}}><img src={DashboardLogo} alt="Dashboard Logo" /></button>
-        <button title="Master Files" onClick={handleClick1}><img src={MasterFileLogo} alt="Master File Logo" /></button>
+        {userTokenData.jobrole==='Administrator' && (
+          <button title="Master Files" onClick={handleClick1}><img src={MasterFileLogo} alt="Master File Logo" /></button>
+        )} 
         <button title="Purchasing" onClick={handleClick2}><img src={PurchasingLogo} alt="Purchasing Logo" /></button>
         <button title="Sales" onClick={handleClick3}><img src={SalesLogo} alt="Sales Logo" /></button>
-        <button title="Reports" onClick={handleClick4}><img src={ReportLogo} alt="Report Logo" /></button>
-        <button title="Master Lists" onClick={handleClick5}><img src={MasterListLogo} alt="Master List Logo" /></button>
+        {userTokenData.jobrole==='Administrator' && (
+          <button title="Reports" onClick={handleClick4}><img src={ReportLogo} alt="Report Logo" /></button>
+        )}
+        {userTokenData.jobrole==='Administrator' && (
+          <button title="Master Lists" onClick={handleClick5}><img src={MasterListLogo} alt="Master List Logo" /></button>
+        )}
       </div>
 
       <Menu className='side-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
@@ -170,14 +179,8 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
             <span>Invoice List</span>
           </button>
         </MenuItem>
-        <MenuItem onClick={() => {navigateTo(`/home/grn-list`); setAnchorE5(null); updateHeaderText('GRN List')}}>
-        <button>
-            <span>GRN List</span>
-          </button>
-        </MenuItem>
       </Menu>
-
-      </div>
+    </div>
   );
 };
 

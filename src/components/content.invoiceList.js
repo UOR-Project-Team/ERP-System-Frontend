@@ -22,7 +22,6 @@ import CsvLogo from './../assets/icons/csv.png';
 import SearchLogo from './../assets/icons/search.png';
 import ViewLogo from './../assets/icons/view.png';
 import ActionLogo from './../assets/icons/action.png';
-import DeleteLogo from './../assets/icons/delete.png';
 import invoiceServices from '../services/services.invoice';
 import { subDays, startOfToday , addDays } from 'date-fns';
 import CompanyLogo from '../assets/logos/Uni_Mart.png';
@@ -30,9 +29,9 @@ import QRCode from 'qrcode-generator';
 import { useUser } from '../services/services.UserContext';
 
 
-function InvoiceList() {
+function InvoiceList({updateHeaderText}) {
 
-  const { userData } = useUser();
+  const { userTokenData } = useUser();
   const [Invoices, setInvoices] = useState([]);
   const [filteredInvoices, setFilteredInvoices] = useState([]); 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -162,7 +161,7 @@ function InvoiceList() {
       const formattedTime = currentDate.toLocaleTimeString();
   
       let qrCodeImage;
-      const qrCodeData = `GeneratedDate: ${formattedDate}\nGeneratedTime: ${formattedTime}\nUser: ${userData.fullname}`;
+      const qrCodeData = `GeneratedDate: ${formattedDate}\nGeneratedTime: ${formattedTime}\nUser: ${userTokenData.fullname}`;
       const qr = QRCode(0, 'L');
       qr.addData(qrCodeData);
       qr.make();
@@ -207,7 +206,7 @@ function InvoiceList() {
         pdf.text(noteHeader , 638 , 35);
         pdf.addImage(qrCodeImage, 'JPEG', 635, 37, 60, 60);
         pdftext2();
-        pdf.text(`${userData.fullname}`, 700, 55);
+        pdf.text(`${userTokenData.fullname}`, 700, 55);
         pdf.text(`${formattedDate}`, 700, 70);
         pdf.text(`${formattedTime}`, 700, 85);
       };
@@ -327,7 +326,7 @@ function InvoiceList() {
       <ToastContainer />
       <div className='list-content-top'>
         <div className='button-container'>
-          <button onClick={() => {navigateTo(`/home/invoice-add`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Invoice</span></button>
+          <button onClick={() => {navigateTo(`/home/invoice-add`); updateHeaderText('Invoice Add');}}><img src={AddLogo} alt='Add Logo'/><span>Add Invoice</span></button>
         </div>
         <div className='search-container'>
         <input
@@ -406,12 +405,6 @@ function InvoiceList() {
           <button onClick={() => handleRequest('view', currentInvoice)}>
             <img src={ViewLogo} alt='View Logo' />
             <span>View Invoice</span>
-          </button>
-        </MenuItem>
-        <MenuItem onClick={() => handleRequest('delete')}>
-          <button>
-            <img src={DeleteLogo} alt="Delete Logo"/>
-            <span>Delete Invoice</span>
           </button>
         </MenuItem>
       </Menu>

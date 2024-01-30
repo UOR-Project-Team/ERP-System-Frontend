@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios'
 import validateUser from '../services/validate.userLoginForms';
 import {Usertoken} from '../services/token.userToken'
 import { validateUsername, validatePassword, validateConfirmPassword } from '../services/validate.Password'
@@ -11,6 +10,7 @@ import img3 from '../assets/images/login-background-3.jpg'
 import Modal from 'react-modal';
 import TextField from '@mui/material/TextField';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import connection from "../connection";
 
 const images = [ img1, img2, img3 ];
 
@@ -90,7 +90,7 @@ function Login({ updateAuthentication }) {
     }
   
     try {
-      const response = await axios.post('http://localhost:8081/login', {
+      const response = await connection.post('/login', {
           username: formData.username, 
           password: formData.password,
       });
@@ -141,10 +141,7 @@ function Login({ updateAuthentication }) {
     }
   }
 
-
-
   const handleReset = ()=>{
-
     closeModal()
     updateAuthentication(true);
   }
@@ -166,7 +163,7 @@ function Login({ updateAuthentication }) {
 
     try {
       
-      const response = await axios.post(`http://localhost:8081/reset/${resetformData.username}`, resetformData);
+      const response = await connection.post(`/reset/${resetformData.username}`, resetformData);
       
       if(response.status ===200){
           console.log("Suucesfully Updated")
