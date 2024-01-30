@@ -93,14 +93,12 @@ function Home({ updateAuthentication }) {
             <Route path="profit-loss-reports" element={<ProfitLossReports />} />
             <Route path="other-reports" element={<OtherReports />} />
             <Route path="category-list" element={<CategoryList updateHeaderText={updateHeaderText} />} />
-            <Route path="/item-list/*" element={<ItemList />} />
+            <Route path="/item-list/*" element={<ItemList updateHeaderText={updateHeaderText} />} />
             <Route path="supplier-list" element={<SupplierList updateHeaderText={updateHeaderText} />} />
-            <Route path="user-list" element={<UserList />} />
-            <Route path="customer-list" element={<CustomerList />} />
-            {/* <Route path="invoice-view" element={<InvoiceView />} /> */}
+            <Route path="user-list" element={<UserList updateHeaderText={updateHeaderText} />} />
+            <Route path="customer-list" element={<CustomerList updateHeaderText={updateHeaderText} />} />
             <Route path="invoice-view/:invoiceNo" element={<InvoiceView />} />
-
-            <Route path="invoice-list" element={<InvoiceList />} />
+            <Route path="invoice-list" element={<InvoiceList updateHeaderText={updateHeaderText} />} />
             <Route path="unit-list" element={<UnitList updateHeaderText={updateHeaderText} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

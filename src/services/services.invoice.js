@@ -33,7 +33,7 @@ const invoiceServices = {
 
   getInvoiceData: async(invoiceNo)=>{
     try{
-      const response = await axios.get(`${apiUrl}/invoice/${invoiceNo}`);
+      const response = await connection.get(`/invoice/invoice/${invoiceNo}`);
       console.log(response);
       return response.data;
       
@@ -45,7 +45,7 @@ const invoiceServices = {
 
   getSalesData: async(invoiceNo)=>{
     try{
-      const response = await axios.get(`${apiUrl}/sales/${invoiceNo}`);
+      const response = await connection.get(`/invoice/sales/${invoiceNo}`);
       console.log(response);
       return response.data;
       
@@ -54,9 +54,6 @@ const invoiceServices = {
     }
 
   },
-
-
-
 
   getAllInvoices: async () => {
     try {

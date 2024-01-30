@@ -545,19 +545,6 @@ body, html {
     font-weight: bold;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*-------------------- Master Container -----------------------*/
 
 .body-container .master-content {
@@ -1810,7 +1797,7 @@ body, html {
 
 .button-container-InvoiceView{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     margin-top: 5vh;
     margin-right: 1.5em;
     
