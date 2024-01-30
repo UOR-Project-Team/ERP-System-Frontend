@@ -48,10 +48,7 @@ function InvoiceList() {
   useEffect(()=>{
     fetchInvoices();
   }, []);
-
-
-
-
+  
 
 
 
@@ -103,15 +100,7 @@ function InvoiceList() {
 
     const handleRequest = (type) => {
         navigateTo(`/home/invoice-display`)
-        // setAnchorEl(null);
-        // setModelContent(type);
-        // setIsModalOpen(true);
-
-        //fetchItem(currentItem);
-        // fetchCategoryOptions();
-        // fetchUnitOptions();
-        // fetchSupplierOptions();
-  
+        
       };
 
 
@@ -188,6 +177,9 @@ function InvoiceList() {
     };
 
 
+    
+
+
 
     
   const filterContent = (invoices, searchTerm) => {
@@ -224,13 +216,16 @@ function InvoiceList() {
     }
     };
 
+
+        
+
   return (
     <div>
       <div className='list-container'>
       <ToastContainer />
       <div className='list-content-top'>
         <div className='button-container'>
-          
+        
         </div>
         <div className='search-container'>
         <input
@@ -248,6 +243,18 @@ function InvoiceList() {
         <button onClick={handleSearchInputChange}><img src={SearchLogo} alt="Search Logo"/></button>
         </div>
       </div>
+
+      <div>
+
+      <label>
+        <script>
+          
+        </script>
+      </label>
+
+      </div>
+
+
       <div className='list-content'>
         
         <div className='table-container'>
@@ -255,11 +262,11 @@ function InvoiceList() {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>No.</th>
-                <th>Date/Time</th>
-                <th>Total Amount</th>
-                <th>User</th>
-                <th>Customer</th>
+                <th>Itemid</th>
+                <th>Description</th>
+                <th>price</th>
+                <th>qty</th>
+                <th>Total price</th>
                 
                 <th className='action-column'></th>
               </tr>
@@ -286,29 +293,23 @@ function InvoiceList() {
                     </td>
 
                   </tr>
+
+                  
+
+
                 ))
               )}
             </tbody>
           </table>
+          <br/>
+
+          <div>
+          
+          </div>
         </div>
       </div>
       </div>
-      <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose} >
-                <MenuItem>
-                  <button onClick={() => {handleRequest('edit');}}>
-                    <img src={ViewLogo} alt='View Logo' />
-                    <span>View Invoice</span>
-                  </button>               
-                        
-                </MenuItem>
-                <MenuItem onClick={() => {setDialogTitle('Delete Item'); setDialogDescription('Do you want to delete this Item record?'); setDialogOpen(true); setAnchorEl(null);}}>
-                  <button>
-                    <img src={DeleteLogo} alt="Delete Logo"/>
-                    <span>Delete Invoice</span>
-                  </button>
-                </MenuItem>
-      </Menu>
-
+      
 
       <Dialog open={removeClick} onClose={() => setDialogOpen(false)} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
               <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
@@ -328,9 +329,10 @@ function InvoiceList() {
       </Dialog>
 
       
-      
 
     </div>
+
+
   );
 }
 
