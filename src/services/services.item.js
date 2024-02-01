@@ -92,6 +92,15 @@ const itemServices ={
         }
       },
 
+      getProductCode: async () => {
+        try {
+          const response = await axios.get(`${apiUrl}/productCode`);
+          return response.data;
+        } catch (error) {
+          throw new Error('Error getting product code');
+        }
+      },
+
 
 
 }

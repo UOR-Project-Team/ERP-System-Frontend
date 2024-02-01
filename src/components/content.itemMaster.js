@@ -17,6 +17,7 @@ function ItemMaster() {
   const [categories, setCategories] = useState([]);
   const [units, setUnit] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+
   const[values,setValues]=useState({
     code:'',
     itemName:'',
@@ -69,10 +70,28 @@ function ItemMaster() {
     }
   };
 
+  // Getting Unique Product Code from the server
+  const getProductCode = async () => {
+    try {
+      const product_code = await itemServices.getProductCode();
+
+      // Set values.code state with fetched productCode
+      setValues(prevState => ({
+        ...prevState, 
+        code: product_code 
+      }));
+
+      console.log(values.code);
+    } catch (error) {
+      console.error('Error getting product Code:', error.message);
+    }
+  };
+
   useEffect(() => {
     fetchCategoryOptions();
     fetchUnitOptions();
     fetchSupplierOptions();
+    getProductCode();
   }, []);
 
   const categoryOptions = categories.map(category => ({
@@ -199,7 +218,7 @@ function ItemMaster() {
           <h3>Item Details</h3>
           <div className='line-type3-container'>
             <div className='line-type3-left-content'>
-              <TextField error={errorMessage.code ? true : false} className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  />
+              <TextField error={errorMessage.code ? true : false} className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  disabled  />
               <label className='error-text'>{errorMessage.code}</label>
             </div>
             <div className='line-type3-right-content'>
