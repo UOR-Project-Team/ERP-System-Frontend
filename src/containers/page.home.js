@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/panel.Header';
 import SidePanelCollapse from '../components/panel.SidePanel-Collapse';
 import SidePanelExpand from '../components/panel.SidePanel-Expand';
@@ -23,6 +23,7 @@ import UserList from '../components/content.userList';
 import CustomerList from '../components/content.customerList';
 import InvoiceList from '../components/content.invoiceList';
 import UnitList from '../components/content.unitList';
+import InvoiceView from '../components/content.invoiceView';
 
 function Home({ updateAuthentication }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -46,6 +47,21 @@ function Home({ updateAuthentication }) {
   const toggleupdateAuthentication = () => {
     updateAuthentication(false)
   };
+
+  const handleResize = () => {
+    const deviceWidth = window.innerWidth;
+    if(deviceWidth <= 890) {
+      setIsExpanded(false);
+    }
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div className="master-container">
@@ -77,11 +93,12 @@ function Home({ updateAuthentication }) {
             <Route path="profit-loss-reports" element={<ProfitLossReports />} />
             <Route path="other-reports" element={<OtherReports />} />
             <Route path="category-list" element={<CategoryList updateHeaderText={updateHeaderText} />} />
-            <Route path="/item-list/*" element={<ItemList />} />
+            <Route path="/item-list/*" element={<ItemList updateHeaderText={updateHeaderText} />} />
             <Route path="supplier-list" element={<SupplierList updateHeaderText={updateHeaderText} />} />
-            <Route path="user-list" element={<UserList />} />
-            <Route path="customer-list" element={<CustomerList />} />
-            <Route path="invoice-list" element={<InvoiceList />} />
+            <Route path="user-list" element={<UserList updateHeaderText={updateHeaderText} />} />
+            <Route path="customer-list" element={<CustomerList updateHeaderText={updateHeaderText} />} />
+            <Route path="invoice-view/:invoiceNo" element={<InvoiceView />} />
+            <Route path="invoice-list" element={<InvoiceList updateHeaderText={updateHeaderText} />} />
             <Route path="unit-list" element={<UnitList updateHeaderText={updateHeaderText} />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

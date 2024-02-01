@@ -5,14 +5,14 @@ const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const initialUserData = Usertoken(); // Get initial user data using Usertoken function
-  const [userData, setUserData] = useState(initialUserData);
+  const [userTokenData, setUserData] = useState(initialUserData);
 
-  const updateUser = (newUserData) => {
+  const setuserTokenData = (newUserData) => {
     setUserData(newUserData);
   };
 
   return (
-    <UserContext.Provider value={{ userData, updateUser }}>
+    <UserContext.Provider value={{ userTokenData, setuserTokenData }}>
       {children}
     </UserContext.Provider>
   );

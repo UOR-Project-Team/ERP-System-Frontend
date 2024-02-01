@@ -13,7 +13,6 @@ body, html {
     margin: 0;
 }
 
-
 /*-------------------- Login Container -----------------------*/
 
 .login-container {
@@ -313,13 +312,10 @@ body, html {
     font-family: 'Merriweather', serif;
 }
   
-.header-container .header .middle {
-    flex: 1;
-}
-  
 .header-container .header .right {
     justify-content: flex-end;
     display: flex;
+    flex: 1;
     align-items: center;
 }
 
@@ -548,19 +544,6 @@ body, html {
     font-size: 20px;
     font-weight: bold;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*-------------------- Master Container -----------------------*/
 
@@ -1422,6 +1405,21 @@ body, html {
         margin-top: 32px;
         font-size: 15px;
     }
+
+    .sidepanel-container .header {
+        height: 40px;
+        padding: 0px 10px;
+    }
+    
+    .sidepanel-container .header button {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .sidepanel-container .body {
+        height: calc(100vh - 40px);
+        padding: 20px 10px;
+    }
     
     .sidepanel-container img {
         width: 20px;
@@ -1429,7 +1427,7 @@ body, html {
     }
     
     .sidepanel-container .body {
-        padding: 20px 5px;
+        padding: 15px 5px;
     }
     
     .sidepanel-container .body button {
@@ -1439,13 +1437,12 @@ body, html {
     }
     
     .sidepanel-container .expanded .body button {
-        width: 140px;
+        width: 90%;
         margin: 6px 0px;
         padding: 5px 5px;
     }
 
     .sidepanel-container .expanded .body span {
-        width: 80px;
         margin-left: 10px;
         font-size: 12px;
     }
@@ -1469,13 +1466,23 @@ body, html {
     .header-container .header .left img {
         margin-right: 5px;
     }
-      
-    .header-container .header .middle {
-        font-size: 14px;
-    }
 
     .header-container .header .right img {
         margin-left: 5px;
+    }
+    
+    .header-container .header .right button img {
+        width: 8px;
+        height: 6px;
+    }
+    
+    .header-container .header .right .text-container .uname-text {
+        font-weight: bold;
+        font-size: 13px;
+    }
+    
+    .header-container .header .right .text-container .type-text {
+        font-size: 10px;
     }
 
     .body-container .dashboard-container .row-container1 .box {
@@ -1650,7 +1657,6 @@ body, html {
         font-size: 12px;
     }
 
-
 }
 
 @media only screen and (max-width: 890px) {
@@ -1659,14 +1665,17 @@ body, html {
         width: 100%;
         background-color: rgb(38, 2, 97, 0.5);
     }
+
+    .sidepanel-container .body {
+        padding: 5px 5px;
+    }
+
+    .sidepanel-container .header button {
+        display: none;
+    }
 }
 
 @media only screen and (max-height: 400px), (max-width: 500px) {
-
-    .login-container .form-container {
-        width: 100%;
-        background-color: rgb(38, 2, 97, 0.5);
-    }
 
     .login-container .form-container form {
         width: 250px;
@@ -1691,6 +1700,72 @@ body, html {
         height: 28px;
         margin-top: 24px;
     }
+    
+    .sidepanel-container .header {
+        height: 40px;
+    }
+
+    .sidepanel-container .header button {
+        display: none;
+    }
+    
+    .sidepanel-container .body {
+        height: calc(100vh - 40px);
+        padding: 0px 10px;
+    }
+
+    .sidepanel-container img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .sidepanel-container .body button {
+        width: 32px;
+        height: 32px;
+        margin: 5px 0px;
+    }
+
+    .header-container .header .left h2 {
+        font-size: 12px;
+    }
+    
+    .header-container .header .right .text-container {
+        display: none;
+    }
+
+}
+
+@media only screen and (max-width: 280px), (max-height: 450px) {
+
+    .login-container .form-container form {
+        width: 180px;
+    }
+
+    .login-container .form-container h3 {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+
+    .login-container .form-container form label {
+        font-size: 8px;
+    }
+
+    .login-container .form-container form .input-label {
+        font-size: 14px;
+    }
+
+    .login-container .form-container form input {
+        height: 24px;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-bottom: 6px;
+    }
+
+    .login-container .form-container form button {
+        height: 24px;
+        margin-top: 20px;
+        font-size: 12px;
+    }
 
 }
 
@@ -1710,3 +1785,25 @@ body, html {
   height: 25px;
    
 }
+
+.grn-container1 {
+    padding: 5px;
+}
+
+.grn-container1 .grn-content1 {
+    margin-bottom: 5px;
+    padding: 6px 4px;
+}
+
+.button-container-InvoiceView{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5vh;
+    margin-right: 1.5em;
+    
+}
+.btn-invoiceView{
+    width:10px;
+    height: 10px;
+}
+

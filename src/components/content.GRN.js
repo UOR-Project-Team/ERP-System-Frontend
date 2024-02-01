@@ -11,7 +11,7 @@ import {generatePDFGRN} from "../services/generatePrint";
 
 function GRN() {
 
-  const { userData } = useUser();
+  const { userTokenData } = useUser();
   const [grnNumber, setgrnNumber] = useState(0);
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplierId, setSelectedSupplierId] = useState('');
@@ -37,7 +37,7 @@ function GRN() {
   const [grnData, setgrnData] = useState({
     grnNo: '',
     supplierid:'',
-    userid: userData.userid,
+    userid: userTokenData.userid,
     puchaseditems :[],
     totalAmount: ''
   });
@@ -290,7 +290,7 @@ function GRN() {
         setgrnData({
           grnNo: '',
           supplierid:'',
-          userid: userData.userid,
+          userid: userTokenData.userid,
           puchaseditems :[],
           totalAmount: ''
 
@@ -323,7 +323,7 @@ function GRN() {
     setgrnData({
       grnNo: '',
       supplierid:'',
-      userid: userData.userid,
+      userid: userTokenData.userid,
       puchaseditems :[],
       totalAmount: ''
 
@@ -367,7 +367,7 @@ function GRN() {
         selectedSupplierName,
         selectedSupplierMobile,
         selectedSupplierEmail,
-        userData.fullname,
+        userTokenData.fullname,
         CompanyLogo,
         SelectedItems,
         subTotal,

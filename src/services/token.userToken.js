@@ -15,9 +15,8 @@ export const Usertoken = () => {
       contactno: decodedToken.contactno,
       address: decodedToken.address,
       city: decodedToken.city,
-      loginflag: decodedToken.loginflag,
-      // Add other properties as needed
+      loginflag: decodedToken.loginflag
     };
   }
-  return null; // Or handle accordingly if the token doesn't exist or is invalid
+  return null;
 };

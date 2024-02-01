@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo , useEffect} from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -38,9 +38,9 @@ import CompanyLogo from '../assets/logos/Uni_Mart.png';
 import QRCode from 'qrcode-generator';
 import { useUser } from '../services/services.UserContext';
 
-function ItemList() {
+function ItemList({updateHeaderText}) {
 
-  const { userData } = useUser();
+  const { userTokenData } = useUser();
   const [Item, setItems] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [removeClick, setDialogOpen] = useState(false);
@@ -90,6 +90,11 @@ function ItemList() {
     reorderLevel:'',
     reorderQuantity:''
   })
+
+  useEffect(() => {
+    updateHeaderText('Item List');
+    fetchItems('all');
+  }, [updateHeaderText]);
   
   //fetch all items function
   const fetchItems = async (flag, id)=>{
@@ -245,7 +250,7 @@ function ItemList() {
     const formattedDate = currentDate.toLocaleDateString();
     const formattedTime = currentDate.toLocaleTimeString();
 
-    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userData.fullname}`;
+    const qrCodeData = `Date: ${formattedDate}\nTime: ${formattedTime}\nUser: ${userTokenData.fullname}`;
     const qr = QRCode(0, 'L');
     qr.addData(qrCodeData);
     qr.make();
@@ -289,7 +294,7 @@ function ItemList() {
       pdf.text(noteHeader , 638 , 35);
       pdf.addImage(qrCodeImage, 'JPEG', 635, 37, 60, 60);
       pdftext2();
-      pdf.text(`${userData.fullname}`, 700, 55);
+      pdf.text(`${userTokenData.fullname}`, 700, 55);
       pdf.text(`${formattedDate}`, 700, 70);
       pdf.text(`${formattedTime}`, 700, 85);
    };
@@ -481,7 +486,7 @@ function ItemList() {
     e.preventDefault();
     try {
       if (searchInput === '') {
-        await fetchUpdatedItems();
+        await fetchItems();
       } else {
         const res = await itemServices.getAllItems();
         if(res) {
@@ -499,7 +504,7 @@ function ItemList() {
       <ToastContainer />
       <div className='list-content-top'>
         <div className='button-container'>
-          <button onClick={() => {navigateTo(`/home/item-master`)}}><img src={AddLogo} alt='Add Logo'/><span>Add Item</span></button>
+          <button onClick={() => {navigateTo(`/home/item-master`); updateHeaderText('Item Master');}}><img src={AddLogo} alt='Add Logo'/><span>Add Item</span></button>
         </div>
         <div className='search-container'>
             <form>

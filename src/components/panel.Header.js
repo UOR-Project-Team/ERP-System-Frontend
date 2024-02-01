@@ -16,7 +16,6 @@ import {
   Button,
   DialogContentText,
 } from '@mui/material';
-import DownLogo from './../assets/icons/down.png';
 import KeyLogo from './../assets/icons/key.png';
 import LogoutLogo from './../assets/icons/logout.png';
 import SettingsLogo from './../assets/icons/settings.png';
@@ -32,19 +31,19 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
 
   const navigate = useNavigate();
 
-  const { userData, updateUser } = useUser();
+  const { userTokenData, setuserTokenData } = useUser();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelContent, setModelContent] = useState('profile');
   const [removeClick, setDialogOpen] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullname: userData.fullname,
-    email: userData.email,
-    NIC: userData.nic,
-    contactno: userData.contactno,
-    address: userData.address,
-    city: userData.city
+    fullname: userTokenData.fullname,
+    email: userTokenData.email,
+    NIC: userTokenData.nic,
+    contactno: userTokenData.contactno,
+    address: userTokenData.address,
+    city: userTokenData.city
   });
 
   const [errorMessage, setErrorMessage] = useState({
@@ -110,7 +109,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     }
 
     try {
-      const response = await userServices.updateProfile(userData.userid, formData)
+      await userServices.updateProfile(userTokenData.userid, formData)
       const updatedFields = {
         fullname: formData.fullname,
         email: formData.email,
@@ -119,11 +118,10 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         address: formData.address,
         city: formData.city
       };
-      const newUserData = { ...userData, ...updatedFields };
-      updateUser(newUserData);
+      const newUserData = { ...userTokenData, ...updatedFields };
+      setuserTokenData(newUserData);
       setIsModalOpen(false);
       showSuccessToast('Profile successfully updated')
-      console.log('Profile updated:', response);
     } catch(error) {
       const { message, attributeName } = error.response.data;
       showErrorToast(`${message}`);
@@ -149,12 +147,12 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
 
   const handleUpdateReset = () => {
     setFormData({
-      fullname: userData.fullname,
-      email: userData.email,
-      NIC: userData.nic,
-      contactno: userData.contactno,
-      address: userData.address,
-      city: userData.city
+      fullname: userTokenData.fullname,
+      email: userTokenData.email,
+      NIC: userTokenData.nic,
+      contactno: userTokenData.contactno,
+      address: userTokenData.address,
+      city: userTokenData.city
     });
     setErrorMessage({
       fullname:'',
@@ -169,13 +167,94 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   const handlePasswordChanges = (event) => {
     const { name, value } = event.target;
     setPasswordData({
-      ...formData,
+      ...passwordData,
       [name]: value,
     });
   };
 
-  const handlePasswordSubmit = () => {
+  const handlePasswordSubmit = async (e) =>  {
+    e.preventDefault();
 
+    if(passwordData.currentPW === '') {
+      setPasswordError({
+        currentPW: 'This field is required *'
+      })
+      return;
+    } else {
+      setPasswordError({
+        currentPW: ''
+      })
+    }
+
+    if(passwordData.newPW === '') {
+      setPasswordError({
+        newPW: 'This field is required *'
+      })
+      return;
+    } else {
+      setPasswordError({
+        newPW: ''
+      })
+    }
+
+    if(passwordData.confirmPW === '') {
+      setPasswordError({
+        confirmPW: 'This field is required *'
+      })
+      return;
+    } else {
+      setPasswordError({
+        confirmPW: ''
+      })
+    }
+
+    try {
+      const response = await userServices.verifyPassword(userTokenData.userid,  {
+        currentPW: passwordData.currentPW
+      });
+
+      if (response.status === 200) {
+        console.log('Password verified');
+        setPasswordError({
+          currentPW: ''
+        })
+      }
+
+    } catch (error) {
+      console.error('[Error] :', error);
+      if (error.response && error.response.status === 401) {
+        setPasswordError({
+          currentPW: 'Please check the password again.'
+        })
+        showErrorToast(`Invalid credentials`);
+      } else {
+        showErrorToast(`Internal Server Error`);
+      }
+      return;
+    }
+
+    if(passwordData.newPW !== passwordData.confirmPW) {
+      setPasswordError({
+        confirmPW: 'Password mismatch. Please check this field again.'
+      })
+      showErrorToast(`Password mismatch`);
+      return;
+    }
+
+    try {
+      await userServices.updatePassword(userTokenData.userid, {
+        newPW: passwordData.newPW
+      });
+      setIsModalOpen(false);
+      console.log('Password changed.');
+      showSuccessToast('Password successfully updated!');
+      handlePasswordReset();
+    } catch (error) {
+      console.error('[Error] :', error);
+      handlePasswordReset();
+      showErrorToast(`Error occured while updating`);
+    }
+    
   };
 
   const handlePasswordReset = () => {
@@ -196,16 +275,13 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         <div className="left">
           <h2>{getHeaderText()}</h2>
         </div>
-        <div className="middle">
-        </div>
         <div className="right">
           <span>
           <button onClick={() => handleRequest('profile')}>
               <span className='text-container'>
-                <div className='uname-text'>{userData.fullname}</div>
-                <div className='type-text'>{userData.jobrole === 'admin' ? ('Administrator') : ('System User')}</div>
+                <div className='uname-text'>{userTokenData.fullname}</div>
+                <div className='type-text'>{userTokenData.jobrole}</div>
               </span>
-              <span><img src={DownLogo} alt="Down Logo"/></span>
             </button>
           </span>
             <img title='Notification' src={NotificationLogo} alt="Notification Logo"/>
@@ -283,12 +359,12 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <div className='edit-model'>
               <h3>Change Password</h3>
               <form className='form-container'>
-                <TextField className='text-line-type1' name='currentPW' value={passwordData.currentPW} onChange={(e) => handlePasswordChanges(e)} label="Current Password" variant='outlined' />
-                <label className='error-text'>{passwordData.currentPW}</label>
-                <TextField className='text-line-type1' name='newPW' value={passwordData.newPW} onChange={(e) => handlePasswordChanges(e)} label="New Password" variant='outlined' />
-                <label className='error-text'>{passwordData.newPW}</label>
-                <TextField className='text-line-type1' name='confirmPW' value={passwordData.confirmPW} onChange={(e) => handlePasswordChanges(e)} label="Confirm Password" variant='outlined' />
-                <label className='error-text'>{passwordData.confirmPW}</label>
+                <TextField  className='text-line-type1' name='currentPW' value={passwordData.currentPW} onChange={(e) => handlePasswordChanges(e)} label="Current Password" type="password" />
+                <label className='error-text'>{passwordError.currentPW}</label>
+                <TextField  className='text-line-type1' name='newPW' value={passwordData.newPW} onChange={(e) => handlePasswordChanges(e)} label="New Password" type="password" />
+                <label className='error-text'>{passwordError.newPW}</label>
+                <TextField  className='text-line-type1' name='confirmPW' value={passwordData.confirmPW} onChange={(e) => handlePasswordChanges(e)} label="Confirm Password" type="password" />
+                <label className='error-text'>{passwordError.confirmPW}</label>
                 <div className='button-container'>
                   <button type='submit' class='submit-button' onClick={handlePasswordSubmit}>Submit</button>
                   <button type='reset' class='reset-button' onClick={handlePasswordReset}>Reset</button>

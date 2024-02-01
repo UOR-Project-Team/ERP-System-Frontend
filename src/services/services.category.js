@@ -1,11 +1,10 @@
-import axios from 'axios';
-const apiUrl = 'http://localhost:8081/category';
+import connection from "../connection";
 
 const categoryServices = {
   
   createCategory: async (data) => {
     try {
-      const response = await axios.post(`${apiUrl}/create`, data, {
+      const response = await connection.post(`/category/create`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -18,7 +17,7 @@ const categoryServices = {
 
   getAllCategories: async () => {
     try {
-      const response = await axios.get(`${apiUrl}`);
+      const response = await connection.get(`/category`);
       return response.data.categories;
     } catch (error) {
       throw new Error('Error fetching categories');
@@ -27,7 +26,7 @@ const categoryServices = {
 
   getCategoryById: async (categoryId) => {
     try {
-      const response = await axios.get(`${apiUrl}/${categoryId}`);
+      const response = await connection.get(`/category/${categoryId}`);
       return response.data;
 
     } catch (error) {
@@ -37,7 +36,7 @@ const categoryServices = {
 
   updateCategory: async (categoryId, data) => {
     try {
-      const response = await axios.put(`${apiUrl}/${categoryId}`, data, {
+      const response = await connection.put(`/category/${categoryId}`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -51,7 +50,7 @@ const categoryServices = {
 
   deleteCategory: async (categoryId) => {
     try {
-      const response = await axios.delete(`${apiUrl}/${categoryId}`);
+      const response = await connection.delete(`/category/${categoryId}`);
       return response.data;
     } catch (error) {
       throw new Error(`Error deleting category: ${error.message}`);

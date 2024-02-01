@@ -26,8 +26,8 @@ function ItemMaster() {
     supplierName:'',
     reorderLevel:'',
     reorderQuantity:'' 
-    
   })
+
   const [errorMessage, setErrorMessage] = useState({
     code: '',
     itemName: '',
@@ -210,7 +210,7 @@ function ItemMaster() {
   };
 
   return (
-    <div className="master-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} >
+    <div>
       <ToastContainer />
       <div className='master-content'>
         <form onSubmit={handleSubmit} className='form-container' >
