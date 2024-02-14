@@ -58,15 +58,15 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
       </div>
       <div className='body'>
         <button title="Dashboard" onClick={() => {navigateTo('/home'); updateHeaderText('Dashboard');}}><img src={DashboardLogo} alt="Dashboard Logo" /></button>
-        {userTokenData.jobrole==='Administrator' && (
+        {userTokenData.jobrole==='admin' && (
           <button title="Master Files" onClick={handleClick1}><img src={MasterFileLogo} alt="Master File Logo" /></button>
         )} 
         <button title="Purchasing" onClick={handleClick2}><img src={PurchasingLogo} alt="Purchasing Logo" /></button>
         <button title="Sales" onClick={handleClick3}><img src={SalesLogo} alt="Sales Logo" /></button>
-        {userTokenData.jobrole==='Administrator' && (
+        {userTokenData.jobrole==='admin' && (
           <button title="Reports" onClick={handleClick4}><img src={ReportLogo} alt="Report Logo" /></button>
         )}
-        {userTokenData.jobrole==='Administrator' && (
+        {userTokenData.jobrole==='admin' && (
           <button title="Master Lists" onClick={handleClick5}><img src={MasterListLogo} alt="Master List Logo" /></button>
         )}
       </div>
