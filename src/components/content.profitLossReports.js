@@ -12,6 +12,8 @@ import {
 import QRCode from 'qrcode-generator';
 import { useUser } from '../services/services.UserContext';
 import CompanyLogo from '../assets/logos/Uni_Mart.png';
+import Papa from 'papaparse';
+import CsvLogo from './../assets/icons/csv.png';
 
 
 
@@ -117,7 +119,7 @@ function ProfitLossReports() {
     doc.setFontSize(12);
   
     // Define table columns and rows
-    const columns = ['Category', 'Rs.', 'Rs.'];
+    const columns = ['Category', 'Amount(Rs.)', 'Total(Rs.)'];
     const rows = [
       ['Income','',''],
       ['Sales', data.total_sales,''],
@@ -163,11 +165,41 @@ function ProfitLossReports() {
     doc.save('profit_loss_report.pdf');
   }
 
+  const exportCSV = () => {
+    const headers = ['Category', 'Amount(Rs.)', 'Total(Rs.)'];
+  
+    const rows = [
+      ['Income','',''],
+      ['Sales', data.total_sales,''],
+      ['Total Income','', data.total_sales],
+  
+      ['Expenses','',''],
+      ['Cost of goods sold', data.total_purchase,''],
+      ['Total Expenses','', data.total_purchase],
+      ['Profit/Loss','', data.profit_loss]
+    ];
+    
+  
+    const csvData = [headers, ...rows];
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.href = url;
+    link.setAttribute('download', 'ERP-Item-report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setDialogOpen(false);
+  };
+
+
   const handleDialogAction = async () => {
     if(dialogTitle === 'PDF Exporter') {
       exportPDF(data);
     } else if(dialogTitle === 'CSV Exporter') {
-      //exportCSV();
+      exportCSV();
     } 
   };
 
@@ -217,8 +249,8 @@ function ProfitLossReports() {
       <div className='list-content'>
 
         <div className='features-panel'>
-            <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this Profit & Loss report?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
-            {/* <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button> */}
+            <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this Profit & Loss report as a PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
+            <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this Profit & Loss report as a CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
         </div>
 
         <div className='table-container'>
