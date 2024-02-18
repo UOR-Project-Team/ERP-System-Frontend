@@ -21,9 +21,11 @@ const invoiceServices = {
     }
   },
 
-  getPrice: async (prodcutId) => {
+  getPrice: async (barcode) => {
     try {
-      const response = await connection.get(`/invoice/product/${prodcutId}`);
+      //console.log("barcode for product", barcode)
+      const response = await connection.post('/invoice/product',{ barcode });
+      //console.log("response is ", response)
       return response.data;
 
     } catch (error) {

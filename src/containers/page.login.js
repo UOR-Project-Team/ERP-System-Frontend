@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import validateUser from '../services/validate.userLoginForms';
@@ -90,7 +91,7 @@ function Login({ updateAuthentication }) {
     }
   
     try {
-      const response = await connection.post('/login', {
+      const response = await axios.post('http://localhost:8080/login', {
           username: formData.username, 
           password: formData.password,
       });

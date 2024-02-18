@@ -33,6 +33,7 @@ function Invoice(){
     const [selecteditemLabel, setSelecteditemLabel] = useState(null);
     const [selectedIteminfo, setSelectedIteminfo] = useState(null);
     const [stock, setstock] = useState(false)
+    const [purchaseprice, setpuchaseprice] = useState('');
 
     const [invoiceData, setInvoiceData] = useState({
       invoiceNumber: '',
@@ -47,6 +48,7 @@ function Invoice(){
       productId: '',
       barcode: '',
       s_price: '',
+      p_price:'',
       quantity: ''
     })
 
@@ -71,6 +73,7 @@ function Invoice(){
       setsoldProduct(prevData => ({
         ...prevData,
         s_price: quantity * price,
+        p_price: quantity * purchaseprice,
       }));
     }, [quantity]);
 
@@ -170,12 +173,15 @@ function Invoice(){
 
   const fetchPrice = useCallback(async () => {
     try {
-      const response = await invoiceServices.getPrice(selectedItemId);
-      //console.log(response);
+      //console.log("barcode is",selectedIteminfo.Barcode )
+      const barcode = selectedIteminfo.Barcode;
+      const response = await invoiceServices.getPrice(barcode);
+      console.log(response);
       if (Array.isArray(response) && response.length > 0) {
         const unitPrice = response[0].Unit_Price;
         const p_barcode = response[0].Barcode;
         const p_id = response[0].id;
+        const p_Price = response[0].Purchase_Price;
         
         setsoldProduct(prevData => ({
           ...prevData,
@@ -183,12 +189,13 @@ function Invoice(){
           barcode: p_barcode,
         }));
         setPrice(unitPrice);
+        setpuchaseprice(p_Price);
        // console.log('Unit Price:', unitPrice);
       } else {
         console.error('Unit Price not found in the response:', response);
       }
     } catch (error) {
-      console.error('Error fetching items', error.message);
+      console.error('Error fetching items', error);
     }
   }, [selectedItemId, setPrice]);
 
@@ -251,6 +258,7 @@ function Invoice(){
               productId: '',
               barcode: '',
               s_price: '',
+              p_price: '',
               quantity: ''
             });
             
@@ -355,6 +363,8 @@ function Invoice(){
        setCash('');
        setBalance(0);
        setQuantity('');
+       setstock('');
+       setpuchaseprice('');
 
        setInvoiceData({
         invoiceNumber: '',
@@ -367,11 +377,12 @@ function Invoice(){
         productId: '',
         barcode: '',
         s_price: '',
+        p_price: '',
         quantity: ''
       });
 
       setSelecteditemLabel(null);
-      generateRandomNumber();
+      //generateRandomNumber();
       setSelectedcustomerLabel(null)
 
 
@@ -408,8 +419,28 @@ function Invoice(){
           setCash('');
           setBalance(0);
           setQuantity('');
+          setstock('');
+          setpuchaseprice('');
 
-          setSelectedcustomerLabel(null)
+          setInvoiceData({
+            invoiceNumber: '',
+            Customerid:'',
+            userid: userTokenData.userid,
+            solditems :[],
+            totalAmount: ''
+           });
+
+          setsoldProduct({
+            productId: '',
+            barcode: '',
+            s_price: '',
+            p_price: '',
+            quantity: ''
+          });
+
+          setSelecteditemLabel(null);
+      generateRandomNumber();
+      setSelectedcustomerLabel(null)
 
      }else{
           showErrorToast("Faild To Update the Invoice ")
