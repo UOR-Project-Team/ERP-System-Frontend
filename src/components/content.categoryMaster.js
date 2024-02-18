@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer} from 'react-toastify';
 import validateCategory from '../services/validate.category';
 import categoryServices from '../services/services.category';
-import TextField from '@mui/material/TextField';
+import CustomTextfield from './custom.muiTextfield';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 
 function CategoryMaster(){
@@ -75,12 +75,12 @@ function CategoryMaster(){
             <div className='master-content' style={{height: '92vh'}}>
                 <form className='form-container' style={{marginTop:'25vh'}}>
                     <h3>Category Details</h3>
-                        <TextField error={errorMessage.Description ? true : false} className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
-                        <label className='error-text'>{errorMessage.Description}</label>
-                        <div className='button-container'>
-                                <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
-                                <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
-                        </div>
+                    <CustomTextfield data={formData.Description} error={errorMessage.Description} name={'Description'} label={'Description'} classtype={'text-line-type1'} handleChanges={handleChanges} />   
+                    {errorMessage.Description && (<label className='error-text'>{errorMessage.Description}</label>)}
+                    <div className='button-container'>
+                        <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+                        <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
+                    </div>
                 </form>
                 
             </div>
