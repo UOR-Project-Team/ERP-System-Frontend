@@ -14,6 +14,7 @@ import { useUser } from '../services/services.UserContext';
 import CompanyLogo from '../assets/logos/Uni_Mart.png';
 import Papa from 'papaparse';
 import CsvLogo from './../assets/icons/csv.png';
+import reportServices from '../services/services.reports';
 
 
 
@@ -22,6 +23,7 @@ function ProfitLossReports() {
   const { userTokenData } = useUser();
   const [fromDate, setfromDate] = useState();
   const [toDate, settoDate] = useState();
+  const [profitLoss, setProfitLoss] = useState();
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogDescription, setDialogDescription] = useState('');
   const [removeClick, setDialogOpen] = useState(false);
@@ -33,6 +35,52 @@ function ProfitLossReports() {
     total_purchase:500,
     profit_loss:500
   }
+
+
+
+  useEffect(() => {
+    // Set today's date as the default value for toDate
+    const today = new Date();
+    const formattedDate = formatDate(today);
+    settoDate(formattedDate);
+    //console.log(formattedDate);
+
+    // Calculate the date 30 days ago and set it as the default value for fromDate
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    const formattedThirtyDaysAgo = formatDate(thirtyDaysAgo);
+    setfromDate(formattedThirtyDaysAgo);
+   // console.log(formattedThirtyDaysAgo);
+
+
+  }, []);
+
+
+  useEffect(() => {
+
+    fetchProfitLoss(fromDate, toDate);
+
+  }, [fromDate,toDate]);
+
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  //fetch Profit & Loss details
+  const fetchProfitLoss = async (fromDate,toDate) => {
+    try {
+      console.log("date is content",fromDate,toDate);
+      const profitloss = await reportServices.getProfitLoss(fromDate,toDate);
+      console.log(profitloss)
+      setProfitLoss(profitloss);
+    } catch (error) {
+      console.error('Error fetching profit & loss information:', error.message);
+    }
+  };
 
 
   const exportPDF = (data) => {
@@ -254,7 +302,7 @@ function ProfitLossReports() {
         </div>
 
         <div className='table-container'>
-          <table>
+          {profitLoss ? (<table>
             <table>
                   <thead>
                     <tr>
@@ -267,13 +315,13 @@ function ProfitLossReports() {
                     
                       <tr>
                         <td>Sales</td>
-                        <td>{data.total_sales}</td>
+                        <td>{profitLoss.total_sale}</td>
                         <td></td>
                       </tr>
                       <tr>
                         <td><b>Total Income</b></td>
                         <td></td>
-                        <td>{data.total_sales}</td>
+                        <td>{profitLoss.total_sale}</td>
                       </tr>
                     
                     <tr>
@@ -284,14 +332,14 @@ function ProfitLossReports() {
                     
                     <tr>
                         <td>Cost of goods sold</td>
-                        <td>{data.total_purchase}</td>
+                        <td>{profitLoss.total_cost}</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td><b>Total Expenses</b></td>
                         <td></td>
-                        <td>{data.total_purchase}</td>
+                        <td>{profitLoss.total_cost}</td>
                     </tr>
 
                     <tr>
@@ -303,12 +351,14 @@ function ProfitLossReports() {
                     <tr>
                         <td><b>Profit/Loss</b></td>
                         <td></td>
-                        <td>{data.profit_loss}</td>
+                        <td>{profitLoss.profit_loss}</td>
                     </tr>
                     
                   </tbody>
                 </table>
-          </table>
+          </table>):(
+            <p>Loading....</p>
+          )}
         </div>
       </div>
 

@@ -218,13 +218,8 @@ function ItemMaster() {
           <h3>Item Details</h3>
           <div className='line-type3-container'>
             <div className='line-type3-left-content'>
-<<<<<<< HEAD
-              <TextField error={errorMessage.code ? true : false} className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  disabled  />
-              <label className='error-text'>{errorMessage.code}</label>
-=======
               <CustomTextfield data={values.code} error={errorMessage.code} name={'code'} label={'Item Code'} classtype={'text-line-type1'} handleChanges={handleInputChange} />
               {errorMessage.code && (<label className='error-text'>{errorMessage.code}</label>)}
->>>>>>> main
             </div>
             <div className='line-type3-right-content'>
               <CustomTextfield data={values.itemName} error={errorMessage.itemName} name={'itemName'} label={'Item Name'} classtype={'text-line-type1'} handleChanges={handleInputChange} />
