@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import validateUnit from '../services/validate.unit';
 import unitServices from '../services/services.unit';
-import TextField from '@mui/material/TextField';
+import CustomTextfield from './custom.muiTextfield';
 
 function UnitMaster(){
 
@@ -87,14 +87,14 @@ function UnitMaster(){
             <div className='master-content' style={{height: '92vh'}}>
                 <form className='form-container' style={{marginTop:'22vh'}}>
                     <h3>Unit Details</h3>
-                        <TextField error={errorMessage.Description ? true : false} className='text-line-type1' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant='outlined' />
-                        <label className='error-text'>{errorMessage.Description}</label>
-                        <TextField error={errorMessage.SI ? true : false} className='text-line-type1' name='SI' value={formData.SI} onChange={(e) => handleChanges(e)} label="SI" variant='outlined' />
-                        <label className='error-text'>{errorMessage.SI}</label>
-                        <div className='button-container'>
-                                <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
-                                <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
-                        </div>
+                    <CustomTextfield data={formData.Description} error={errorMessage.Description} name={'Description'} label={'Description'} classtype={'text-line-type1'} handleChanges={handleChanges} />   
+                    {errorMessage.Description && (<label className='error-text'>{errorMessage.Description}</label>)}
+                    <CustomTextfield data={formData.SI} error={errorMessage.SI} name={'SI'} label={'SI'} classtype={'text-line-type1'} handleChanges={handleChanges} />   
+                    {errorMessage.SI && (<label className='error-text'>{errorMessage.SI}</label>)}
+                    <div className='button-container'>
+                        <button type='submit' className='submit-button' onClick={handleSubmit}>Submit</button>
+                        <button type='reset' className='reset-button' onClick={handleReset}>Reset</button>
+                    </div>
                 </form>
                 
             </div>
