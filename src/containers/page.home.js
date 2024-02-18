@@ -26,6 +26,7 @@ import UnitList from '../components/content.unitList';
 import InvoiceView from '../components/content.invoiceView';
 
 function Home({ updateAuthentication }) {
+  const [isHidden, setIsHidden] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [headerText, setHeaderText] = useState("Control Panel");
 
@@ -53,6 +54,11 @@ function Home({ updateAuthentication }) {
     if(deviceWidth <= 890) {
       setIsExpanded(false);
     }
+    if(deviceWidth<=500) {
+      setIsHidden(true);
+    } else {
+      setIsHidden(false);
+    }
   };
 
   useEffect(() => {
@@ -65,7 +71,7 @@ function Home({ updateAuthentication }) {
 
   return (
     <div className="master-container">
-      <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px' }}>
+      <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px', display: isHidden ? 'none' : 'block' }}>
         {isExpanded ? (
           <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../services/services.UserContext';
-import RightArrowLogo from './../assets/icons/left.png';
+import MenuLogo from './../assets/icons/menu-light.png';
 import DashboardLogo from './../assets/icons/dashboard.png';
 import MasterFileLogo from './../assets/icons/customer.png';
 import PurchasingLogo from './../assets/icons/purchase.png';
@@ -40,7 +40,7 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
   return(
     <div className='expanded'>
       <div className='header'>
-        <button title="Collapse"><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo"/></button>
+        <button title="Collapse"><img src={MenuLogo} onClick={onToggle} alt="Menu Logo"/></button>
       </div>
       <div className='body'>
         <button onClick={() => updateHeaderText('Dashboard')}>
@@ -48,8 +48,6 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
           <span>Dashboard</span>
           <img style={{width: '14px', height: '14px', visibility: 'hidden'}} src={SingleRightLogo} alt="SingleRight Logo"/>
         </button>
-        {userTokenData.jobrole==='Administrator' && (
-          <div>
             <button onClick={() => handleSubcategoryClick('masterFiles')}>
               <img src={MasterFileLogo} alt="Master File Logo"/>
               <span>Master Files</span>
@@ -81,8 +79,6 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
                   <span>Customer Master</span>
                 </button>
               </div>
-          </div>
-        )}
         <button onClick={() => handleSubcategoryClick('purchasing')}>
           <img src={PurchasingLogo} alt="Purchasing Logo"/>
           <span>Purchasing</span>
@@ -109,8 +105,6 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
               <span>Invoice Display</span>
             </button>
           </div>
-        {userTokenData.jobrole==='Administrator' && (
-          <div>
             <button onClick={() => handleSubcategoryClick('reports')}>
               <img src={ReportLogo} alt="Report Logo"/>
               <span>Reports</span>
@@ -130,10 +124,6 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
                   <span>Other Reports</span>
                 </button>
               </div>
-          </div>
-        )}
-        {userTokenData.jobrole==='Administrator' && (
-          <div>
             <button onClick={() => handleSubcategoryClick('masterlists')}>
               <img src={MasterListLogo} alt="Master List Logo"/>
               <span>Master Lists</span>
@@ -169,8 +159,6 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
                   <span>Invoice List</span>
                 </button>
               </div>
-          </div>
-        )}
       </div>
     </div>
   );
