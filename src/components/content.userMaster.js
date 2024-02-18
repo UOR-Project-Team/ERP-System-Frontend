@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
-import TextField from '@mui/material/TextField';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import validateUser from '../services/validate.user';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Autocomplete from '@mui/material/Autocomplete';
 import userServices from '../services/services.user';
+import CustomTextfield from './custom.muiTextfield';
+import CustomAutoComplete from './custom.muiAutoComplete';
 
 function UserMaster() {
 
@@ -121,64 +121,44 @@ function UserMaster() {
     <div className='master-content'>
       <form className='form-container'>
         <h3>User Details</h3>
-          <TextField className='text-line-type1' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
-          <label className='error-text'>{errorMessage.Fullname}</label>
-          <TextField className='text-line-type1' name='username' value={formData.username} onChange={(e) => handleChanges(e)} label=" Username" variant="outlined" />
-          <label className='error-text'>{errorMessage.username}</label>
-          <TextField className='text-line-type1' name='password' value={formData.password} onChange={(e) => handleChanges(e)} label=" Password" variant="outlined" />
-          <label className='error-text'></label>
+          <CustomTextfield data={formData.Fullname} error={errorMessage.Fullname} name={'Fullname'} label={'Fullname'} classtype={'text-line-type1'} handleChanges={handleChanges} />
+          {errorMessage.Fullname && (<label className='error-text'>{errorMessage.Fullname}</label>)}
+          <CustomTextfield data={formData.username} error={errorMessage.username} name={'username'} label={'Username'} classtype={'text-line-type1'} handleChanges={handleChanges} />
+          {errorMessage.username && (<label className='error-text'>{errorMessage.username}</label>)}
+          <CustomTextfield data={formData.password} error={errorMessage.password} name={'password'} label={'Password'} classtype={'text-line-type1'} handleChanges={handleChanges} />
 
           <div className='line-type2-container'>
             <div className='line-type2-content'>
-              <TextField className='text-line-type2' name='NIC' value={formData.NIC} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
-              <label className='error-text'>{errorMessage.NIC}</label>
+              <CustomTextfield data={formData.NIC} error={errorMessage.NIC} name={'NIC'} label={'National ID / Passport'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+              {errorMessage.NIC && (<label className='error-text'>{errorMessage.NIC}</label>)}
             </div>
             <div className='line-type2-content'>
-              <Autocomplete
-                disablePortal
-                className='text-line-type2'
-                options={[{ label: 'Administrator' }, { label: 'Staff Member' }]}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Job Role"
-                    name='jobrole' 
-                    value={formData.jobrole}
-                    onChange={(e) => {
-                      handleChanges(e);
-                    }}
-                  />
-                )}
-                onChange={(_, newValue) => {
-                  setFormData((prevData) => ({ ...prevData, jobrole: newValue?.label || '' }));
-                }}
-                value={formData.jobrole}
-              />
-                  <label className='error-text'>{errorMessage.jobrole}</label>
+              <CustomAutoComplete data={formData.jobrole} error={errorMessage.jobrole} list={[{ label: 'Administrator' }, { label: 'Staff Member' }]} name={'jobrole'} label={'Job Role'} classtype={'text-line-type2'} handleChanges={handleChanges} setFormData={setFormData} />
+              {errorMessage.jobrole && (<label className='error-text'>{errorMessage.jobrole}</label>)}
             </div>
           </div>
 
           <h3>Contact Details</h3>
           <div className='line-type2-container'>
             <div className='line-type2-content'>
-              <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
-              <label className='error-text'>{errorMessage.email}</label> 
+              <CustomTextfield data={formData.email} error={errorMessage.email} name={'email'} label={'Email'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+              {errorMessage.email && (<label className='error-text'>{errorMessage.email}</label>)}
             </div>
             <div className='line-type2-content'>
-              <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
-              <label className='error-text'>{errorMessage.contactno}</label> 
+              <CustomTextfield data={formData.contactno} error={errorMessage.contactno} name={'contactno'} label={'Contact Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+              {errorMessage.contactno && (<label className='error-text'>{errorMessage.contactno}</label>)}
             </div>
           </div>
 
           <h3>Address</h3>
           <div className='line-type2-container'>
             <div className='line-type2-content'>
-              <TextField className='text-line-type2' name='address' value={formData.address} onChange={(e) => handleChanges(e)} label="Address" variant="outlined"/>
-              <label className='error-text'>{errorMessage.address}</label> 
+              <CustomTextfield data={formData.address} error={errorMessage.address} name={'address'} label={'Address'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+              {errorMessage.address && (<label className='error-text'>{errorMessage.address}</label>)}
             </div>
             <div className='line-type2-content'>
-              <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined" />
-              <label className='error-text'>{errorMessage.city}</label> 
+              <CustomTextfield data={formData.city} error={errorMessage.city} name={'city'} label={'City'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+              {errorMessage.city && (<label className='error-text'>{errorMessage.city}</label>)}
             </div>
           </div>
 

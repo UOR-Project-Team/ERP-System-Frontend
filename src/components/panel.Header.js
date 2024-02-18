@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import Modal from 'react-modal';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
+import CustomMenuItem from './custom.muiMenuItem';
+import CustomTextfield from './custom.muiTextfield';
+import CustomPasswordfield from './custom.muiPasswordField';
 import { useUser } from '../services/services.UserContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,6 +25,9 @@ import WidgetLogo from './../assets/icons/widget.png';
 import userServices from '../services/services.user';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import validatProfile from '../services/validate.profile';
+import MenuLightLogo from './../assets/icons/menu-light.png';
+import MenuDarkLogo from './../assets/icons/menu-dark.png';
+import SidePanelCollapse from './panel.SidePanel-Expand';
 
 Modal.setAppElement('#root');
 
@@ -36,6 +40,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelContent, setModelContent] = useState('profile');
   const [removeClick, setDialogOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     fullname: userTokenData.fullname,
@@ -66,6 +71,14 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     newPW: '',
     confirmPW: ''
   });
+
+  const handleOpenMenu = () => {
+    setIsMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -208,6 +221,14 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
       })
     }
 
+    if(passwordData.newPW !== passwordData.confirmPW) {
+      setPasswordError({
+        confirmPW: 'Password mismatch. Please check this field again.'
+      })
+      showErrorToast(`Password mismatch`);
+      return;
+    }
+
     try {
       const response = await userServices.verifyPassword(userTokenData.userid,  {
         currentPW: passwordData.currentPW
@@ -230,14 +251,6 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
       } else {
         showErrorToast(`Internal Server Error`);
       }
-      return;
-    }
-
-    if(passwordData.newPW !== passwordData.confirmPW) {
-      setPasswordError({
-        confirmPW: 'Password mismatch. Please check this field again.'
-      })
-      showErrorToast(`Password mismatch`);
       return;
     }
 
@@ -273,6 +286,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
   return (
     <div className="header">
         <div className="left">
+          <img src={MenuDarkLogo} alt='Menu Logo' onClick={handleOpenMenu} /> 
           <h2>{getHeaderText()}</h2>
         </div>
         <div className="right">
@@ -288,25 +302,36 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <img title='Settings' src={SettingsLogo} alt="Settings Logo" onClick={handleClick}/>
         </div>
 
+        {isMenuOpen && (
+          <div className='slide-menu'>
+          <div className='slide-header'>
+          <img src={MenuLightLogo} alt='Menu Logo' onClick={handleCloseMenu} /> 
+          </div>
+          <div className="sidepanel-container">
+          <SidePanelCollapse/>
+          </div>
+        </div>
+        )}
+
         <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-          <MenuItem onClick={() => handleRequest('updatePassword')}>
+          <CustomMenuItem onClick={() => handleRequest('updatePassword')}>
             <button>
               <img src={KeyLogo} alt="Key Logo"/>
               <span>Change Password</span>
             </button>
-          </MenuItem>
-          <MenuItem>
+          </CustomMenuItem>
+          <CustomMenuItem style={{ minHeight: '10px' }}>
             <button onClick={() => handleRequest('widget')}>
               <img src={WidgetLogo} alt="Widget Logo"/>
               <span>Widgets</span>
             </button>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
+          </CustomMenuItem>
+          <CustomMenuItem onClick={handleClose}>
             <button onClick={() => setDialogOpen(true)}>
               <img src={LogoutLogo} alt="Logout Logo"/>
               <span>Logout</span>
             </button>
-          </MenuItem>
+          </CustomMenuItem>
         </Menu>
 
         <Modal
@@ -320,32 +345,34 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <div className='edit-model'>
               <h3>Update Profile</h3>
               <form className='form-container'>
-                <TextField className='text-line-type1' name='fullname' value={formData.fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
-                <label className='error-text'>{errorMessage.fullname}</label>
-                <TextField className='text-line-type1' name='NIC' value={formData.NIC} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
-                <label className='error-text'>{errorMessage.NIC}</label>
+
+              <h3>User Details</h3>
+                <CustomTextfield data={formData.fullname} error={errorMessage.fullname} name={'fullname'} label={'Fullname'} classtype={'text-line-type1'} handleChanges={handleChanges} />
+                {errorMessage.fullname && (<label className='error-text'>{errorMessage.fullname}</label>)}
+                <CustomTextfield data={formData.NIC} error={errorMessage.NIC} name={'NIC'} label={'National ID / Passport'} classtype={'text-line-type1'} handleChanges={handleChanges} />
+                {errorMessage.NIC && (<label className='error-text'>{errorMessage.NIC}</label>)}
 
                 <h3>Contact Details</h3>
                 <div className='line-type2-container'>
                   <div className='line-type2-content'>
-                    <TextField className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
-                    <label className='error-text'>{errorMessage.email}</label> 
+                    <CustomTextfield data={formData.email} error={errorMessage.email} name={'email'} label={'Email'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                    {errorMessage.email && (<label className='error-text'>{errorMessage.email}</label>)}
                   </div>
                   <div className='line-type2-content'>
-                    <TextField className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
-                    <label className='error-text'>{errorMessage.contactno}</label> 
+                    <CustomTextfield data={formData.contactno} error={errorMessage.contactno} name={'contactno'} label={'Contact Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                    {errorMessage.contactno && (<label className='error-text'>{errorMessage.contactno}</label>)}
                   </div>
                 </div>
 
                 <h3>Address</h3>
                 <div className='line-type2-container'>
                   <div className='line-type2-content'>
-                    <TextField className='text-line-type2' name='address' value={formData.address} onChange={(e) => handleChanges(e)} label="Address" variant="outlined"/>
-                    <label className='error-text'>{errorMessage.address}</label> 
+                    <CustomTextfield data={formData.address} error={errorMessage.address} name={'address'} label={'Address'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                    {errorMessage.address && (<label className='error-text'>{errorMessage.address}</label>)}
                   </div>
                   <div className='line-type2-content'>
-                    <TextField className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined" />
-                    <label className='error-text'>{errorMessage.city}</label> 
+                    <CustomTextfield data={formData.city} error={errorMessage.city} name={'city'} label={'City'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                    {errorMessage.city && (<label className='error-text'>{errorMessage.city}</label>)}
                   </div>
                 </div>
 
@@ -359,12 +386,12 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
             <div className='edit-model'>
               <h3>Change Password</h3>
               <form className='form-container'>
-                <TextField  className='text-line-type1' name='currentPW' value={passwordData.currentPW} onChange={(e) => handlePasswordChanges(e)} label="Current Password" type="password" />
-                <label className='error-text'>{passwordError.currentPW}</label>
-                <TextField  className='text-line-type1' name='newPW' value={passwordData.newPW} onChange={(e) => handlePasswordChanges(e)} label="New Password" type="password" />
-                <label className='error-text'>{passwordError.newPW}</label>
-                <TextField  className='text-line-type1' name='confirmPW' value={passwordData.confirmPW} onChange={(e) => handlePasswordChanges(e)} label="Confirm Password" type="password" />
-                <label className='error-text'>{passwordError.confirmPW}</label>
+                <CustomPasswordfield data={passwordData.currentPW} error={passwordError.currentPW} name={'currentPW'} label={'Current Password'} classtype={'text-line-type1'} handleChanges={handlePasswordChanges} />
+                {passwordError.currentPW && (<label className='error-text'>{passwordError.currentPW}</label>)}
+                <CustomPasswordfield data={passwordData.newPW} error={passwordError.newPW} name={'newPW'} label={'New Password'} classtype={'text-line-type1'} handleChanges={handlePasswordChanges} />
+                {passwordError.newPW && (<label className='error-text'>{passwordError.newPW}</label>)}
+                <CustomPasswordfield data={passwordData.confirmPW} error={passwordError.confirmPW} name={'confirmPW'} label={'Confirm Password'} classtype={'text-line-type1'} handleChanges={handlePasswordChanges} />
+                {passwordError.confirmPW && (<label className='error-text'>{passwordError.confirmPW}</label>)}
                 <div className='button-container'>
                   <button type='submit' class='submit-button' onClick={handlePasswordSubmit}>Submit</button>
                   <button type='reset' class='reset-button' onClick={handlePasswordReset}>Reset</button>

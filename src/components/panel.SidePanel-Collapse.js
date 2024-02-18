@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../services/services.UserContext';
-import RightArrowLogo from './../assets/icons/right.png';
+import MenuLogo from './../assets/icons/menu-light.png';
 import DashboardLogo from './../assets/icons/dashboard.png';
 import MasterFileLogo from './../assets/icons/customer.png';
 import PurchasingLogo from './../assets/icons/purchase.png';
@@ -54,10 +54,11 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   return (
     <div>
       <div className='header'>
-        <button title="Expand"><img src={RightArrowLogo} onClick={onToggle} alt="Left Arrow Logo" /></button>
+        <button title="Expand"><img src={MenuLogo} onClick={onToggle} alt="Menu Logo" /></button>
       </div>
       <div className='body'>
         <button title="Dashboard" onClick={() => {navigateTo('/home'); updateHeaderText('Dashboard');}}><img src={DashboardLogo} alt="Dashboard Logo" /></button>
+<<<<<<< HEAD
         {userTokenData.jobrole==='admin' && (
           <button title="Master Files" onClick={handleClick1}><img src={MasterFileLogo} alt="Master File Logo" /></button>
         )} 
@@ -69,6 +70,13 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
         {userTokenData.jobrole==='admin' && (
           <button title="Master Lists" onClick={handleClick5}><img src={MasterListLogo} alt="Master List Logo" /></button>
         )}
+=======
+        <button title="Master Files" onClick={handleClick1}><img src={MasterFileLogo} alt="Master File Logo" /></button>
+        <button title="Purchasing" onClick={handleClick2}><img src={PurchasingLogo} alt="Purchasing Logo" /></button>
+        <button title="Sales" onClick={handleClick3}><img src={SalesLogo} alt="Sales Logo" /></button>
+        <button title="Reports" onClick={handleClick4}><img src={ReportLogo} alt="Report Logo" /></button>
+        <button title="Master Lists" onClick={handleClick5}><img src={MasterListLogo} alt="Master List Logo" /></button>
+>>>>>>> main
       </div>
 
       <Menu className='side-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>

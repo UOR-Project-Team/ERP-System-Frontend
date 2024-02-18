@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import { ToastContainer } from 'react-toastify';
 import itemServices from '../services/services.item';
 import validateItem from '../services/validate.item';
@@ -9,6 +7,8 @@ import { showSuccessToast, showErrorToast } from '../services/services.toasterMe
 import categoryServices from '../services/services.category';
 import unitServices from '../services/services.unit';
 import supplierServices from '../services/services.supplier';
+import CustomTextfield from './custom.muiTextfield';
+import CustomAutoComplete from './custom.muiAutoComplete';
 
 function ItemMaster() {
 
@@ -218,88 +218,41 @@ function ItemMaster() {
           <h3>Item Details</h3>
           <div className='line-type3-container'>
             <div className='line-type3-left-content'>
+<<<<<<< HEAD
               <TextField error={errorMessage.code ? true : false} className='text-line-type1' name='code' value={values.code} onChange={(e) => handleInputChange(e)} label="Item Code" variant="outlined"  disabled  />
               <label className='error-text'>{errorMessage.code}</label>
+=======
+              <CustomTextfield data={values.code} error={errorMessage.code} name={'code'} label={'Item Code'} classtype={'text-line-type1'} handleChanges={handleInputChange} />
+              {errorMessage.code && (<label className='error-text'>{errorMessage.code}</label>)}
+>>>>>>> main
             </div>
             <div className='line-type3-right-content'>
-              <TextField error={errorMessage.itemName ? true : false} className='text-line-type1' name='itemName' value={values.itemName} onChange={(e) => handleInputChange(e)} label="Item Name" variant="outlined" />
-              <label className='error-text'>{errorMessage.itemName}</label>
+              <CustomTextfield data={values.itemName} error={errorMessage.itemName} name={'itemName'} label={'Item Name'} classtype={'text-line-type1'} handleChanges={handleInputChange} />
+              {errorMessage.itemName && (<label className='error-text'>{errorMessage.itemName}</label>)}
             </div>
           </div>
 
           <h3>Category Details</h3>
-          <Autocomplete
-            disablePortal
-            className='text-line-type2'
-            options={categoryOptions}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Category"
-                name='categoryDescription' 
-                value={values.categoryDescription}
-
-              />
-            )}
-            onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, categoryDescription: newValue?.label || '' }));
-            }}
-            value={values.categoryDescription}
-          />
-          <label className='error-text'>{errorMessage.categoryDescription}</label>
+          <CustomAutoComplete data={values.categoryDescription} error={errorMessage.categoryDescription} list={categoryOptions} name={'categoryDescription'} label={'Category'} classtype={'text-line-type2'} handleChanges={handleInputChange} setFormData={setValues} />
+          {errorMessage.categoryDescription && (<label className='error-text'>{errorMessage.categoryDescription}</label>)}
 
           <h3>Unit Details</h3>
-          <Autocomplete
-            disablePortal
-            className='text-line-type2'
-            options={unitOptions}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Unit"
-                name='unitDescription' 
-                value={values.unitDescription}
-
-              />
-            )}
-            onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, unitDescription: newValue?.label || '' }));
-            }}
-            value={values.unitDescription}
-          />
-          <label className='error-text'>{errorMessage.unitDescription}</label>
+          <CustomAutoComplete data={values.unitDescription} error={errorMessage.unitDescription} list={unitOptions} name={'unitDescription'} label={'Unit'} classtype={'text-line-type2'} handleChanges={handleInputChange} setFormData={setValues} />
+          {errorMessage.unitDescription && (<label className='error-text'>{errorMessage.unitDescription}</label>)}
 
           <h3>Supplier Details</h3>
-          <Autocomplete
-            disablePortal
-            className='text-line-type2'
-            options={supplierOptions}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Supplier Name"
-                name='supplierName' 
-                value={values.supplierName}
-
-              />
-            )}
-            onChange={(_, newValue) => {
-              setValues((prevData) => ({ ...prevData, supplierName: newValue?.label || '' }));
-            }}
-            value={values.supplierName}
-          />
-          <label className='error-text'>{errorMessage.supplierName}</label>
-
+          <CustomAutoComplete data={values.supplierName} error={errorMessage.supplierName} list={supplierOptions} name={'supplierName'} label={'Supplier'} classtype={'text-line-type2'} handleChanges={handleInputChange} setFormData={setValues} />
+          {errorMessage.supplierName && (<label className='error-text'>{errorMessage.supplierName}</label>)}
 
           <h3>Reorder Details</h3>
           <div className='line-type2-container'>
             <div className='line-type2-content'>
-              <TextField type="number" error={errorMessage.code ? true : false} className='text-line-type1' name='reorderLevel' value={values.reorderLevel} onChange={(e) => handleInputChange(e)} label="Reorder Level" variant="outlined"  />
-              <label className='error-text'>{errorMessage.reorderLevel}</label>
+              <CustomTextfield data={values.reorderLevel} error={errorMessage.reorderLevel} name={'reorderLevel'} label={'Reorder Level'} classtype={'text-line-type1'} handleChanges={handleInputChange} />
+              {errorMessage.reorderLevel && (<label className='error-text'>{errorMessage.reorderLevel}</label>)}
             </div>
             <div className='line-type2-content'>
-              <TextField type="number" error={errorMessage.itemName ? true : false} className='text-line-type1' name='reorderQuantity' value={values.reorderQuantity} onChange={(e) => handleInputChange(e)} label="Reorder Quantity" variant="outlined" />
-              <label className='error-text'>{errorMessage.reorderQuantity}</label>
+              <CustomTextfield data={values.reorderQuantity} error={errorMessage.reorderQuantity} name={'reorderQuantity'} label={'Reorder Quantity'} classtype={'text-line-type1'} handleChanges={handleInputChange} />
+              {errorMessage.reorderQuantity && (<label className='error-text'>{errorMessage.reorderQuantity}</label>)}
             </div>
           </div>
 
