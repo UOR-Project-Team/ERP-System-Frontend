@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import customerServices from '../services/services.customer';
 import validateCustomer from '../services/validate.customer';
 import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
 import { useNavigate } from "react-router-dom";
+import CustomTextfield from './custom.muiTextfield';
+import CustomAutoComplete from './custom.muiAutoComplete';
 
 function CustomerMaster() {
 
@@ -122,93 +122,51 @@ function CustomerMaster() {
           <h3>Customer Details</h3>
             <div className='line-type3-container'>
               <div className='line-type3-left-content'>
-                <Autocomplete
-                  disablePortal
-                  className='text-line-type2'
-                  options={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Title"
-                      name='title' 
-                      error={errorMessage.title ? true : false}
-                      value={formData.title}
-                      onChange={(e) => {
-                        handleChanges(e);
-                      }}
-                    />
-                  )}
-                  onChange={(_, newValue) => {
-                    setFormData((prevData) => ({ ...prevData, title: newValue?.label || '' }));
-                  }}
-                  value={formData.title}
-                />
+                <CustomAutoComplete data={formData.title} error={errorMessage.title} list={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]} name={'title'} label={'Title'} classtype={'text-line-type1'} handleChanges={handleChanges} setFormData={setFormData} />
+                {errorMessage.title && (<label className='error-text'>{errorMessage.title}</label>)}
                 <label className='error-text'>{errorMessage.title}</label>
               </div>
               <div className='line-type3-right-content'>
-                <TextField error={errorMessage.fullname ? true : false} className='text-line-type2' name='fullname' value={formData.fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
-                <label className='error-text'>{errorMessage.fullname}</label>
+                <CustomTextfield data={formData.fullname} error={errorMessage.fullname} name={'fullname'} label={'Full Name'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.fullname && (<label className='error-text'>{errorMessage.fullname}</label>)}
               </div>
             </div>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.nic ? true : false} className='text-line-type2' name='nic' value={formData.nic} onChange={(e) => handleChanges(e)} label="National ID / Passport" variant="outlined" />
-                <label className='error-text'>{errorMessage.nic}</label>
+                <CustomTextfield data={formData.nic} error={errorMessage.nic} name={'nic'} label={'National ID / Passport'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.nic && (<label className='error-text'>{errorMessage.nic}</label>)}
               </div>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.vatno ? true : false} className='text-line-type2' name='vatno' value={formData.vatno} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.vatno}</label>
+                <CustomTextfield data={formData.vatno} name={'vatno'} label={'VAT Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
               </div>
             </div>
             <h3>Contact Details</h3>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.email ? true : false} className='text-line-type2' name='email' value={formData.email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
-                <label className='error-text'>{errorMessage.email}</label>
+                <CustomTextfield data={formData.email} error={errorMessage.email} name={'email'} label={'Email'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.email && (<label className='error-text'>{errorMessage.email}</label>)}
               </div>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.contactno ? true : false} className='text-line-type2' name='contactno' value={formData.contactno} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.contactno}</label>
+                <CustomTextfield data={formData.contactno} error={errorMessage.contactno} name={'contactno'} label={'Contact Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.contactno && (<label className='error-text'>{errorMessage.contactno}</label>)}
               </div>
             </div>
             <h3>Address</h3>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='street1' value={formData.street1} onChange={(e) => handleChanges(e)} label="Street 1" variant="outlined"/>
-                <label className='error-text'></label>
+                <CustomTextfield data={formData.street1} name={'street1'} label={'Street 1'} classtype={'text-line-type2'} handleChanges={handleChanges} />
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='street2' value={formData.street2} onChange={(e) => handleChanges(e)} label="Street 2" variant="outlined" />
-                <label className='error-text'></label>
+                <CustomTextfield data={formData.street2} name={'street2'} label={'Street 2'} classtype={'text-line-type2'} handleChanges={handleChanges} />
               </div>
             </div>
             <div className='line-type2-container'>
-            <div className='line-type2-content'>
-                <TextField error={errorMessage.city ? true : false} className='text-line-type2' name='city' value={formData.city} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
-                <label className='error-text'>{errorMessage.city}</label>
+              <div className='line-type2-content'>
+                <CustomTextfield data={formData.city} error={errorMessage.city} name={'city'} label={'City'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.city && (<label className='error-text'>{errorMessage.city}</label>)}
               </div>
               <div className='line-type2-content'>
-                <Autocomplete
-                  disablePortal
-                  className='text-line-type2'
-                  options={[{ label: 'Sri Lanka' }, { label: 'India' }]}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Country"
-                      name='country' 
-                      error={errorMessage.country ? true : false}
-                      value={formData.country}
-                      onChange={(e) => {
-                        handleChanges(e);
-                      }}
-                    />
-                  )}
-                  onChange={(_, newValue) => {
-                    setFormData((prevData) => ({ ...prevData, country: newValue?.label || '' }));
-                  }}
-                  value={formData.country}
-                />
+                <CustomAutoComplete data={formData.country} error={errorMessage.country} list={[{ label: 'Sri Lanka' }, { label: 'India' }]} name={'country'} label={'Country'} classtype={'text-line-type1'} handleChanges={handleChanges} setFormData={setFormData} />
                 <label className='error-text'>{errorMessage.country}</label>
               </div>
             </div>

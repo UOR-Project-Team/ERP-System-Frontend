@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import supplierServices from '../services/services.supplier';
 import validateSupplier from '../services/validate.supplier';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import CustomTextfield from './custom.muiTextfield';
+import CustomAutoComplete from './custom.muiAutoComplete';
 
 function SupplierMaster() {
 
@@ -128,103 +128,60 @@ function SupplierMaster() {
           <h3>Supplier Details</h3>
           <div className='line-type3-container'>
               <div className='line-type3-left-content'>
-                <Autocomplete
-                  disablePortal
-                  className='text-line-type2'
-                  options={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Title"
-                      name='title' 
-                      error={errorMessage.Title ? true : false}
-                      value={formData.Title}
-                      onChange={(e) => {
-                        handleChanges(e);
-                      }}
-                    />
-                  )}
-                  onChange={(_, newValue) => {
-                    setFormData((prevData) => ({ ...prevData, Title: newValue?.label || '' }));
-                  }}
-                  value={formData.Title}
-                />
-                <label className='error-text'>{errorMessage.Title}</label>
+                <CustomAutoComplete data={formData.Title} error={errorMessage.Title} list={[{ label: 'Mr.' }, { label: 'Mrs.' }, { label: 'Ms.' }, { label: 'Dr.' }, { label: 'Company' }]} name={'Title'} label={'Title'} classtype={'text-line-type1'} handleChanges={handleChanges} setFormData={setFormData} />
+                {errorMessage.Title && (<label className='error-text'>{errorMessage.Title}</label>)}
               </div>
               <div className='line-type3-right-content'>
-                <TextField error={errorMessage.Fullname ? true : false} className='text-line-type2' name='Fullname' value={formData.Fullname} onChange={(e) => handleChanges(e)} label="Full Name" variant="outlined" />
-                <label className='error-text'>{errorMessage.Fullname}</label>
+                <CustomTextfield data={formData.Fullname} error={errorMessage.Fullname} name={'Fullname'} label={'Full Name'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.Fullname && (<label className='error-text'>{errorMessage.Fullname}</label>)}
               </div>
             </div>
-            <TextField className='text-line-type2' name='Description' value={formData.Description} onChange={(e) => handleChanges(e)} label="Description" variant="outlined" />
-            <label className='error-text'></label>
+            <CustomTextfield data={formData.Description} error={errorMessage.Description} name={'Description'} label={'Description'} classtype={'text-line-type1'} handleChanges={handleChanges} />
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.RegistrationNo ? true : false} className='text-line-type1' name='RegistrationNo' value={formData.RegistrationNo} onChange={(e) => handleChanges(e)} label="Registration Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.RegistrationNo}</label>  
+                <CustomTextfield data={formData.RegistrationNo} error={errorMessage.RegistrationNo} name={'RegistrationNo'} label={'Registraion Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.RegistrationNo && (<label className='error-text'>{errorMessage.RegistrationNo}</label>)}
               </div>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.VatNo ? true : false} className='text-line-type2' name='VatNo' value={formData.VatNo} onChange={(e) => handleChanges(e)} label="VAT Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.VatNo}</label>
+              <CustomTextfield data={formData.VatNo} error={errorMessage.VatNo} name={'VatNo'} label={'VAT Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
               </div>
             </div>
             <h3>Contact Details</h3>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.Email ? true : false} className='text-line-type2' name='Email' value={formData.Email} onChange={(e) => handleChanges(e)} label="Email" variant="outlined"/>
-                <label className='error-text'>{errorMessage.Email}</label>
+                <CustomTextfield data={formData.Email} error={errorMessage.Email} name={'Email'} label={'Email'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.Email && (<label className='error-text'>{errorMessage.Email}</label>)}
               </div>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.ContactNo ? true : false} className='text-line-type2' name='ContactNo' value={formData.ContactNo} onChange={(e) => handleChanges(e)} label="Contact Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.ContactNo}</label>
+                <CustomTextfield data={formData.ContactNo} error={errorMessage.ContactNo} name={'ContactNo'} label={'Contact Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.ContactNo && (<label className='error-text'>{errorMessage.ContactNo}</label>)}
               </div>
               </div>
               <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField error={errorMessage.Fax ? true : false} className='text-line-type2' name='Fax' value={formData.Fax} onChange={(e) => handleChanges(e)} label="Fax Number" variant="outlined" />
-                <label className='error-text'>{errorMessage.Fax}</label>
+                <CustomTextfield data={formData.Fax} error={errorMessage.Fax} name={'Fax'} label={'FAX Number'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.Fax && (<label className='error-text'>{errorMessage.Fax}</label>)}
               </div>
-            
             </div>
             <h3>Address</h3>
             <div className='line-type2-container'>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='Street1' value={formData.Street1} onChange={(e) => handleChanges(e)} label="Street 1" variant="outlined"/>
-                <label className='error-text'></label>
+                <CustomTextfield data={formData.Street1} error={errorMessage.Street1} name={'Street1'} label={'Street 01'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.Street1 && (<label className='error-text'>{errorMessage.Street1}</label>)}
               </div>
               <div className='line-type2-content'>
-                <TextField className='text-line-type2' name='Street2' value={formData.Street2} onChange={(e) => handleChanges(e)} label="Street 2" variant="outlined" />
-                <label className='error-text'></label>
+                <CustomTextfield data={formData.Street2} error={errorMessage.Street2} name={'Street2'} label={'Street 02'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+                {errorMessage.Street2 && (<label className='error-text'>{errorMessage.Street2}</label>)}
               </div>
             </div>
             <div className='line-type2-container'>
             <div className='line-type2-content'>
-              <TextField error={errorMessage.City ? true : false} className='text-line-type2' name='City' value={formData.City} onChange={(e) => handleChanges(e)} label="City" variant="outlined"/>
-              <label className='error-text'>{errorMessage.City}</label>
+              <CustomTextfield data={formData.City} error={errorMessage.City} name={'City'} label={'City'} classtype={'text-line-type2'} handleChanges={handleChanges} />
+              {errorMessage.City && (<label className='error-text'>{errorMessage.City}</label>)}
             </div>
             <div className='line-type2-content'>
-              <Autocomplete
-                disablePortal
-                className='text-line-type2'
-                options={[{ label: 'Sri Lanka' }, { label: 'India' }]}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Country"
-                    name='country' 
-                    error={errorMessage.Country ? true : false}
-                    value={formData.Country}
-                    onChange={(e) => {
-                      handleChanges(e);
-                    }}
-                  />
-                )}
-                onChange={(_, newValue) => {
-                  setFormData((prevData) => ({ ...prevData, Country: newValue?.label || '' }));
-                }}
-                value={formData.Country}
-              />
-              <label className='error-text'>{errorMessage.Country}</label>
+              <CustomAutoComplete data={formData.Country} error={errorMessage.Country} list={[{ label: 'Sri Lanka' }, { label: 'India' }]} name={'Country'} label={'Country'} classtype={'text-line-type1'} handleChanges={handleChanges} setFormData={setFormData} />
+              {errorMessage.Country && (<label className='error-text'>{errorMessage.Country}</label>)}
             </div>
           </div>
           <div className='button-container'>
