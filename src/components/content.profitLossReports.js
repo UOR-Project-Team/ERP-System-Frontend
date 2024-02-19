@@ -156,6 +156,10 @@ function ProfitLossReports() {
     doc.text("Page " + data.pageNumber + " of " + pageCount, data.settings.margin.left, doc.internal.pageSize.height - 15);
     };
    
+    const DateRange = function() {
+      doc.text(`Profit & Loss Report From ${fromDate} To ${toDate}`, 280, 150);
+      //doc.text(`To Date: ${toDate}`, 320, 160);
+    };
 
 
     // Set document properties
@@ -170,18 +174,18 @@ function ProfitLossReports() {
     const columns = ['Category', 'Amount(Rs.)', 'Total(Rs.)'];
     const rows = [
       ['Income','',''],
-      ['Sales', data.total_sales,''],
-      ['Total Income','', data.total_sales],
+      ['Sales', profitLoss.total_sale,''],
+      ['Total Income','', profitLoss.total_sale],
   
       ['Expenses','',''],
-      ['Cost of goods sold', data.total_purchase,''],
-      ['Total Expenses','', data.total_purchase],
-      ['Profit/Loss','', data.profit_loss]
+      ['Cost of goods sold', profitLoss.total_cost,''],
+      ['Total Expenses','', profitLoss.total_cost],
+      ['Profit/Loss','', profitLoss.profit_loss]
     ];
   
     // Add the table using autoTable plugin
     doc.autoTable({
-      startY: 150, 
+      startY: 170, 
       head: [columns],
       body: rows,
       theme: 'striped',
@@ -202,6 +206,7 @@ function ProfitLossReports() {
       addPageContent: function(data) {
         headerRight(data);
         headerLeft(data);
+        DateRange();
         doc.line(20, 120, doc.internal.pageSize.width-20, 120);
         footer(data);
     }
@@ -218,13 +223,13 @@ function ProfitLossReports() {
   
     const rows = [
       ['Income','',''],
-      ['Sales', data.total_sales,''],
-      ['Total Income','', data.total_sales],
+      ['Sales', profitLoss.total_sale,''],
+      ['Total Income','', profitLoss.total_sale],
   
       ['Expenses','',''],
-      ['Cost of goods sold', data.total_purchase,''],
-      ['Total Expenses','', data.total_purchase],
-      ['Profit/Loss','', data.profit_loss]
+      ['Cost of goods sold', profitLoss.total_cost,''],
+      ['Total Expenses','', profitLoss.total_cost],
+      ['Profit/Loss','', profitLoss.profit_loss]
     ];
     
   
