@@ -30,6 +30,9 @@ function StockMovementReports() {
 
   const { userTokenData } = useUser();
   const [reportData , setReportData ] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [noResults, setNoResults] = useState(false);
+
 
   useEffect(() => {
     fetchReportsData();
@@ -40,10 +43,45 @@ function StockMovementReports() {
       const reportData = await reportsServices.getStockMovement();
       console.log(reportData);
       setReportData([...reportData]);
+      setNoResults(false);
     } catch (error) {
       console.error('Error fetching stock movement data', error.message);
     }
   }
+  const filterContent = (reportData, searchTerm) => {
+    const result = reportData.filter((data) => {
+      const values = Object.values(data).join(' ').toLowerCase();
+      const regex = new RegExp(`\\b${searchTerm.toLowerCase()}`);
+  
+      return regex.test(values);
+    });
+
+    if(result.length === 0){
+      showErrorToast('No any matching item.Please check again')
+    }else{
+      setReportData(result);
+    }
+
+    
+ 
+  };
+
+  const handleSearchInputChange = async (e) => {
+    e.preventDefault();
+    try {
+      if (searchInput === '') {
+        await fetchReportsData();
+      } else {
+        const res = await reportsServices.getStockMovement();
+        if (res) {
+           filterContent(res, searchInput);
+        }
+      }
+    } catch (error) {
+      console.error('Error handling search input', error.message);
+    }
+  };
+
   const renderTableByDescription = (description, data) => (
     <div key={description} className='table-container'>
       <div className='stock-report-category'>
@@ -89,15 +127,41 @@ function StockMovementReports() {
 
   return (
     <div>
+     
       <div className='list-container'>
+      <ToastContainer />
+      <div className='list-content-top'>
+          <div className='button-container'>
+          </div>
+          <div className='search-container'>
+            <form>
+              <input
+                type="text"
+                placeholder='Explore the possibilities...'
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSearchInputChange(e);
+                  }
+                }}
+              />
+              <button onClick={(e) => handleSearchInputChange(e)}><img src={SearchLogo} alt="Search Logo"/></button>
+            </form>
+          </div>
+        </div>
         <div className='list-content'>
           <div className='features-panel'>
             <button><img src={PdfLogo} alt='pdf Logo' /></button>
             <button><img src={CsvLogo} alt='CSV Logo'/></button>
           </div>
-          {renderReports()}
+        
+             {renderReports()}
+          
         </div>
       </div>
+        
     </div>
   );
 }
