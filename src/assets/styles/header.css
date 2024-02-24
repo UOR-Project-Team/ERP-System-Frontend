@@ -1,0 +1,138 @@
+/*-------------------- Header Container -----------------------*/
+
+.header-container {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #D9D9D9;
+    padding: 0px 20px;
+    z-index: 99;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    font-family: 'Ubuntu', sans-serif;
+}
+  
+.header img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+  
+.header .left {
+    display: flex;
+    align-items: center;
+    font-family: 'Merriweather', serif;
+}
+
+.header .left img {
+    display: none;
+}
+  
+.header .right {
+    justify-content: flex-end;
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+
+.header .right #user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
+
+.header .right button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding-right: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.header .right button img {
+    width: 10px;
+    height: 8px;
+}
+.header .right span {
+    display: inline-block;
+}
+
+.header .right .text-container {
+    padding-left: 10px;
+    font-family: 'ubuntu', serif;
+    text-align: left;
+}
+
+.header .right .text-container .uname-text {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.header .right .text-container .type-text {
+    font-size: 12px;
+}
+
+.header .right #button-container {
+    border-left: 2px solid grey ;
+}
+  
+.header .right #button-container img {
+    margin-left: 10px;
+}
+
+ .header .right #button-container #notification-logo:hover, #settings-logo:hover {
+    transform: scale(1.2);
+    transition: 0.3s ease;
+}
+
+.slide-menu {
+    top: 0;
+    left: 0;
+    width: 60%;
+    height: 100vh;
+    z-index: 99;
+    position: fixed;
+    background-color: #260261;
+    display: none;
+}
+
+.slide-menu .slide-header {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.settings-menu button {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin: 0px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.settings-menu button img {
+    width: 18px;
+    height: 18px;
+}
+
+.settings-menu button span {
+    width: 120px;
+    display: inline-block;
+    text-align: left;
+    margin-left: 10px;
+    font-family: 'Ubuntu', sans-serif;
+}

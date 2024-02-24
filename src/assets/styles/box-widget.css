@@ -1,0 +1,135 @@
+.box-widget {
+    flex: 1;
+    padding: 20px;
+    border-radius: 5px;
+    color: whitesmoke;
+    margin: 0px 10px;
+}
+
+.box-widget #b1 {
+    background-color: #55B4B0;
+}
+
+.box-widget #b2 {
+    background-color: #D2386C;
+}
+
+.box-widget #b3 {
+    background-color: #926AA6;
+}
+
+.box-widget #b4 {
+    background-color: #FF6F61;
+}
+
+.box-widget #b5 {
+    background-color: #5B5EA6;
+}
+
+.box-widget .r1 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.box-widget .r2, .r3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0px;
+    height: 32px;
+}
+
+.box-widget .r2 .c1 img {
+    height: 24px;
+    width: 24px;
+}
+
+.box-widget .r2 .c2 {
+    font-size: 26px;
+}
+
+.box-widget .r3 .c1 {
+    font-size: 18px;
+}
+
+.box-widget .r3 .c2 {
+    font-size: 18px;
+    text-align: right;
+}
+
+/*--------------------- Responsive the UI ---------------------------------------*/
+
+@media only screen and (max-width: 1600px){
+
+    .box-widget {
+        width: 220px;
+        padding: 18px;
+        margin: 0px 8px;
+    }
+    
+    .box-widget .r1 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .box-widget .r2, .r3 {
+        margin: 4px 0px;
+        height: 28px;
+    }
+    
+    .box-widget .r2 .c1 img {
+        height: 20px;
+        width: 20px;
+    }
+    
+    .box-widget .r2 .c2 {
+        font-size: 22px;
+    }
+    
+    .box-widget .r3 .c1 {
+        font-size: 15px;
+    }
+    
+    .box-widget .r3 .c2 {
+        font-size: 15px;
+    }
+
+}
+
+@media only screen and (max-width: 1300px){
+
+    .box-widget {
+        width: 180px;
+        padding: 15px;
+        margin: 0px 5px;
+    }
+     
+    .box-widget .r1 {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .box-widget .r2, .r3 {
+        margin: 4px 0px;
+        height: 25px;
+    }
+    
+    .box-widget .r2 .c1 img {
+        height: 18px;
+        width: 18px;
+    }
+    
+    .box-widget .r2 .c2 {
+        font-size: 18px;
+    }
+
+    .box-widget .r3 .c1 {
+        font-size: 12px;
+    }
+    
+    .box-widget .r3 .c2 {
+        font-size: 12px;
+    }
+
+}
