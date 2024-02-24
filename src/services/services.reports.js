@@ -20,6 +20,17 @@ const reportsServices ={
         }
       },
     
+      getStockMovement : async () => {
+        try{
+          const response = await connection.get('/report/stock')
+          console.log(response)
+          return response.data;
+
+        }catch (error) {
+          throw new Error ('Error retrieving Stock movement Data');
+        }
+      }
+
 
   }
   
