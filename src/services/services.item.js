@@ -91,6 +91,17 @@ const itemServices ={
     }
   },
 
+  getProductCode: async () => {
+    try {
+      const response = await connection.get(`/item/productCode`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error getting product code');
+    }
+  },
+
+
+
 }
 
 export default itemServices;
