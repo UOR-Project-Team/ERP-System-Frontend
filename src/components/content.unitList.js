@@ -343,10 +343,10 @@ function UnitList({updateHeaderText}) {
           </div>
         </div>
         <div className='list-content'>
-          <div className='features-panel'>
+          {/* <div className='features-panel'>
             <button onClick={() => {setDialogTitle('PDF Exporter'); setDialogDescription('Do you want to export this table as PDF?'); setDialogOpen(true);}}><img src={PdfLogo} alt="Pdf Logo" /></button>
             <button onClick={() => {setDialogTitle('CSV Exporter'); setDialogDescription('Do you want to export this table as CSV?'); setDialogOpen(true);}}><img src={CsvLogo} alt="Csv Logo" /></button>
-          </div>
+          </div> */}
           <div className='table-container'>
             <table>
               <thead>
