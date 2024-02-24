@@ -442,6 +442,9 @@ function Invoice(){
       generateRandomNumber();
       setSelectedcustomerLabel(null)
 
+      //Printing Pdf
+      handleExportToPDF();
+
      }else{
           showErrorToast("Faild To Update the Invoice ")
      }
@@ -494,6 +497,8 @@ function Invoice(){
     pdf.save("ERP-Invoice.pdf");  
     showSuccessToast('PDF generated successfully');
   };
+
+
 
 
     
@@ -726,9 +731,7 @@ return(
             Cancel
           </button>
           
-        
-          <button style={{ backgroundColor: '#2a6592' }}  onClick={handleExportToPDF}>Save & Print</button>
-          <button style={{ backgroundColor: 'green' }} onClick={handleSavebutton}>Save</button>
+          <button style={{ backgroundColor: 'green' }} onClick={handleSavebutton}>Save & Print</button>
         </div>
       </div>
 

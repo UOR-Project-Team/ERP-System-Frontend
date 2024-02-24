@@ -297,6 +297,8 @@ function GRN() {
         })
 
         reset();
+
+        handleExportToPDF();
       }
     }catch(error){
       showErrorToast(" Please Try again ")
@@ -680,8 +682,7 @@ function GRN() {
       <div className='grn-content' style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div className='button-container' >
           <button style={{ backgroundColor: 'crimson' }} onClick={handlecancel}>Cancel</button>
-          <button style={{ backgroundColor: '#2a6592' }} onClick={handleExportToPDF}>Save & Print</button>
-          <button style={{ backgroundColor: 'green' }} onClick={handlesavegrn}>Save</button>
+          <button style={{ backgroundColor: 'green' }} onClick={handlesavegrn}>Save & Print</button>
         </div>
       </div>
       <ToastContainer/>
