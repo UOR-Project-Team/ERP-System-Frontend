@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import '../assets/styles/login.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import validateUser from '../services/validate.userLoginForms';
@@ -159,29 +160,29 @@ function Login({ updateAuthentication }) {
       cnfPassword: confirmPasswordError,
     });
 
-    if(!usernameError && !passwordError && !confirmPasswordError){
+    if(!usernameError && !passwordError && !confirmPasswordError) {
 
-    try {
-      
-      const response = await connection.post(`/reset/${resetformData.username}`, resetformData);
-      
-      if(response.status ===200){
-          console.log("Suucesfully Updated")
-          showSuccessToast('Password successfully Changed!');
-  
-          setTimeout(() => {
-            closeModal();
-            updateAuthentication(true);
-          }, 2000);
-          
-      }else{
-        showErrorToast('Failed to Update password. Please try again.');
+      try {
+        
+        const response = await connection.post(`/reset/${resetformData.username}`, resetformData);
+        
+        if(response.status ===200){
+            console.log("Suucesfully Updated")
+            showSuccessToast('Password successfully Changed!');
+    
+            setTimeout(() => {
+              closeModal();
+              updateAuthentication(true);
+            }, 2000);
+            
+        }else{
+          showErrorToast('Failed to Update password. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error updating Password', error);
       }
-    } catch (error) {
-      console.error('Error updating Password', error);
-    }
 
-  }
+    }
   }
 
 

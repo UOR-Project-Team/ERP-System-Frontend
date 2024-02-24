@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import '../assets/styles/header.css';
 import { useNavigate } from "react-router-dom"
 import Modal from 'react-modal';
 import Menu from '@mui/material/Menu';
@@ -27,7 +28,8 @@ import { showSuccessToast, showErrorToast } from '../services/services.toasterMe
 import validatProfile from '../services/validate.profile';
 import MenuLightLogo from './../assets/icons/menu-light.png';
 import MenuDarkLogo from './../assets/icons/menu-dark.png';
-import SidePanelCollapse from './panel.SidePanel-Expand';
+import UserImage from './../assets/images/userImage.png';
+import SidePanelMobile from './panel.SidePanel-Mobile';
 
 Modal.setAppElement('#root');
 
@@ -291,15 +293,20 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         </div>
         <div className="right">
           <span>
-          <button onClick={() => handleRequest('profile')}>
+            <button onClick={() => handleRequest('profile')}>
+              <span>
+                <img id='user-image' title='Profile' src={UserImage} alt='User Img' />
+              </span>
               <span className='text-container'>
                 <div className='uname-text'>{userTokenData.fullname}</div>
                 <div className='type-text'>{userTokenData.jobrole}</div>
               </span>
             </button>
           </span>
-            <img title='Notification' src={NotificationLogo} alt="Notification Logo"/>
-            <img title='Settings' src={SettingsLogo} alt="Settings Logo" onClick={handleClick}/>
+          <span id='button-container'>
+            <img id='notification-logo' title='Notification' src={NotificationLogo} alt="Notification Logo"/>
+            <img id='settings-logo' title='Settings' src={SettingsLogo} alt="Settings Logo" onClick={handleClick}/>
+          </span>
         </div>
 
         {isMenuOpen && (
@@ -308,7 +315,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
           <img src={MenuLightLogo} alt='Menu Logo' onClick={handleCloseMenu} /> 
           </div>
           <div className="sidepanel-container">
-          <SidePanelCollapse/>
+          <SidePanelMobile handleCloseMenu={handleCloseMenu} />
           </div>
         </div>
         )}
