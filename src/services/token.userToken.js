@@ -1,4 +1,3 @@
-// authUtils.js (or any appropriate name)
 import { jwtDecode } from 'jwt-decode';
 
 export const Usertoken = () => {
@@ -15,7 +14,8 @@ export const Usertoken = () => {
       contactno: decodedToken.contactno,
       address: decodedToken.address,
       city: decodedToken.city,
-      loginflag: decodedToken.loginflag
+      loginflag: decodedToken.loginflag,
+      imageUrl: decodedToken.imageUrl
     };
   }
   return null;

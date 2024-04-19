@@ -1,7 +1,11 @@
+/*-------------------- A. Import Google font -----------------------*/
+
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Ubuntu&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
+
+/*-------------------- B.  Main Container -----------------------*/
 
 * {
     box-sizing: border-box;
@@ -13,9 +17,7 @@ body, html {
     margin: 0;
 }
 
-
-
-/*-------------------- Login Container -----------------------*/
+/*-------------------- P1 Login Container -----------------------*/
 
 .login-container {
     width: 100%;
@@ -106,7 +108,132 @@ body, html {
     background-color: rgb(220, 20, 60, 0.8);
 }
 
-/*-------------------- Home Container -----------------------*/
+@media only screen and (max-width: 1300px), (max-height: 600px) {
+
+    .login-container .form-container form {
+        width: 360px;
+    }
+
+    .login-container .form-container h3 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .login-container .form-container form label {
+        font-size: 10px;
+    }
+    
+    .login-container .form-container form input {
+        height: 36px;
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+    
+    .login-container .form-container form button {
+        height: 36px;
+        margin-top: 32px;
+        font-size: 15px;
+    }
+    
+    .login-container .form-container form {
+        width: 360px;
+    }
+
+    .login-container .form-container h3 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .login-container .form-container form label {
+        font-size: 15px;
+    }
+    
+    .login-container .form-container form input {
+        height: 36px;
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+    
+    .login-container .form-container form button {
+        height: 36px;
+        margin-top: 32px;
+        font-size: 15px;
+    }
+
+}
+
+@media only screen and (max-width: 890px) {
+
+    .login-container .form-container {
+        width: 100%;
+        background-color: rgb(38, 2, 97, 0.5);
+    }
+
+}
+
+@media only screen and (max-width: 500px), (max-height: 400px) {
+
+    .login-container .form-container form {
+        width: 250px;
+    }
+
+    .login-container .form-container h3 {
+        margin-bottom: 24px;
+    }
+
+    .login-container .form-container form label {
+        font-size: 10px;
+    }
+
+    .login-container .form-container form input {
+        height: 28px;
+        margin-top: 6px;
+        margin-bottom: 10px;
+    }
+
+    .login-container .form-container form button {
+        width: 100%;
+        height: 28px;
+        margin-top: 24px;
+    }
+
+}
+
+@media only screen and (max-width: 280px), (max-height: 450px) {
+
+    .login-container .form-container form {
+        width: 180px;
+    }
+
+    .login-container .form-container h3 {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+
+    .login-container .form-container form label {
+        font-size: 8px;
+    }
+
+    .login-container .form-container form .input-label {
+        font-size: 14px;
+    }
+
+    .login-container .form-container form input {
+        height: 24px;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-bottom: 6px;
+    }
+
+    .login-container .form-container form button {
+        height: 24px;
+        margin-top: 20px;
+        font-size: 12px;
+    }
+    
+}
+
+/*-------------------- P2 Home Container -----------------------*/
 
 .master-container {
     width: 100%;
@@ -114,6 +241,8 @@ body, html {
     display: flex;
     flex-direction: row;
 }
+
+/*-------------------- P2.a Side Panel Container -----------------------*/
   
 .sidepanel-container {
     height: 100vh;
@@ -227,6 +356,99 @@ body, html {
     text-align: left;
 }
 
+
+@media only screen and (max-width: 1300px), (max-height: 600px) {
+
+    .sidepanel-container .header {
+        height: 40px;
+        padding: 0px 10px;
+    }
+    
+    .sidepanel-container .header button {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .sidepanel-container .body {
+        height: calc(100vh - 40px);
+        padding: 20px 10px;
+    }
+    
+    .sidepanel-container img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .sidepanel-container .body {
+        padding: 15px 5px;
+    }
+    
+    .sidepanel-container .body button {
+        width: 36px;
+        height: 36px;
+        margin: 8px 0px;
+    }
+    
+    .sidepanel-container .expanded .body button {
+        width: 90%;
+        margin: 6px 0px;
+        padding: 5px 5px;
+    }
+
+    .sidepanel-container .expanded .body span {
+        margin-left: 10px;
+        font-size: 12px;
+    }
+
+    .sidepanel-container .expanded .body .subCategory img {
+        width: 10px;
+        height: 10px;
+    }
+
+}
+
+@media only screen and (max-width: 890px) {
+
+    .sidepanel-container .body {
+        padding: 5px 5px;
+    }
+
+    .sidepanel-container .header button {
+        display: none;
+    }
+
+}
+
+@media only screen and (max-width: 500px), (max-height: 400px) {
+    
+    .sidepanel-container .header {
+        height: 40px;
+    }
+
+    .sidepanel-container .header button {
+        display: none;
+    }
+    
+    .sidepanel-container .body {
+        height: calc(100vh - 40px);
+        padding: 0px 10px;
+    }
+
+    .sidepanel-container img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .sidepanel-container .body button {
+        width: 32px;
+        height: 32px;
+        margin: 5px 0px;
+    }
+
+}
+
+
+
 .modal-overlay {
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
@@ -285,6 +507,8 @@ body, html {
     color: black;
 }
 
+/*-------------------- Header Container -----------------------*/
+
 .header-container {
     width: 100%;
     height: 60px;
@@ -337,8 +561,10 @@ body, html {
 }
 
 .header-container .header .right button img {
-    width: 10px;
-    height: 8px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50%;
 }
 
 .header-container .header .right button img:hover {
@@ -415,6 +641,195 @@ body, html {
     text-align: left;
     margin-left: 10px;
     font-family: 'Ubuntu', sans-serif;
+}
+
+.profile-picture-upload-container {
+    display: flex;
+}
+
+.profile-picture-upload-btn {
+    height: 36px;
+    background-color: #0072B5;
+    border: 0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding: 0px 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.profile-picture-upload-btn img {
+    width: 26px;
+    height: 26px;
+    margin-right: 5px;
+}
+
+.profile-picture-upload-btn span {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.profile-picture-remove-btn {
+    height: 36px;
+    width: 36px;
+    background-color: #D2386C;
+    border: 0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.profile-picture-remove-btn img {
+    width: 26px;
+    height: 26px;
+}
+
+@media only screen and (max-width: 1300px), (max-height: 600px) {
+    
+    .header-container {
+        height: 40px;
+        padding: 0px 12px;
+        font-size: 12px;
+    }
+      
+    .header-container .header img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .header-container .header .left img {
+        margin-right: 5px;
+    }
+
+    .header-container .header .right img {
+        margin-left: 5px;
+    }
+    
+    .header-container .header .right button img {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .header-container .header .right .text-container .uname-text {
+        font-weight: bold;
+        font-size: 13px;
+    }
+    
+    .header-container .header .right .text-container .type-text {
+        font-size: 10px;
+    }
+
+}
+
+@media only screen and (max-width: 890px) {
+
+    .settings-menu button {
+        margin: 0px 5px;
+    }
+    
+    .settings-menu button img {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .settings-menu button span {
+        width: 110px;
+        margin-left: 5px;
+        font-size: 13px;
+    }
+    
+}
+
+@media only screen and (max-width: 625px) {
+
+    .header-container .header .right .text-container {
+        display: none;
+    }
+
+    .header-container .header .right button img {
+        width: 26px;
+        height: 26px;
+    }
+    
+}
+
+@media only screen and (max-width: 500px), (max-height: 400px) {
+
+    .header-container .header img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .header-container .header .left h2 {
+        display: none;
+    }
+
+    .header-container .header .left img {
+        display: inline-block;
+    }
+
+    .header-container .header .right button img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .header-container .header .right .text-container {
+        display: none;
+    }
+
+    .header-container .slide-menu {
+        display: block;
+    }
+
+}
+
+@media only screen and (max-width: 370px) {
+
+    .header-container .slide-menu {
+        width: 80%;
+    }
+
+}
+
+@media only screen and (max-width: 320px) {
+
+    .header-container .slide-menu {
+        width: 100%;
+    }
+    
+}
+
+@media only screen and (max-width: 280px), (max-height: 450px) {
+
+    .header-container .header .right button img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .header-container .slide-menu {
+        width: 100%;
+    }
+
+    .settings-menu button {
+        margin: 0px 2px;
+    }
+    
+    .settings-menu button img {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .settings-menu button span {
+        width: 100px;
+        margin-left: 5px;
+        font-size: 12px;
+    }
+
 }
 
 .body-container {
@@ -1444,7 +1859,7 @@ body, html {
 
 /*--------------------- Responsive the UI ---------------------------------------*/
 
-@media only screen and (max-width: 1300px), (max-height: 600px) {
+/* @media only screen and (max-width: 1300px), (max-height: 600px) {
 
     .login-container .form-container form {
         width: 360px;
@@ -2096,27 +2511,6 @@ body, html {
         margin: 5px 0px;
     }
 
-    .header-container .header img {
-        width: 18px;
-        height: 18px;
-    }
-
-    .header-container .header .left h2 {
-        display: none;
-    }
-
-    .header-container .header .left img {
-        display: inline-block;
-    }
-    
-    .header-container .header .right .text-container {
-        display: none;
-    }
-
-    .header-container .slide-menu {
-        display: block;
-    }
-
     .edit-model {
         padding: 0px 10px;
     }
@@ -2148,10 +2542,6 @@ body, html {
 }
 
 @media only screen and (max-width: 370px) {
-
-    .header-container .slide-menu {
-        width: 80%;
-    }
 
     .body-container .master-content .form-container {
         width: 95%;
@@ -2199,10 +2589,6 @@ body, html {
 }
 
 @media only screen and (max-width: 320px) {
-
-    .header-container .slide-menu {
-        width: 100%;
-    }
     
     .body-container .master-content .form-container .line-type2-container {
         display: block;
@@ -2229,54 +2615,6 @@ body, html {
 
 @media only screen and (max-width: 280px), (max-height: 450px) {
 
-    .login-container .form-container form {
-        width: 180px;
-    }
-
-    .login-container .form-container h3 {
-        font-size: 24px;
-        margin-bottom: 18px;
-    }
-
-    .login-container .form-container form label {
-        font-size: 8px;
-    }
-
-    .login-container .form-container form .input-label {
-        font-size: 14px;
-    }
-
-    .login-container .form-container form input {
-        height: 24px;
-        font-size: 12px;
-        margin-top: 4px;
-        margin-bottom: 6px;
-    }
-
-    .login-container .form-container form button {
-        height: 24px;
-        margin-top: 20px;
-        font-size: 12px;
-    }
-
-    .header-container .slide-menu {
-        width: 100%;
-    }
-
-    .settings-menu button {
-        margin: 0px 2px;
-    }
-    
-    .settings-menu button img {
-        width: 12px;
-        height: 12px;
-    }
-    
-    .settings-menu button span {
-        width: 100px;
-        margin-left: 5px;
-        font-size: 12px;
-    }
 
     .MuiAutocomplete-option {
         min-height: 14px !important;
@@ -2292,7 +2630,7 @@ body, html {
         width: 12px !important;
     }
 
-}
+} */
 
 .grn-container .grn-content table .price {
     width: 120px;

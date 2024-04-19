@@ -1,4 +1,5 @@
-const validateUserLoginForm = (formValues) => {
+const validateLogin = (formValues) => {
+    
     const errors = {
         username: '',
         password: '',
@@ -14,6 +15,6 @@ const validateUserLoginForm = (formValues) => {
 
     return errors;
 
-  };
+};
 
-  export default validateUserLoginForm;
+export default validateLogin;

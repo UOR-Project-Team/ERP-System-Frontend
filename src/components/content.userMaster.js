@@ -33,9 +33,16 @@ function UserMaster() {
     contactno: '',
     address: '',
     city: '',
-  })
+  });
 
-  
+  const handleChanges = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   const handleSubmit = async(event) => {
     event.preventDefault();
     
@@ -82,14 +89,6 @@ function UserMaster() {
       }
         console.error('Error:', error);
     }
-  };
-
-  const handleChanges = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
   };
 
   const handleReset = () => {

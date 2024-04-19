@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import Modal from 'react-modal';
 import Menu from '@mui/material/Menu';
@@ -7,35 +6,35 @@ import CustomMenuItem from './custom.muiMenuItem';
 import CustomTextfield from './custom.muiTextfield';
 import CustomPasswordfield from './custom.muiPasswordField';
 import { useUser } from '../services/services.UserContext';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, DialogContentText } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  DialogContentText,
-} from '@mui/material';
+import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
+import userServices from '../services/services.user';
+import validatProfile from '../services/validate.profile';
+import SidePanelCollapse from './panel.sidePanel-collapsed';
+import ProfileLogo from './../assets/icons/profile.png';
 import KeyLogo from './../assets/icons/key.png';
 import LogoutLogo from './../assets/icons/logout.png';
 import SettingsLogo from './../assets/icons/settings.png';
 import NotificationLogo from './../assets/icons/notification.png';
 import WidgetLogo from './../assets/icons/widget.png';
-import userServices from '../services/services.user';
-import { showSuccessToast, showErrorToast } from '../services/services.toasterMessage';
-import validatProfile from '../services/validate.profile';
+import UploadLogo from './../assets/icons/upload.png';
+import DeleteLogo from './../assets/icons/delete-light.png';
 import MenuLightLogo from './../assets/icons/menu-light.png';
 import MenuDarkLogo from './../assets/icons/menu-dark.png';
-import SidePanelCollapse from './panel.SidePanel-Expand';
+import DefaultProfile from './../assets/images/default-user-profile.png';
 
 Modal.setAppElement('#root');
 
 const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
 
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
-  const { userTokenData, setuserTokenData } = useUser();
+  const baseURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8081";
+
+  const { userTokenData, updateUserToken } = useUser();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelContent, setModelContent] = useState('profile');
@@ -48,7 +47,8 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     NIC: userTokenData.nic,
     contactno: userTokenData.contactno,
     address: userTokenData.address,
-    city: userTokenData.city
+    city: userTokenData.city,
+    file: null
   });
 
   const [errorMessage, setErrorMessage] = useState({
@@ -72,6 +72,23 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     confirmPW: ''
   });
 
+  useEffect(() => {
+    if(!userTokenData.loginflag) {
+      handleRequest('updatePassword')
+      updateUserLoginFlag();
+      updateUserToken();
+    }
+  }, []);
+
+  const updateUserLoginFlag = async () => {
+    try {
+      await userServices.updateLoginFlag(userTokenData.userid);
+      console.log('Login flag updated successfully');
+    } catch (error) {
+      console.error('Error updating login flag:', error);
+    }
+  };
+
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
   };
@@ -94,13 +111,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     setIsModalOpen(true);
   }
 
-  const handleLogout = () => {
-    setAnchorEl(null);
-    toggleupdateAuthentication()
-    localStorage.removeItem('token');
-    navigate('/');
-  }
-
+  // Handle changes of update user form
   const handleChanges = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -109,56 +120,92 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     });
   };
 
+  // Handle image upload of update user form
+  const handleUploadBtnClick = (e) => {
+    e.preventDefault();
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+
+    if (files.length > 1) {
+      showErrorToast('Multiple inputs are not allowed.');
+    }
+
+    if (files.length == 1) {
+      const selectedFile = files[0];
+      const fileType = selectedFile.type.split('/')[0];
+      if (fileType !== 'image') {
+        showErrorToast('Please select an image file.');
+        return;
+      }
+      setFormData({ ...formData, file: selectedFile });
+    }
+  };
+
+  // Remove uploaded image from user from
+  const handleRemoveImage = () => {
+    setFormData({ ...formData, file: null });
+  };
+
+
+  // Submit the profile updation form
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
 
-    // Validations
+    // Validate the input fields
     const validationErrors = validatProfile(formData);
     setErrorMessage(validationErrors);
 
+    // Pop up an error meassage if validation failed
     if (Object.values(validationErrors).some((error) => error !== '')) {
       showErrorToast('Check the inputs again');
       return
     }
 
     try {
-      await userServices.updateProfile(userTokenData.userid, formData)
-      const updatedFields = {
-        fullname: formData.fullname,
-        email: formData.email,
-        nic: formData.NIC,
-        contactno: formData.contactno,
-        address: formData.address,
-        city: formData.city
-      };
-      const newUserData = { ...userTokenData, ...updatedFields };
-      setuserTokenData(newUserData);
+
+      // Send updated user data to backend API.
+      const {token} = await userServices.updateProfile(userTokenData.userid, formData);
+
+      // Update the JWT token on local storage
+      localStorage.setItem('token', token);
+      updateUserToken();
       setIsModalOpen(false);
-      showSuccessToast('Profile successfully updated')
+      showSuccessToast('Profile successfully updated');
+      handleRemoveImage();
     } catch(error) {
-      const { message, attributeName } = error.response.data;
-      showErrorToast(`${message}`);
-    
-      if (attributeName) {
-        if(attributeName==='Email') {
-          setErrorMessage({
-            email: 'This Email already Exists',
-          });
-        } else if(attributeName==='NIC') {
-          setErrorMessage({
-            nic: 'This National ID/Passport already Exists',
-          });
-        } else if(attributeName==='ContactNo') {
-          setErrorMessage({
-            contactno: 'This Contact Number already Exists',
-          });
+      if (error.response) {
+        const { message, attributeName } = error.response.data;
+        showErrorToast(`${message}`);
+  
+        if (attributeName) {
+          if (attributeName === 'Email') {
+            setErrorMessage({
+              email: 'This Email already Exists',
+            });
+          } else if (attributeName === 'NIC') {
+            setErrorMessage({
+              nic: 'This National ID/Passport already Exists',
+            });
+          } else if (attributeName === 'ContactNo') {
+            setErrorMessage({
+              contactno: 'This Contact Number already Exists',
+            });
+          }
         }
+        console.error('Error:', message);
+      } else {
+        setErrorMessage('Internal server error.');
+        console.error('Unknown error:', error);
       }
-      console.error('Error:', message);
     } 
   };
 
+  // Reset the profile updation form
   const handleUpdateReset = () => {
+    handleRemoveImage();
     setFormData({
       fullname: userTokenData.fullname,
       email: userTokenData.email,
@@ -177,6 +224,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     });
   };
 
+  // Handle attribute changes of change password form
   const handlePasswordChanges = (event) => {
     const { name, value } = event.target;
     setPasswordData({
@@ -185,6 +233,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     });
   };
 
+  // Submit the change password form
   const handlePasswordSubmit = async (e) =>  {
     e.preventDefault();
 
@@ -270,6 +319,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     
   };
 
+  // Reset the change password form
   const handlePasswordReset = () => {
     setPasswordData({
         currentPW: '',
@@ -283,6 +333,14 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
     });
   };
 
+  // Logout function for the system
+  const handleLogout = () => {
+    setAnchorEl(null);
+    toggleupdateAuthentication()
+    localStorage.removeItem('token');
+    navigate('/');
+  }
+
   return (
     <div className="header">
         <div className="left">
@@ -291,7 +349,8 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         </div>
         <div className="right">
           <span>
-          <button onClick={() => handleRequest('profile')}>
+            <button>
+              <img title='Profile' src={baseURL + '/' + userTokenData.imageUrl} onError={(e) => { e.target.onerror = null;  e.target.alt = ''; e.target.src = DefaultProfile;  }} alt="User"/>
               <span className='text-container'>
                 <div className='uname-text'>{userTokenData.fullname}</div>
                 <div className='type-text'>{userTokenData.jobrole}</div>
@@ -314,6 +373,12 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
         )}
 
         <Menu className='settings-menu' anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+        <CustomMenuItem onClick={() => handleRequest('profile')}>
+            <button>
+              <img src={ProfileLogo} alt="Profile Logo"/>
+              <span>Update Profile</span>
+            </button>
+          </CustomMenuItem>
           <CustomMenuItem onClick={() => handleRequest('updatePassword')}>
             <button>
               <img src={KeyLogo} alt="Key Logo"/>
@@ -336,7 +401,7 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
 
         <Modal
         isOpen={isModalOpen}
-        onRequestClose={() => {setIsModalOpen(false)}}
+        onRequestClose={() => {setIsModalOpen(false);}}
         contentLabel="Header-Model"
         className="modal-content"
         overlayClassName="modal-overlay"
@@ -376,6 +441,20 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
                   </div>
                 </div>
 
+                <h3>Profile picture</h3>
+                <div className='profile-picture-upload-container'>
+                  <input ref={fileInputRef} type="file" accept="image/*" className="profile-picture-upload" onChange={handleFileChange} style={{ display: 'none' }} />
+                  <button className="profile-picture-upload-btn" onClick={handleUploadBtnClick}>
+                    <img src={UploadLogo} alt='Upload' />
+                    <span>Upload Image</span>
+                  </button>
+                  {formData.file && (
+                    <button  className="profile-picture-remove-btn"  type="button" onClick={handleRemoveImage}>
+                      <img src={DeleteLogo} alt='Delete' />
+                    </button>
+                  )}
+                </div>
+                
                 <div className='button-container'>
                   <button type='submit' className='submit-button' onClick={handleUpdateSubmit}>Submit</button>
                   <button type='reset' className='reset-button' onClick={handleUpdateReset}>Reset</button>
@@ -393,8 +472,14 @@ const Header = ({ getHeaderText, toggleupdateAuthentication }) => {
                 <CustomPasswordfield data={passwordData.confirmPW} error={passwordError.confirmPW} name={'confirmPW'} label={'Confirm Password'} classtype={'text-line-type1'} handleChanges={handlePasswordChanges} />
                 {passwordError.confirmPW && (<label className='error-text'>{passwordError.confirmPW}</label>)}
                 <div className='button-container'>
+
                   <button type='submit' class='submit-button' onClick={handlePasswordSubmit}>Submit</button>
-                  <button type='reset' class='reset-button' onClick={handlePasswordReset}>Reset</button>
+                  { (userTokenData.loginFlag) ? (
+                    <button type='reset' class='reset-button' onClick={handlePasswordReset}>Reset</button>
+                  ) : (
+                    <button type='reset' class='reset-button' onClick={handlePasswordReset}>Reset</button>
+                  )}
+                  
                 </div>
               </form>
             </div>

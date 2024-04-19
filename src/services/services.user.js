@@ -33,11 +33,11 @@ const userServices = {
     }
   },
   
-  updateProfile: async (userId, data) => {
+   updateProfile: async (userId, formData) => {
     try {
-      const response = await connection.put(`/user/profile/${userId}`, data, {
+      const response = await connection.put(`/user/profile/${userId}`, formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data', // Use multipart/form-data content type to send Image file
         },
       });
       return response.data;
@@ -62,6 +62,19 @@ const userServices = {
   updatePassword: async (userId, data) => {
     try {
       const response = await connection.put(`/user/changePW/${userId}`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateLoginFlag: async (userId) => {
+    try {
+      const response = await connection.put(`/user/loginFlag/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
         },

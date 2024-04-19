@@ -11,13 +11,14 @@ import MasterListLogo from './../assets/icons/list.png';
 import SingleRightLogo from './../assets/icons/singleright.png';
 import DoubleRightLogo from './../assets/icons/doubleright.png';
 
-const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
-  const [activeSubcategories, setActiveSubcategories] = useState([]);
-  const [rotatedButton, setRotatedButton] = useState([]);
+const SidePanelCollapsed = ({ onToggle, updateHeaderText }) => {
 
   const navigateTo = useNavigate();
 
   const { userTokenData } = useUser();
+  
+  const [activeSubcategories, setActiveSubcategories] = useState([]);
+  const [rotatedButton, setRotatedButton] = useState([]);
 
   // Sub category expanding and Arrow rotating function
   const handleSubcategoryClick = (subcategory) => {
@@ -164,4 +165,4 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText }) => {
   );
 };
 
-export default SidePanelCollapse;
+export default SidePanelCollapsed;

@@ -11,7 +11,7 @@ import MasterListLogo from './../assets/icons/list.png';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
+const SidePanelExpanded = ({ onToggle, updateHeaderText}) => {
   
   const navigateTo = useNavigate();
 
@@ -178,4 +178,4 @@ const SidePanelCollapse = ({ onToggle, updateHeaderText}) => {
   );
 };
 
-export default SidePanelCollapse;
+export default SidePanelExpanded;

@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import Header from '../components/panel.Header';
-import SidePanelCollapse from '../components/panel.SidePanel-Collapse';
-import SidePanelExpand from '../components/panel.SidePanel-Expand';
+import Header from '../components/panel.header';
+import SidePanelExpanded from '../components/panel.sidePanel-expanded';
+import SidePanelCollapsed from '../components/panel.sidePanel-collapsed';
 import Dashboard from '../components/content.dashboard';
 import CustomerMaster from '../components/content.customerMaster';
 import CategoryMaster from '../components/content.categoryMaster';
@@ -73,9 +73,9 @@ function Home({ updateAuthentication }) {
     <div className="master-container">
       <div className="sidepanel-container" style={{ width: isExpanded ? '20%' : '60px', display: isHidden ? 'none' : 'block' }}>
         {isExpanded ? (
-          <SidePanelExpand onToggle={togglePanel} updateHeaderText={updateHeaderText} />
+          <SidePanelCollapsed onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         ) : (
-          <SidePanelCollapse onToggle={togglePanel} updateHeaderText={updateHeaderText} />
+          <SidePanelExpanded onToggle={togglePanel} updateHeaderText={updateHeaderText} />
         )}
       </div>
       <div className="main-container">
