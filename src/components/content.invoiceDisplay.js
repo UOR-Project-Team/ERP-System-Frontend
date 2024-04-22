@@ -136,8 +136,8 @@ function InvoiceDisplay() {
       <label>
         <table>
           <tr>
-          <td width='700px'><br/>refg</td>
-          <td>tfgh</td>
+          <td width='700px'><br/></td>
+          <td></td>
           </tr>
         </table>
       </label>
